@@ -15,10 +15,8 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Output Student name
-      run: echo “Tristan VD” 
     - name: Restore dependencies
-      working-directory: ./src
+      working-directory: ./src/CraneSim
       run: dotnet restore
     - name: Build
       working-directory: ./src
