@@ -9,6 +9,7 @@ import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
 export default function Dashboard() {
+    const [test, setTest] = useState(null)
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
         const options = {
@@ -17,30 +18,30 @@ export default function Dashboard() {
             password: "Dashboard1234",
         };
 
-        const client = mqtt.connect('wss://c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud:8884/mqtt', options);
-        // const client = mqtt.connect(options);
-        client.on('connect', function () {
-            console.log('Connected');
+        const client = mqtt.connect("wss://c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud:8884/mqtt", options);
+        client.on("connect", function () {
+            console.log("Connected");
         });
-        client.on('error', function (error) {
+        client.on("error", function (error) {
             console.log("ERROR", error);
         });
-        client.on('message', (topic,message,packet)=>{
-            console.log("RECEIVE", topic)
-            console.log("RECEIVE", message)
-            console.log("RECEIVE", packet)
+        client.on("message", (topic,message)=>{
+            console.log("RECEIVE", message.toString())
+            setTest(message.toString())
         });
+        client.subscribe('my/test/topic');
+
+// publish message 'Hello' to topic 'my/test/topic'
+        client.publish('my/test/topic', 'Hello');
     }, []);
 
-
-
-  return (
-    <div id={"container"}>
-      <CraneVisualisation />
-      <DataTable />
-      <AnimatedGraphs />
-      <EmergencyButton />
-      <InputVisualisation />
-    </div>
-  )
+    return (
+        <div id={"container"}>
+        <CraneVisualisation />
+        <DataTable test={test} />
+        <AnimatedGraphs />
+        <EmergencyButton />
+        <InputVisualisation />
+        </div>
+    )
 }
