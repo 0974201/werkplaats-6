@@ -56,23 +56,34 @@ client.on_publish = on_publish
 client.subscribe("#", qos=1)
 
 # code here
+
+# Movement of the hoist
 def hoist_movement():
-    hoist_move_X = 0
-    hoist_move_Y = 12
-    hoist_move_Z = 0
-    return hoist_move_X,hoist_move_Y,hoist_move_Z
+    hoist_move_x = 0
+    hoist_move_y = 12
+    hoist_move_z = 0
+    return hoist_move_x, hoist_move_y, hoist_move_z
 
+# Starting position of the hoist
+def hoist_start_pos():
+    hoist_starting_pos_x = 0
+    hoist_starting_pos_y = 0
+    hoist_starting_pos_z = 0
+    return hoist_starting_pos_x, hoist_starting_pos_y, hoist_starting_pos_z
+
+# New position of the hoist
 def hoist_pos():
-    starting_pos_X = 0
-    starting_pos_Y = 0
-    starting_pos_Z = 0
-    
-    hoist_move_X, hoist_move_Y, hoist_move_Z = hoist_movement()
+    hoist_move_x, hoist_move_y, hoist_move_z = hoist_movement()
+    hoist_starting_pos_x, hoist_starting_pos_y, hoist_starting_pos_z = hoist_start_pos()
 
-    move_pos_X = hoist_move_X
-    move_pos_Y = hoist_move_Y
-    move_pos_Z = hoist_move_Z
-    hoist_pos = (starting_pos_X + move_pos_X, starting_pos_Y + move_pos_Y, starting_pos_Z + move_pos_Z)
+    move_pos_x = hoist_move_x
+    move_pos_y = hoist_move_y
+    move_pos_z = hoist_move_z
+    hoist_pos = (
+        hoist_starting_pos_x + move_pos_x,
+        hoist_starting_pos_y + move_pos_y,
+        hoist_starting_pos_z + move_pos_z
+    )
 
     return hoist_pos
 
