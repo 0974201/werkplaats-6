@@ -2,10 +2,8 @@
 on:
   pull_request:
     branches: [ "dev" ]
-  workflow_dispatch:
-    
 jobs:
-  restore-build-test:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,8 +13,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      working-directory: ./src/CSharp
       run: dotnet build --no-restore
     - name: Run all tests
-      working-directory: ./srcCSharp
       run: dotnet test --no-build --verbosity normal
