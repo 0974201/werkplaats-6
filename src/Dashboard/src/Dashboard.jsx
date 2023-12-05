@@ -1,11 +1,38 @@
+import React from 'react';
+import mqtt from 'mqtt';
 import './Dashboard.css'
 import CraneVisualisation from "./CraneVisualisation/CraneVisualisation.jsx";
 import DataTable from "./DataTable/DataTable.jsx";
 import AnimatedGraphs from "./AnimatedGraphs/AnimatedGraphs.jsx";
 import EmergencyButton from "./EmergencyButton/EmergencyButton.jsx";
 import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
+import {useEffect, useState} from "react";
 
 export default function Dashboard() {
+    // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
+    useEffect(() => {
+        const options = {
+            protocol: "wss",
+            username: "Dashboardmqtt",
+            password: "Dashboard1234",
+        };
+
+        const client = mqtt.connect('wss://c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud:8884/mqtt', options);
+        // const client = mqtt.connect(options);
+        client.on('connect', function () {
+            console.log('Connected');
+        });
+        client.on('error', function (error) {
+            console.log("ERROR", error);
+        });
+        client.on('message', (topic,message,packet)=>{
+            console.log("RECEIVE", topic)
+            console.log("RECEIVE", message)
+            console.log("RECEIVE", packet)
+        });
+    }, []);
+
+
 
   return (
     <div id={"container"}>
