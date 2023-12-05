@@ -9,18 +9,19 @@ namespace Gantry
     public class Gantry
     {
 
-        public string Component;
+        public string Component { get; set }
 
-        public float PositionZ;
+        public float PositionZ { get; set }
 
-        public float Speed;
-        public float Acceleration;
+        public float Speed { get; set; }
+        public float Acceleration { get; set; }
 
-        public bool IsActive;
+        public bool IsActive {  get; set; }
 
 
         public Gantry()
         {
+
         }
     }
 }
