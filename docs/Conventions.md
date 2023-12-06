@@ -1,41 +1,45 @@
 # Conventions
 Hard guidelines for maintaining/operating/developing this project.
 
-## Metrics
-- Acceleration:
-- Speed: 
-- Dimensions: 
-
+## Data
+ -  Metrics
+    - Dimensions = meters
+    - Time = Seconds
+ - Floats have 2 decimal points
 
 ## MQTT messages
-= each message will have a topic property, this is equal to its MQTT topic 
 ### Topics
- - Command Emergency Button Message
+each message will have a topic property, this is equal to its MQTT topic 
+ - Command Emergency Button Messages
    - = Command to stop entire system
    - topic = "meta/emergency_button"
    - sender = controller
- - Container State Message
-   - = Current state from this container
-   - topic = "crane/containers/_container_ID_/state"
-   - sender = _this_container_
- - Component State Message
-   - = Current state from this component
-   - topic = "crane/components/_component_/state"
-   - sender = _this_component_
- - Command Message
+ - Command Messages
    - = Command to specific component
    - topic = "crane/components/_component_/command"
    - sender = controller
+   - command syntax:
+      0 => do nothing
+      1 => go up/right/forward
+      2 => go down/left/backward
+ - Container State Messages
+   - = Current state from this container
+   - topic = "containers/_container_ID_/state"
+   - sender = _this_container_
+ - Component State Messages
+   - = Current state from this component
+   - topic = "crane/components/_component_/state"
+   - sender = _this_component_
  - Crane State Message
    - = Current state of all components of the crane
    - topic = "crane/state"
    - sender = crane
- - Error Message
+ - Error Messages
    - = Error messages
    - topic = "meta/errors"
    - sender = _any_microservice_
 
-### Templates
+### Messages formats
 #### All Messages
 ```JSON
 {
@@ -47,6 +51,17 @@ Hard guidelines for maintaining/operating/developing this project.
    }
 }
 ```
+#### Emergency Button Messages
+```JSON
+{
+   "meta":{
+      "topic":"meta/emergency_button"
+   },
+   "msg":{
+      "isPressed":"bool"
+   }
+}
+```
 #### Command Messages
 ```JSON
 {
@@ -55,15 +70,15 @@ Hard guidelines for maintaining/operating/developing this project.
    },
    "msg":{
       "target":"str",
-      "command":"bool"
+      "command":"int"
    }
 }
 ```
-#### Container
+#### Container Messages
 ```JSON
 {
    "meta":{
-      "topic":"crane/containers/id/state",
+      "topic":"containers/id/state",
       "id":"int",
       "component":"container"
    },
