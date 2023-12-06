@@ -16,6 +16,7 @@
 import time
 import paho.mqtt.client as paho
 from paho import mqtt
+import json
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -30,8 +31,23 @@ def on_subscribe(client, userdata, mid, granted_qos, properties=None):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 # print message, useful for checking if it was successful
-def on_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+def on_message(client, userdata, message):
+    # Decode the payload from bytes to string
+    payload_string = message.payload.decode('utf-8')
+    # Call the function that uses the data variable
+    process_data(payload_string)
+
+def process_data(payload_string):
+    data = json.loads(payload_string)
+    
+    # Access the value associated with the information u need
+    pos = data.get("pos")
+    isActive = data.get("isActive")
+    component = data.get("component")
+    acceleration = data.get("acceleration")
+    speed = data.get("speed")
+    #to sent the data u need to call the prosses thet needs the dat egg.. 
+    # hoist_movement(pos) the hoist movement is the name of your function and the (pos) is the name of the var u assigned to the data
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
 # userdata is user defined data of any type, updated by user_data_set()
@@ -51,16 +67,13 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.on_publish = on_publish
 
-# use this to subscribe to the data onto mqtt
-# like client.subscribe("topic u need", qos=1)
+# subscribe to all topics of encyclopedia by using the wildcard "#"
 client.subscribe("#", qos=1)
 
-# code here
+test_data= '{"pos": 20, "isActive": true, "component": "Hoist", "acceleration": null, "speed": 100}'
 
-
-# use this to publish the data onto mqtt
-# like this client.publish("name topic example: hoist/move", payload=str(data u want to publish), qos=1)
-client.publish("", payload=str(), qos=1)
+# a single publish, this can also be done in loops, etc.
+client.publish("hoist", payload=test_data, qos=1)
 
 # loop_forever for simplicity, here you need to stop the loop manually
 # you can also use loop_start and loop_stop
