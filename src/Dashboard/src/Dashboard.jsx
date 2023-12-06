@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react';
 import mqtt from 'mqtt';
 import './Dashboard.css'
@@ -9,7 +10,7 @@ import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
 export default function Dashboard() {
-    const [test, setTest] = useState(null)
+    const [craneInfo, setCraneInfo] = useState(null)
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
         const options = {
@@ -27,21 +28,18 @@ export default function Dashboard() {
         });
         client.on("message", (topic,message)=>{
             console.log("RECEIVE", message.toString())
-            setTest(message.toString())
+            setCraneInfo(message.toString())
         });
         client.subscribe('my/test/topic');
-
-// publish message 'Hello' to topic 'my/test/topic'
-        client.publish('my/test/topic', 'Hello');
     }, []);
 
     return (
         <div id={"container"}>
-        <CraneVisualisation />
-        <DataTable test={test} />
-        <AnimatedGraphs />
-        <EmergencyButton />
-        <InputVisualisation />
+            <CraneVisualisation />
+            <DataTable craneInfo={craneInfo} />
+            <AnimatedGraphs />
+            <EmergencyButton />
+            <InputVisualisation />
         </div>
     )
 }
