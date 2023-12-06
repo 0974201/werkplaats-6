@@ -14,10 +14,14 @@ Hard guidelines for maintaining/operating/developing this project.
    - = Command to stop entire system
    - topic = "meta/emergency_button"
    - sender = controller
+ - Container State Message
+   - = Current state from this container
+   - topic = "crane/containers/_container_ID_/state"
+   - sender = _this_container_
  - Component State Message
    - = Current state from this component
    - topic = "crane/components/_component_/state"
-   - sender = component
+   - sender = _this_component_
  - Command Message
    - = Command to specific component
    - topic = "crane/components/_component_/command"
@@ -29,7 +33,7 @@ Hard guidelines for maintaining/operating/developing this project.
  - Error Message
    - = Error messages
    - topic = "meta/errors"
-   - sender = _any microservice_
+   - sender = _any_microservice_
 
 ### Templates
 #### All Messages
@@ -55,6 +59,31 @@ Hard guidelines for maintaining/operating/developing this project.
    }
 }
 ```
+#### Container
+```JSON
+{
+   "meta":{
+      "topic":"crane/containers/id/state",
+      "id":"int",
+      "component":"container"
+   },
+   "msg":{
+      "isConnected":"bool",
+      "absolutePosition":{
+         "x":"float",
+         "y":"float",
+         "z":"float"
+      },
+      "speed":{
+         "speed":{
+            "x":"float",
+            "y":"float",
+            "z":"float"
+         }
+      }
+   }
+}
+```
 #### State Messages
 - All State Messages
    ```JSON
@@ -65,33 +94,6 @@ Hard guidelines for maintaining/operating/developing this project.
           "component":"str"
        },
        "msg":{
-          "command":"bool"
-       }
-    }
-   ```
-- Container
-    ```JSON
-    {
-       "meta":{
-          "topic":"crane/components/container/state",
-          "id":"int",
-          "isActive":"bool",
-          "component":"container"
-       },
-       "msg":{
-          "isConnected":"bool",
-          "absolutePosition":{
-             "x":"float",
-             "y":"float",
-             "z":"float"
-          },
-          "speed":{
-             "speed":{
-                "x":"float",
-                "y":"float",
-                "z":"float"
-             }
-          }
        }
     }
    ```
@@ -161,6 +163,7 @@ Hard guidelines for maintaining/operating/developing this project.
              "x":"float",
              "y":"float"
           },
+          "rotation": "float",
           "speed":{
              "activeAcceleration":{
                 "x":"bool",
@@ -206,27 +209,107 @@ Hard guidelines for maintaining/operating/developing this project.
    ```
 #### Crane State Messages
    ```JSON
-   {
-      "meta": {
-         "topic": "crane/components/Gantry/state",
-         "active": bool
+{
+  "meta": {
+          "topic":"crane/state",
+          "isActive":"bool"
+  },
+  "absolutePosition": {
+    "x": "float",
+    "y": "float",
+    "z": "float"
+  },
+  "container": {
+      "id": "bool",
+      "isConnected": "bool"
+    },
+  "components": [
+    {
+      "component": "hoist",
+      "isActive": "bool",
+      "isConnected": "bool",
+      "absolutePosition": {
+          "x": "float",
+          "y": "float",
+          "z": "float"
       },
-      "msg": {
-         "absolutePosition": {
-            "z": float
-        },
-        "speed": {
+      "speed": {
           "activeAcceleration": {
-            "z": bool
+            "y": "bool"
           },
           "acceleration": {
-            "z": float
+            "y": "float"
           },
           "speed": {
-            "z": float,
+            "y": "float"
           }
       }
-   }
+    },
+    {
+      "component": "trolley",
+      "isActive": "bool",
+      "absolutePosition": {
+        "x": "float",
+        "y": "float",
+        "z": "float"
+       },
+      "speed": {
+        "activeAcceleration": {
+          "x": "bool"
+        },
+        "acceleration": {
+          "x": "float"
+        },
+        "speed": {
+          "x": "float"
+        }
+      }
+    },
+    {
+      "component": "boom",
+      "isActive": "bool",
+      "absolutePosition": {
+        "x": "float",
+        "y": "float",
+        "z": "float"
+      },
+      "speed": {
+        "activeAcceleration": {
+          "x": "bool",
+          "y": "bool"
+        },
+        "acceleration": {
+          "x": "float",
+          "y": "float"
+        },
+        "speed": {
+          "X": "float",
+          "y": "float"
+        }
+      }
+    },
+    {
+      "component": "gantry",
+      "isActive": "bool",
+      "absolutePosition": {
+        "x": "float",
+        "y": "float",
+        "z": "float"
+      },
+      "speed": {
+        "activeAcceleration": {
+          "z": "bool"
+        },
+        "acceleration": {
+         "z": "float"
+        },
+        "speed": {
+          "z": "float"
+        }
+      }
+    }
+  ]
+}
 ```
 #### Error Messages
 ```JSON
@@ -235,9 +318,9 @@ Hard guidelines for maintaining/operating/developing this project.
       "topic": "meta/errors"
    },
    "msg": {
-      "type": str,
-      "microservice": str
-      "error": str
+      "type": "str",
+      "microservice": "str",
+      "error": "str"
    }
 }
 ```
