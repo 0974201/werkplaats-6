@@ -30,24 +30,44 @@ def on_publish(client, userdata, mid, properties=None):
 def on_subscribe(client, userdata, mid, granted_qos, properties=None):
     print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
-# print message, useful for checking if it was successful
+# gets called when a message arives, 
 def on_message(client, userdata, message):
-    # Decode the payload from bytes to string
     payload_string = message.payload.decode('utf-8')
-    # Call the function that uses the data variable
+    print(payload_string)
+    #passes a call with payload_string to prosses data
     process_data(payload_string)
 
+
+# code here
+# these are examples
+# will loop endlessly
+
+# will send the data to mqtt
+def sent_data(speed_value):
+    speed = speed_value
+    mqtt_sent = '{"isActive": true, "component": "Hoist", "acceleration": null, "speed":' + str(speed) + '}'
+    print(mqtt_sent)
+    client.publish("hoist", payload=mqtt_sent, qos=1)
+
+
+# egg of hoist to sent speed
+class Hoist:
+    def hoist_speed(self, get_speed):
+        current_speed = get_speed
+        speed_value = current_speed
+        sent_data(speed_value)
+
+
+# prosses the data in useble parts (add all of the componets u need the dat of in here)
 def process_data(payload_string):
     data = json.loads(payload_string)
-    
-    # Access the value associated with the information u need
-    pos = data.get("pos")
     isActive = data.get("isActive")
     component = data.get("component")
     acceleration = data.get("acceleration")
-    speed = data.get("speed")
-    #to sent the data u need to call the prosses thet needs the dat egg.. 
-    # hoist_movement(pos) the hoist movement is the name of your function and the (pos) is the name of the var u assigned to the data
+    get_speed = data.get("speed")
+
+    hoist_instance = Hoist()
+    hoist_instance.hoist_speed(get_speed)
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
 # userdata is user defined data of any type, updated by user_data_set()
@@ -67,13 +87,13 @@ client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.on_publish = on_publish
 
-# subscribe to all topics of encyclopedia by using the wildcard "#"
+# subscribe to the picks u need
+# make sure ur not subscribe to ur own component otherwise it will endlessly loop
 client.subscribe("#", qos=1)
 
-test_data= '{"pos": 20, "isActive": true, "component": "Hoist", "acceleration": null, "speed": 100}'
 
 # a single publish, this can also be done in loops, etc.
-client.publish("hoist", payload=test_data, qos=1)
+
 
 # loop_forever for simplicity, here you need to stop the loop manually
 # you can also use loop_start and loop_stop
