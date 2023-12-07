@@ -18,7 +18,7 @@ namespace Controller.wpf
     public partial class MainWindow : Window
     {
 
-        private bool IsStop = false;
+        private bool _isStop = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -34,7 +34,7 @@ namespace Controller.wpf
         }
         private void HandleKeyPress(Key key)
         {
-            if (!IsStop)
+            if (!_isStop)
             {
                 if (key == Key.W)
                 {
@@ -77,7 +77,7 @@ namespace Controller.wpf
                 if (key == Key.O)
                 {
                     infoLabel.Content = "Noodstop has been pressed!!!!\nPress P to reset";
-                    IsStop = true;
+                    _isStop = true;
                 }
             }
             else
@@ -85,14 +85,14 @@ namespace Controller.wpf
                 if (key == Key.P)
                 {
                     infoLabel.Content = "Undid the Noodstop!";
-                    IsStop = false;
+                    _isStop = false;
                 }
             }
 
         }
         private void HandleKeyRelease(Key key)
         {
-            if (!IsStop)
+            if (!_isStop)
             {
                 if (key == Key.W)
                 {
