@@ -63,6 +63,13 @@ namespace CraneSim.Core.Services
 
             float newPositionX = entity.PositionX - travelledDistance;
 
+            if (newPositionX < entity.MinPositionX)
+            {
+                newPositionX = 0.0F;
+            }
+
+            entity.PositionX = newPositionX;
+
             return newPositionX;
         }
 
@@ -73,6 +80,13 @@ namespace CraneSim.Core.Services
             var travelledDistance = currentSpeed * timePast;
 
             float newPositionX = entity.PositionX + travelledDistance;
+
+            if (newPositionX > entity.MaxPositionX)
+            {
+                newPositionX = 136.0F;
+            }
+
+            entity.PositionX = newPositionX;
 
             return newPositionX;
         }
