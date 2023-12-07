@@ -16,5 +16,6 @@ namespace CraneSim.Core.Interfaces
         Task ResetStopWatch();
         Task StartStopwatch();
         Task StopStopwatch();
+        Task<long> ReturnStopwatchvalue();
     }
 }
