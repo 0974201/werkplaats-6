@@ -20,22 +20,23 @@ class Crane:
         self.client.connect(mqtt_broker)
         self.client.loop_start()
 
-    # Basic error detection for overloading
-    def move(self, dx, dy, dz):
+    # Change: Check whether the crane is moving and check overload condition
+    def move(self, x_position_change, y_position_change, z_position_change):
         if self.is_moving and self.load > self.max_load:
+            # Change: If the crane is overloaded, add an error message and stop the movement
             self.errors.append("Overload: Movement stopped")
             self.stop()
             return
 
-        # Update crane position within allowed limits
-        new_x = min(max(self.x + dx, 0), self.max_arm_length)
-        new_y = min(max(self.y + dy, 0), self.max_height)
-        new_z = min(max(self.z + dz, 0), self.max_load)
+       # Update crane position within allowed limits
+        new_x_position = min(max(self.x + x_position_change, 0), self.max_arm_length)
+        new_y_position = min(max(self.y + y_position_change, 0), self.max_height)
+        new_z_position = min(max(self.z + z_position_change, 0), self.max_load)
 
-        if new_x != self.x or new_y != self.y or new_z != self.z:
-            self.x = new_x
-            self.y = new_y
-            self.z = new_z
+        if new_x_position != self.x or new_y_position != self.y or new_z_position != self.z:
+            self.x = new_x_position
+            self.y = new_y_position
+            self.z = new_z_position
             self.is_moving = True
             self.send_status_update()
 
@@ -44,10 +45,12 @@ class Crane:
         self.is_moving = False
         self.send_status_update()
 
-    # Return the current status of the crane
+    # Change: Return the current status of the crane with separate position values
     def get_status(self):
         return {
-            "position": {"x": self.x, "y": self.y, "z": self.z},
+            "x_position": self.x,
+            "y_position": self.y,
+            "z_position": self.z,
             "moving": self.is_moving,
             "load": self.load,
             "errors": self.errors
