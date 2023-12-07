@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trolley", "Trolley\Trolley.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTTTemplate", "MQTTTemplate\MQTTTemplate.csproj", "{D4018275-953F-4596-AC43-8CADE3B3D6E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller.wpf", "Controller.wpf\Controller.wpf.csproj", "{BA726EEC-39D4-4BB8-AEE5-63E781D1CAED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D4018275-953F-4596-AC43-8CADE3B3D6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4018275-953F-4596-AC43-8CADE3B3D6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4018275-953F-4596-AC43-8CADE3B3D6E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA726EEC-39D4-4BB8-AEE5-63E781D1CAED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA726EEC-39D4-4BB8-AEE5-63E781D1CAED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA726EEC-39D4-4BB8-AEE5-63E781D1CAED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA726EEC-39D4-4BB8-AEE5-63E781D1CAED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
