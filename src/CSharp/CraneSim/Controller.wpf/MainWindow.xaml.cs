@@ -57,44 +57,53 @@ namespace Controller.wpf
                 if (key == Key.W)
                 {
                     infoLabel.Content = "Trolley forward!";
+                    SendTrolleyForward();
                 }
                 if (key == Key.S)
                 {
                     infoLabel.Content = "Trolley backwards!";
+                    SendTrolleyBackward();
                 }
 
                 if (key == Key.A)
                 {
                     infoLabel.Content = "Gantry left!";
+                    SendGantryLeft();
                 }
                 if (key == Key.D)
                 {
                     infoLabel.Content = "Gantry right!";
+                    SendGantryRight();
                 }
 
                 if (key == Key.Up)
                 {
                     infoLabel.Content = "Hoist up!";
+                    SendHoistUp();
                 }
                 if (key == Key.Down)
                 {
                     infoLabel.Content = "Hoist down!";
+                    SendHoistDown();
                 }
 
 
                 if (key == Key.Q)
                 {
                     infoLabel.Content = "Boom Up!";
+                    SendBoomUp();
                 }
                 if (key == Key.E)
                 {
                     infoLabel.Content = "Boom Down!";
+                    SendBoomDown();
                 }
 
 
                 if (key == Key.O)
                 {
                     infoLabel.Content = "Noodstop has been pressed!!!!\nPress P to reset";
+                    SendNoodstop();
                     _isStop = true;
                 }
             }
@@ -103,6 +112,7 @@ namespace Controller.wpf
                 if (key == Key.P)
                 {
                     infoLabel.Content = "Undid the Noodstop!";
+                    SendUndoNoodstop();
                     _isStop = false;
                 }
             }
@@ -115,39 +125,124 @@ namespace Controller.wpf
                 if (key == Key.W)
                 {
                     infoLabel.Content = "Trolley stopped!";
+                    SendTrolleyForwardStop();
                 }
                 if (key == Key.S)
                 {
                     infoLabel.Content = "Trolley stopped!";
+                    SendTrolleyBackwardStop();
                 }
 
                 if (key == Key.A)
                 {
                     infoLabel.Content = "Gantry stopped!";
+                    SendGantryLeftStop();
                 }
                 if (key == Key.D)
                 {
                     infoLabel.Content = "Gantry stopped!";
+                    SendGantryRightStop();
                 }
 
                 if (key == Key.Up)
                 {
                     infoLabel.Content = "Hoist stopped!";
+                    SendHoistUpStop();
                 }
                 if (key == Key.Down)
                 {
                     infoLabel.Content = "Hoist stopped!";
+                    SendHoistDownStop();
                 }
 
                 if (key == Key.Q)
                 {
                     infoLabel.Content = "Boom stopped!";
+                    SendBoomUpStop();
                 }
                 if (key == Key.E)
                 {
                     infoLabel.Content = "Boom stopped!";
+                    SendBoomDownStop();
                 }
             }
         }
+        #region press
+        private void SendTrolleyForward()
+        {
+
+        }
+        private void SendTrolleyBackward()
+        {
+
+        }
+        private void SendGantryLeft()
+        {
+
+        }
+        private void SendGantryRight()
+        {
+
+        }
+        private void SendHoistUp()
+        {
+
+        }
+        private void SendHoistDown()
+        {
+
+        }
+        private void SendBoomUp()
+        {
+
+        }
+        private void SendBoomDown()
+        {
+
+        }
+        private void SendNoodstop()
+        {
+
+        }
+        private void SendUndoNoodstop()
+        {
+
+        }
+        #endregion
+
+        #region release
+        private void SendTrolleyForwardStop()
+        {
+
+        }
+        private void SendTrolleyBackwardStop()
+        {
+
+        }
+        private void SendGantryLeftStop()
+        {
+
+        }
+        private void SendGantryRightStop()
+        {
+
+        }
+        private void SendHoistUpStop()
+        {
+
+        }
+        private void SendHoistDownStop()
+        {
+
+        }
+        private void SendBoomUpStop()
+        {
+
+        }
+        private void SendBoomDownStop()
+        {
+
+        }
+        #endregion
     }
 }
