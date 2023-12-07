@@ -43,19 +43,19 @@ def on_message(client, userdata, message):
 # will loop endlessly
 
 # will send the data to mqtt
-def sent_data(speed_value):
+def send_data(speed_value):
     speed = speed_value
-    mqtt_sent = '{"isActive": true, "component": "Hoist", "acceleration": null, "speed":' + str(speed) + '}'
-    print(mqtt_sent)
-    client.publish("hoist", payload=mqtt_sent, qos=1)
+    mqtt_send = '{"isActive": true, "component": "Hoist", "acceleration": null, "speed":' + str(speed) + '}'
+    print(mqtt_send)
+    client.publish("hoist", payload=mqtt_send, qos=1)
 
 
-# egg of hoist to sent speed
+# exmple of hoist to send speed
 class Hoist:
     def hoist_speed(self, get_speed):
         current_speed = get_speed
         speed_value = current_speed
-        sent_data(speed_value)
+        send_data(speed_value)
 
 
 # prosses the data in useble parts (add all of the componets u need the dat of in here)
