@@ -32,6 +32,21 @@ namespace Controller.wpf
                 // Update the label text or perform any action
                 infoLabel.Content = "W key pressed!";
             }
+            if (e.Key == Key.S)
+            {
+                // Update the label text or perform any action
+                infoLabel.Content = "S key pressed!";
+            }
+            if (e.Key == Key.A) 
+            {
+                // Update the label text or perform any action
+                infoLabel.Content = "A key pressed!";
+            }
+            if (e.Key == Key.D)
+            {
+                // Update the label text or perform any action
+                infoLabel.Content = "D key pressed!";
+            }
         }
     }
 }

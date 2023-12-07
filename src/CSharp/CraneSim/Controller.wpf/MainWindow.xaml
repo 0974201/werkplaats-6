@@ -8,6 +8,6 @@
         Title="MainWindow" Height="450" Width="800"
         KeyDown="Window_KeyDown">
     <Grid>
-        <Label x:Name="infoLabel" Content="Press a key" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="56,50,0,0"/>
+        <Label x:Name="infoLabel" Content="Press a key" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </Window>
