@@ -22,6 +22,7 @@ namespace Controller.wpf
     {
 
         private bool _isStop = false;
+        private HiveMQClient _client;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,9 +38,9 @@ namespace Controller.wpf
             options.UserName = "cranemqtt";
             options.Password = "7va@tWTv2.Jw2yk";
 
-            HiveMQClient client = new HiveMQClient(options);
+            _client = new HiveMQClient(options);
 
-            var connectResult = await client.ConnectAsync().ConfigureAwait(false);
+            var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -168,80 +169,80 @@ namespace Controller.wpf
             }
         }
         #region press
-        private void SendTrolleyForward()
+        private async void SendTrolleyForward()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendTrolleyBackward()
+        private async void SendTrolleyBackward()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendGantryLeft()
+        private async void SendGantryLeft()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendGantryRight()
+        private async void SendGantryRight()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendHoistUp()
+        private async void SendHoistUp()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendHoistDown()
+        private async void SendHoistDown()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendBoomUp()
+        private async void SendBoomUp()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendBoomDown()
+        private async void SendBoomDown()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendNoodstop()
+        private async void SendNoodstop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendUndoNoodstop()
+        private async void SendUndoNoodstop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
         #endregion
 
         #region release
-        private void SendTrolleyForwardStop()
+        private async void SendTrolleyForwardStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendTrolleyBackwardStop()
+        private async void SendTrolleyBackwardStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendGantryLeftStop()
+        private async void SendGantryLeftStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendGantryRightStop()
+        private async void SendGantryRightStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendHoistUpStop()
+        private async void SendHoistUpStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendHoistDownStop()
+        private async void SendHoistDownStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendBoomUpStop()
+        private async void SendBoomUpStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
-        private void SendBoomDownStop()
+        private async void SendBoomDownStop()
         {
-
+            await _client.PublishAsync("", "").ConfigureAwait(false);
         }
         #endregion
     }
