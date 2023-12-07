@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 using HiveMQtt.Client;
 using HiveMQtt.Client.Events;
 using HiveMQtt.Client.Options;
+using NLog.Targets;
 
 namespace Controller.wpf
 {
@@ -169,9 +171,14 @@ namespace Controller.wpf
             }
         }
         #region press
+
+        //bekijk de json conventie en de juiste topics.
+        //"{"meta":{"topic":"str"},"msg":{"target":"str","command":"bool"}}"
+        //topic:crane/components/_component_/command
         private async void SendTrolleyForward()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/forward\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/trolley/forward", jsonString).ConfigureAwait(false);
         }
         private async void SendTrolleyBackward()
         {
