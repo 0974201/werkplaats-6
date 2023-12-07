@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CraneSim.Core.Entities;
+using CraneSim.Dtos.Trolley;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +23,27 @@ namespace CraneSim
     /// </summary>
     public partial class MainWindow : Window
     {
+        Trolley _trolley;
+
+
         public MainWindow()
         {
             InitializeComponent();
+            CreateComopnents();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
+            _trolley.IsActive = true;
+        }
 
+        private void CreateComopnents()
+        {
+            _trolley = new Trolley() 
+            { 
+                Id = 1
+            };
+            
         }
     }
 }
