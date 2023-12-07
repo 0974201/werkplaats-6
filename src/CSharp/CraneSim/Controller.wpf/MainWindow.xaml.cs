@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HiveMQtt.Client;
+using HiveMQtt.Client.Events;
+using HiveMQtt.Client.Options;
 
 namespace Controller.wpf
 {
@@ -22,6 +25,21 @@ namespace Controller.wpf
         public MainWindow()
         {
             InitializeComponent();
+            InitConnection();
+        }
+        private async void InitConnection()
+        {
+            HiveMQClientOptions options = new HiveMQClientOptions();
+            options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
+            options.Port = 8883;
+            options.UseTLS = true;
+
+            options.UserName = "cranemqtt";
+            options.Password = "7va@tWTv2.Jw2yk";
+
+            HiveMQClient client = new HiveMQClient(options);
+
+            var connectResult = await client.ConnectAsync().ConfigureAwait(false);
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
