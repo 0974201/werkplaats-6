@@ -13,7 +13,7 @@ namespace CraneSim.Core.Services
 {
     public class TrolleyService : ITrolleyService
     {
-        Stopwatch _trolleyMoveStopwatch;
+        public readonly Stopwatch _trolleyMoveStopwatch;
 
         public TrolleyService()
         {
@@ -49,7 +49,7 @@ namespace CraneSim.Core.Services
                 entity.Speed = 0;
             }
 
-            entity.Speed = Math.Max(entity.MinimumSpeedValue, Math.Min(entity.MaximumSpeedValue,entity.Speed));
+            entity.Speed = Math.Max(entity.MaximumSpeedValue, Math.Min(entity.MinimumSpeedValue, entity.Speed));
 
             return entity.Speed;
         }
@@ -90,6 +90,11 @@ namespace CraneSim.Core.Services
         public async Task StopStopwatch()
         {
             _trolleyMoveStopwatch.Stop();
+        }
+
+        public async Task<long> ReturnStopwatchvalue()
+        {
+            return _trolleyMoveStopwatch.ElapsedMilliseconds / 1000;
         }
     }
 }
