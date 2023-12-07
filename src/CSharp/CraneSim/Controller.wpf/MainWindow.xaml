@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Controller.wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        KeyDown="Window_KeyDown">
+        KeyDown="Window_KeyDown"
+        KeyUp="Window_KeyUp">
     <Grid>
         <Label x:Name="infoLabel" Content="Press a key" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>

@@ -23,41 +23,88 @@ namespace Controller.wpf
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.W)
+            HandleKeyPress(e.Key);
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            HandleKeyRelease(e.Key);
+        }
+        private void HandleKeyPress(Key key)
+        {
+            if (key == Key.W)
             {
                 infoLabel.Content = "Trolley forward!";
             }
-            if (e.Key == Key.S)
+            if (key == Key.S)
             {
                 infoLabel.Content = "Trolley backwards!";
             }
 
-            if (e.Key == Key.A) 
+            if (key == Key.A) 
             {
                 infoLabel.Content = "Gantry left!";
             }
-            if (e.Key == Key.D)
+            if (key == Key.D)
             {
                 infoLabel.Content = "Gantry right!";
             }
 
-            if (e.Key == Key.Up)
+            if (key == Key.Up)
             {
                 infoLabel.Content = "Hoist up!";
             }
-            if (e.Key == Key.Down)
+            if (key == Key.Down)
             {
                 infoLabel.Content = "Hoist down!";
             }
 
 
-            if (e.Key == Key.Q)
+            if (key == Key.Q)
             {
                 infoLabel.Content = "Boom Up!";
             }
-            if (e.Key == Key.E)
+            if (key == Key.E)
             {
                 infoLabel.Content = "Boom Down!";
+            }
+        }
+        private void HandleKeyRelease(Key key)
+        {
+            if (key == Key.W)
+            {
+                infoLabel.Content = "Trolley stopped!";
+            }
+            if (key == Key.S)
+            {
+                infoLabel.Content = "Trolley stopped!";
+            }
+
+            if (key == Key.A)
+            {
+                infoLabel.Content = "Gantry stopped!";
+            }
+            if (key == Key.D)
+            {
+                infoLabel.Content = "Gantry stopped!";
+            }
+
+            if (key == Key.Up)
+            {
+                infoLabel.Content = "Hoist stopped!";
+            }
+            if (key == Key.Down)
+            {
+                infoLabel.Content = "Hoist stopped!";
+            }
+
+            if (key == Key.Q)
+            {
+                infoLabel.Content = "Boom stopped!";
+            }
+            if (key == Key.E)
+            {
+                infoLabel.Content = "Boom stopped!";
             }
         }
     }
