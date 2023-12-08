@@ -9,13 +9,13 @@ namespace CraneSim.Core.Interfaces
 {
     public interface ITrolleyService
     {
-        Task<float> CalculateHorizontalePositiefMovement(Trolley entity);
-        Task<float> CalculateHorizontaleNegatiefMovement(Trolley entity);
-        Task<float> CalculateCurrentSpeed(Trolley entity);
-        Task<float> CalculateConstantAccelaration(Trolley entity);
-        Task ResetStopWatch();
-        Task StartStopwatch();
-        Task StopStopwatch();
-        Task<long> ReturnStopwatchvalue();
+        float CalculateHorizontalPositiveMovement(Trolley entity);
+        float CalculateHorizontalNegativeMovement(Trolley entity);
+        float CalculateCurrentSpeed(Trolley entity);
+        float CalculateConstantAccelaration(Trolley entity);
+        void ResetStopWatch();
+        void StartStopwatch();
+        void StopStopwatch();
+        double ReturnStopwatchvalue();
     }
 }
