@@ -20,7 +20,7 @@ namespace CraneSim.Core.Services
             _trolleyMoveStopwatch = new Stopwatch();
         }
 
-        public async Task<float> CalculateConstantAccelaration(Trolley entity)
+        public float CalculateConstantAccelaration(Trolley entity)
         {
             var accelerationTime = entity.AccelAndDecelarationTime;
             var currentSpeed = entity.Speed;
@@ -32,32 +32,28 @@ namespace CraneSim.Core.Services
             return result;
         }
 
-        public async Task<float> CalculateCurrentSpeed(Trolley entity)
+        public float CalculateCurrentSpeed(Trolley entity)
         {
-            var timePast = (float)(_trolleyMoveStopwatch.ElapsedMilliseconds / 1000);
+            var timePast = (float)ReturnStopwatchvalue();
 
             if (timePast < entity.AccelAndDecelarationTime)
             {
                 entity.Speed = entity.Acceleration * timePast;
             }
-            else if (timePast < 2 * entity.AccelAndDecelarationTime)
-            {
-                entity.Speed = entity.MaximumSpeedValue - entity.Deceleration * (timePast - entity.AccelAndDecelarationTime);
-            }
             else
             {
-                entity.Speed = 0;
+                entity.Speed = 3;
             }
 
-            entity.Speed = Math.Max(entity.MaximumSpeedValue, Math.Min(entity.MinimumSpeedValue, entity.Speed));
+            entity.Speed = Math.Min(entity.MaximumSpeedValue, entity.Speed);
 
             return entity.Speed;
         }
 
-        public async Task<float> CalculateHorizontaleNegatiefMovement(Trolley entity)
+        public float CalculateHorizontalNegativeMovement(Trolley entity)
         {
 
-            var timePast = (float)(_trolleyMoveStopwatch.ElapsedMilliseconds / 1000.0);
+            var timePast = (float)ReturnStopwatchvalue();
             var currentSpeed = entity.Speed;
             var travelledDistance = currentSpeed * timePast;
 
@@ -73,9 +69,9 @@ namespace CraneSim.Core.Services
             return newPositionX;
         }
 
-        public async Task<float> CalculateHorizontalePositiefMovement(Trolley entity)
+        public float CalculateHorizontalPositiveMovement(Trolley entity)
         {
-            var timePast = (float)(_trolleyMoveStopwatch.ElapsedMilliseconds / 1000.0);
+            var timePast = (float)ReturnStopwatchvalue();
             var currentSpeed = entity.Speed;
             var travelledDistance = currentSpeed * timePast;
 
@@ -91,24 +87,24 @@ namespace CraneSim.Core.Services
             return newPositionX;
         }
 
-        public async Task ResetStopWatch()
+        public void ResetStopWatch()
         {
             _trolleyMoveStopwatch.Reset();
         }
 
-        public async Task StartStopwatch()
+        public void StartStopwatch()
         {
             _trolleyMoveStopwatch.Start();
         }
 
-        public async Task StopStopwatch()
+        public void StopStopwatch()
         {
             _trolleyMoveStopwatch.Stop();
         }
 
-        public async Task<long> ReturnStopwatchvalue()
+        public double ReturnStopwatchvalue()
         {
-            return _trolleyMoveStopwatch.ElapsedMilliseconds / 1000;
+            return (double)(_trolleyMoveStopwatch.ElapsedMilliseconds) / 1000;
         }
     }
 }
