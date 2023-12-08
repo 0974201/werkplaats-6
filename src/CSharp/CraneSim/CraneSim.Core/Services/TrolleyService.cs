@@ -42,7 +42,7 @@ namespace CraneSim.Core.Services
             }
             else
             {
-                entity.Speed = 3;
+                entity.Speed = entity.MaximumSpeedValue;
             }
 
             entity.Speed = Math.Min(entity.MaximumSpeedValue, entity.Speed);
