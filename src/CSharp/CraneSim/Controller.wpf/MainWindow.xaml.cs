@@ -128,128 +128,122 @@ namespace Controller.wpf
                 if (key == Key.W)
                 {
                     infoLabel.Content = "Trolley stopped!";
-                    SendTrolleyForwardStop();
+                    TrolleyStop();
                 }
                 if (key == Key.S)
                 {
                     infoLabel.Content = "Trolley stopped!";
-                    SendTrolleyBackwardStop();
+                    TrolleyStop();
                 }
 
                 if (key == Key.A)
                 {
                     infoLabel.Content = "Gantry stopped!";
-                    SendGantryLeftStop();
+                    GantryStop();
                 }
                 if (key == Key.D)
                 {
                     infoLabel.Content = "Gantry stopped!";
-                    SendGantryRightStop();
+                    GantryStop();
                 }
 
                 if (key == Key.Up)
                 {
                     infoLabel.Content = "Hoist stopped!";
-                    SendHoistUpStop();
+                    HoistStop();
                 }
                 if (key == Key.Down)
                 {
                     infoLabel.Content = "Hoist stopped!";
-                    SendHoistDownStop();
+                    HoistStop();
                 }
 
                 if (key == Key.Q)
                 {
                     infoLabel.Content = "Boom stopped!";
-                    SendBoomUpStop();
+                    BoomStop();
                 }
                 if (key == Key.E)
                 {
                     infoLabel.Content = "Boom stopped!";
-                    SendBoomDownStop();
+                    BoomStop();
                 }
             }
         }
-        #region press
 
-        //bekijk de json conventie en de juiste topics.
-        //"{"meta":{"topic":"str"},"msg":{"target":"str","command":"bool"}}"
-        //topic:crane/components/_component_/command
+        #region press
         private async void SendTrolleyForward()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/forward\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
-            await _client.PublishAsync("crane/components/trolley/forward", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/1\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/trolley/1", jsonString).ConfigureAwait(false);
         }
         private async void SendTrolleyBackward()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/2\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"2\"}}";
+            await _client.PublishAsync("crane/components/trolley/2", jsonString).ConfigureAwait(false);
         }
         private async void SendGantryLeft()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/2\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"2\"}}";
+            await _client.PublishAsync("crane/components/gantry/2", jsonString).ConfigureAwait(false);
         }
         private async void SendGantryRight()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/1\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/gantry/1", jsonString).ConfigureAwait(false);
         }
         private async void SendHoistUp()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/1\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/hoist/1", jsonString).ConfigureAwait(false);
         }
         private async void SendHoistDown()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/2\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"2\"}}";
+            await _client.PublishAsync("crane/components/hoist/2", jsonString).ConfigureAwait(false);
         }
         private async void SendBoomUp()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/1\"},\"msg\":{\"target\":\"Boom\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/boom/1", jsonString).ConfigureAwait(false);
         }
         private async void SendBoomDown()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/2\"},\"msg\":{\"target\":\"Boom\",\"command\":\"2\"}}";
+            await _client.PublishAsync("crane/components/boom/2", jsonString).ConfigureAwait(false);
         }
         private async void SendNoodstop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"true\"}}";
+            await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
         }
         private async void SendUndoNoodstop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"false\"}}";
+            await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
         }
         #endregion
 
         #region release
-        private async void SendTrolleyForwardStop()
+        private async void TrolleyStop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/0\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/trolley/0", jsonString).ConfigureAwait(false);
         }
-        private async void SendTrolleyBackwardStop()
+        private async void GantryStop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/0\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/gantry/0", jsonString).ConfigureAwait(false);
         }
-        private async void SendGantryLeftStop()
+        private async void HoistStop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/0\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/hoist/0", jsonString).ConfigureAwait(false);
         }
-        private async void SendGantryRightStop()
+        private async void BoomStop()
         {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
-        }
-        private async void SendHoistUpStop()
-        {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
-        }
-        private async void SendHoistDownStop()
-        {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
-        }
-        private async void SendBoomUpStop()
-        {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
-        }
-        private async void SendBoomDownStop()
-        {
-            await _client.PublishAsync("", "").ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/0\"},\"msg\":{\"target\":\"Boom\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/boom/0", jsonString).ConfigureAwait(false);
         }
         #endregion
     }
