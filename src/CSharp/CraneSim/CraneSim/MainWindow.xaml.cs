@@ -39,7 +39,7 @@ namespace CraneSim
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _trolley.IsActive = true;
-            //TestTrolleyService();
+            TestTrolleyService();
         }
 
         private void CreateComopnents()
@@ -61,6 +61,7 @@ namespace CraneSim
         private async Task TestTrolleyService() 
         {
             TestTrolleyServiceTimer();
+            _trolleyService.CalculateConstantAccelaration(_trolley);
             TestTrolleySpeed();
             TestTrolleyHorizontalePositiefMovement();
             await Task.Delay(500);
@@ -73,33 +74,33 @@ namespace CraneSim
             await Task.Delay(500); // wait for 1 second
             _trolleyService.StopStopwatch();
 
-            long result = await _trolleyService.ReturnStopwatchvalue();
+            double result = _trolleyService.ReturnStopwatchvalue();
 
             //MessageBox.Show($"{result}");
         }
 
-        private async void TestTrolleySpeed()
+        private void TestTrolleySpeed()
         {
             var speedBefore = _trolley.Speed;
-            await _trolleyService.CalculateCurrentSpeed(_trolley);
+            _trolleyService.CalculateCurrentSpeed(_trolley);
             var speedAfter = _trolley.Speed;
 
             //MessageBox.Show($"startspeed: {speedBefore}, currentspeed{speedAfter}");
         }
 
-        private async void TestTrolleyHorizontalePositiefMovement()
+        private void TestTrolleyHorizontalePositiefMovement()
         {
             var oldPositionX = _trolley.PositionX;
-            await _trolleyService.CalculateHorizontalePositiefMovement(_trolley);
+            _trolleyService.CalculateHorizontalPositiveMovement(_trolley);
             var newPositionX = _trolley.PositionX;
 
             MessageBox.Show($"startposition: {oldPositionX}, currentPosition{newPositionX}");
         }
 
-        private async void TestTrolleyHorizontaleNegatiefMovement()
+        private void TestTrolleyHorizontaleNegatiefMovement()
         {
             var oldPositionX = _trolley.PositionX;
-            await _trolleyService.CalculateHorizontaleNegatiefMovement(_trolley);
+            _trolleyService.CalculateHorizontalNegativeMovement(_trolley);
             var newPositionX = _trolley.PositionX;
 
             MessageBox.Show($"startposition: {oldPositionX}, currentPosition{newPositionX}");
