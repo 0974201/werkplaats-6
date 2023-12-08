@@ -35,7 +35,7 @@ export default function Dashboard() {
 
     return (
         <div id={"container"}>
-            <CraneVisualisation />
+            <CraneVisualisation craneInfo={craneInfo} />
             <DataTable craneInfo={craneInfo} />
             <AnimatedGraphs />
             <EmergencyButton />
