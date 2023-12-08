@@ -39,7 +39,7 @@ namespace CraneSim
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _trolley.IsActive = true;
-            TestTrolleyService();
+            //TestTrolleyService();
         }
 
         private void CreateComopnents()
