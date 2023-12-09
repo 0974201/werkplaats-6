@@ -11,6 +11,9 @@ import {useEffect, useState} from "react";
 
 export default function Dashboard() {
     const [craneInfo, setCraneInfo] = useState(null)
+    const [speed, setSpeed] = useState(0)
+
+
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
         const options = {
@@ -35,11 +38,24 @@ export default function Dashboard() {
 
     return (
         <div id={"container"}>
-            <CraneVisualisation craneInfo={craneInfo} />
-            <DataTable craneInfo={craneInfo} />
-            <AnimatedGraphs />
-            <EmergencyButton />
-            <InputVisualisation />
+            <button onClick={(e) => setSpeed(-24)}>2speed</button>
+            <div>
+                <div id={"threeD"}>
+                    <CraneVisualisation speed={speed} craneInfo={craneInfo} />
+                </div>
+                <div id={"dataTable"}>
+                    <DataTable craneInfo={craneInfo} />
+                </div>
+            </div>
+            <div>
+                <div id={"graph"}>
+                    <AnimatedGraphs />
+                </div>
+                <div id={"input"}>
+                    <InputVisualisation />
+                </div>
+            </div>
+
         </div>
     )
 }

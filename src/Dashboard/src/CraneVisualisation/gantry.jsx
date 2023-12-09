@@ -5,10 +5,8 @@ import Boom from "./boom.jsx";
 
 export default function Gantry(props) {
     const meshRef = useRef()
-    const boomRef = useRef()
 
-    useFrame((state, delta) => (meshRef.current.position.z += (props.speed/60)))
-    useFrame((state, delta) => (boomRef.current.position.z += (props.speed/30)))
+    useFrame((state, delta) => (meshRef.current.position.z += (props.MovementZ/60)))
 
     return (
         <>
@@ -19,14 +17,6 @@ export default function Gantry(props) {
             >
                 <boxGeometry args={props.dimensions} />
                 <meshStandardMaterial color={'green'} />
-            </mesh>
-            <mesh
-                {...props}
-                ref={boomRef}
-                scale={1}
-            >
-                <boxGeometry args={[1,1,100]} />
-                <meshStandardMaterial color={'pink'} />
             </mesh>
         </>
 
