@@ -21,6 +21,8 @@ class Spreader:
             self.attached_container = container
             container.is_lifted = True
             self.client.publish("spreader/action", json.dumps({"action": "attach", "container_id": id(container)}))
+        else:
+            self.errors.append("Error: Unable to attach container due to position mismatch or existing attachment")
 
     # release the attached container
     def release_container(self):
