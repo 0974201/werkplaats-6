@@ -19,7 +19,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, props.dimensions[1], legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
 
                 <mesh
@@ -28,7 +28,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, props.dimensions[1], legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
 
                 <mesh
@@ -37,7 +37,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, props.dimensions[1], legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
 
                 <mesh
@@ -46,7 +46,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, props.dimensions[1], legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
 
                 <mesh
@@ -55,7 +55,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[props.dimensions[0], legWidth, legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[props.position[0], props.position[1]+legWidth, props.position[2]+legWidth/2-props.dimensions[2]/2]}
@@ -63,7 +63,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[props.dimensions[0], legWidth, legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[props.position[0], props.position[1]-(48.7-17.5), props.position[2]-legWidth/2+props.dimensions[2]/2]}
@@ -71,7 +71,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[props.dimensions[0], legWidth, legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[props.position[0], props.position[1]-(48.7-17.5), props.position[2]+legWidth/2-props.dimensions[2]/2]}
@@ -79,7 +79,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[props.dimensions[0], legWidth, legWidth]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[-legWidth/2, props.position[1]+legWidth, props.position[2]]}
@@ -87,7 +87,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, legWidth, props.dimensions[2]]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[-(props.dimensions[0]-legWidth/2), props.position[1]+legWidth, props.position[2]]}
@@ -95,7 +95,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[legWidth, legWidth, props.dimensions[2]]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
                 <mesh
                     position={[-props.dimensions[0]/2, props.position[1]+props.dimensions[1]/2, props.position[2]]}
@@ -103,7 +103,7 @@ export default function Gantry(props) {
                     scale={1}
                 >
                     <boxGeometry args={[props.dimensions[0], legWidth, props.dimensions[2]]} />
-                    <meshStandardMaterial color={'green'} />
+                    <meshStandardMaterial color={'purple'} />
                 </mesh>
             </group>
 
