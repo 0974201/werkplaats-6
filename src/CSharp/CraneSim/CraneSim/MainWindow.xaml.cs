@@ -27,6 +27,8 @@ namespace CraneSim
     {
         Trolley _trolley;
         ITrolleyService _trolleyService;
+        Gantry _gantry;
+        IGantryService _gantryService;
 
 
         public MainWindow()
@@ -39,7 +41,8 @@ namespace CraneSim
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _trolley.IsActive = true;
-            //TestTrolleyService();
+            _gantry.IsActive = true;
+            //TestTrolleyService(); < om test te runnen
         }
 
         private void CreateComopnents()
@@ -49,12 +52,19 @@ namespace CraneSim
                 Id = 1,
                 Name = "Trolley",
             };
+
+            _gantry = new Gantry()
+            {
+                Id = 1,
+                Name = "Gantry",
+            };
             
         }
 
         private void CreateServices()
         {
             _trolleyService = new TrolleyService();
+            _gantryService = new GantryService();
         }
 
         #region Testmethodes
