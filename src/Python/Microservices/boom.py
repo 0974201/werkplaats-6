@@ -1,4 +1,7 @@
 import math
+import paho.mqtt.client as paho
+from paho import mqtt
+import json
 
 class Boom:
     def __init__(self, isActive, positionX, positionY, rotationZ, speed):
