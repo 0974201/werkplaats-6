@@ -42,7 +42,8 @@ namespace CraneSim
         {
             _trolley.IsActive = true;
             _gantry.IsActive = true;
-            //TestTrolleyService(); < om test te runnen
+            //TestTrolleyService();
+            //TestGantryService(); < om test te runnen
         }
 
         private void CreateComopnents()
@@ -114,6 +115,54 @@ namespace CraneSim
             var newPositionX = _trolley.PositionX;
 
             MessageBox.Show($"startposition: {oldPositionX}, currentPosition{newPositionX}");
+        }
+
+        private async Task TestGantryService()
+        {
+            TestGantryServiceTimer();
+            _gantryService.CalculateAcceleration(_gantry);
+            TestGantrySpeed();
+            TestGantryPosMovement();
+            await Task.Delay(500);
+            TestGantryNegMovement();
+        }
+
+        private async void TestGantryServiceTimer()
+        {
+            _gantryService.StartStopwatch();
+            await Task.Delay(500);
+            _gantryService.StopStopwatch();
+
+            double result = _gantryService.ReturnStopwatchvalue();
+
+            MessageBox.Show($"{result}");
+        }
+
+        private void TestGantrySpeed()
+        {
+            var speedBefore = _gantry.Speed;
+            _gantryService.CalculateCurrentSpeed(_gantry);
+            var speedAfter = _gantry.Speed;
+
+            MessageBox.Show($"startspeed: {speedBefore}, currentspeed{speedAfter}");
+        }
+
+        private void TestGantryPosMovement()
+        {
+            var oldPos = _gantry.PositionZ;
+            _gantryService.CalculatePositiveMovement(_gantry);
+            var newPos = _gantry.PositionZ;
+
+            //MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
+        }
+
+        private void TestGantryNegMovement()
+        {
+            var oldPos = _gantry.PositionZ;
+            _gantryService.CalculateNegativeMovement(_gantry);
+            var newPos = _gantry.PositionZ;
+
+            //MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
         }
 
         #endregion
