@@ -15,7 +15,4 @@ class Boom:
     def get_rotation(self):
         return self.rotationZ
 
-    def get_speed(self):
-        return self.speed
-
 
