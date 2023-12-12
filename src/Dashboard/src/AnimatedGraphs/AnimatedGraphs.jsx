@@ -5,7 +5,7 @@ export default function AnimatedGraphs() {
 
     return (
         <>
-
+hi
         </>
     )
 }
