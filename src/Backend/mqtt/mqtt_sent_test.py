@@ -35,7 +35,7 @@ def on_message(client, userdata, message):
     payload_string = message.payload.decode('utf-8')
     print(payload_string)
     #passes a call with payload_string to prosses data
-    process_data(payload_string)
+    # process_data(payload_string)
 
 
 # code here
@@ -43,51 +43,31 @@ def on_message(client, userdata, message):
 # will loop endlessly
 
 # will send the data to mqtt
-# def send_data(speed_value, test1):
-#     speed = speed_value
-#     mqtt_send = '{"isActive": true, "component": "Hoist", "acceleration": null, "speed":' + str(speed) + '}'
-#     # test_result = '{"test1":'+str(test1)+', "test2":'+str(test2)+'}'
-#     print(test1)
-#     # client.publish("hoist", payload=test_result, qos=1)
+def send_data(speed_value):
+    # speed = speed_value
+    
+    print(test_value_1)
 
-temp_data_storage = {}
 
-# exmple of hoist to send speed
-class Hoist:
-    def hoist_speed(self, get_speed):
-        current_speed = get_speed
-        speed_value = current_speed
-        # send_data(speed_value)
 
-class multimsg:
-    def moreThenOne(getTest1, getTest2):
-        test1 = getTest1
-        test2 = getTest2
-        # while not None:
-            # send_data(test1, test2)
+# # exmple of hoist to send speed
+# class Hoist:
+#     def hoist_speed(self, get_speed):
+#         current_speed = get_speed
+#         speed_value = current_speed
+#         send_data(speed_value)
+
 
 # prosses the data in useble parts (add all of the componets u need the dat of in here)
-def process_data(payload_string):
-    for data in payload_string:
-        data = json.loads(payload_string)
-        isActive = data.get("isActive", None)
-        component = data.get("component", "")
-        acceleration = data.get("acceleration", None)
-        get_speed = data.get("speed", None)
-        getTest1 = data.get("test1")
-        getTest2 = data.get("test2")
-        identifier= data.get("identifier")
-        temp_data_storage[identifier]
-        if "msg1" in temp_data_storage and "msg2" in temp_data_storage:
-            print(temp_data_storage)
-            mqtt_send ='{"test1":'+str(temp_data_storage["msg1"]["test1"])+', "test2":'+str(temp_data_storage["msg2"]["test2"])+'}'
-            client.publish("hoist", payload="mqtt_send", qos=1)
-        
-    # hoist_instance = Hoist()
-    # hoist_instance.hoist_speed(get_speed)
-    # msg_instance = multimsg()
-    # msg_instance.moreThenOne(getTest1)
-    # msg_instance.moreThenOne(getTest2)
+# def process_data(payload_string):
+#     data = json.loads(payload_string)
+#     isActive = data.get("isActive")
+#     component = data.get("component")
+#     acceleration = data.get("acceleration")
+#     get_speed = data.get("speed")
+
+#     hoist_instance = Hoist()
+#     hoist_instance.hoist_speed(get_speed)
 
 # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
 # userdata is user defined data of any type, updated by user_data_set()
@@ -109,13 +89,17 @@ client.on_publish = on_publish
 
 # subscribe to the picks u need
 # make sure ur not subscribe to ur own component otherwise it will endlessly loop
-client.subscribe("test1")
-client.subscribe("test2")
+client.subscribe("heirt", qos=1)
 
+test_value_1 = '{"msg_type": "test1","isActive": true, "component": "Hoist", "acceleration": null, "speed": 100, "test1":"hello", "identifier": "msg1"}'
+test_value_2 = '{"msg_type": "test1","isActive": true, "component": "Hoist", "acceleration": null, "speed": 100, "test2":"world", "identifier": "msg2"}'
+client.publish("test1", payload=test_value_1, qos=0)
+client.publish("test2", payload=test_value_2, qos=0)
 
 # a single publish, this can also be done in loops, etc.
 
 
 # loop_forever for simplicity, here you need to stop the loop manually
 # you can also use loop_start and loop_stop
-client.loop_forever()
+client.loop_start()
+client.loop_stop()
