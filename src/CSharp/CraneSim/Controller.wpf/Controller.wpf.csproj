@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CraneSim.Core\CraneSim.Core.csproj" />
+    <PackageReference Include="HiveMQtt" Version="0.6.0" />
   </ItemGroup>
 
 </Project>

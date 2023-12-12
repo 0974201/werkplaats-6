@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+venv
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -361,3 +362,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+env/
