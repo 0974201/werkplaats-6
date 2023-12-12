@@ -12,7 +12,7 @@ namespace CraneSim.Core.Interfaces
         float CalculatePositiveMovement(Gantry entity);
         float CalculateNegativeMovement(Gantry entity);
         float CalculateCurrentSpeed(Gantry entity);
-        float CalculateAccelaration(Gantry entity);
+        float CalculateAcceleration(Gantry entity);
         void ResetStopWatch();
         void StartStopwatch();
         void StopStopwatch();
