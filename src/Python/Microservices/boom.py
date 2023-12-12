@@ -3,19 +3,23 @@ import paho.mqtt.client as paho
 from paho import mqtt
 import json
 
+# define class boom 
 class Boom:
-    def __init__(self, isActive, positionX, positionY, rotationZ, speed):
-        self.isActive = isActive
-        self.speed = speed 
-        self.positionX = positionX 
-        self.positionY = positionY 
-        self.rotationZ = rotationZ 
-        
+  # constructor method for the class
+  def __init__(self, isActive, Speed, positionX, positionY, rotationZ):
+    # assign the parameters to the instance attributes
+    self.isActive = isActive 
+    self.Speed = Speed 
+    self.positionX = positionX 
+    self.positionY = positionY 
+    self.rotationZ = rotationZ 
+    
+# method for getting the cordinates
+  def get_coordinates(self):
+    return (self.positionX, self.positionY)
 
-    def get_coordinates(self):
-        return (self.positionX, self.positionY)
-
-    def get_rotation(self):
-        return self.rotationZ
+# method for getting the rotation
+  def get_rotation(self):
+    return self.rotationZ
 
 
