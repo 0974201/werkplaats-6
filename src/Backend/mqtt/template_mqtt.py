@@ -17,6 +17,9 @@ import time
 import paho.mqtt.client as paho
 from paho import mqtt
 import json
+import time
+
+
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -77,8 +80,7 @@ def process_data(payload_string):
         getTest1 = data.get("test1")
         getTest2 = data.get("test2")
         identifier= data.get("identifier")
-        temp_data_storage[identifier]
-        if "msg1" in temp_data_storage and "msg2" in temp_data_storage:
+        if temp_data_storage != {}:
             print(temp_data_storage)
             mqtt_send ='{"test1":'+str(temp_data_storage["msg1"]["test1"])+', "test2":'+str(temp_data_storage["msg2"]["test2"])+'}'
             client.publish("hoist", payload="mqtt_send", qos=1)
