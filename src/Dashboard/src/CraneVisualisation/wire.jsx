@@ -7,15 +7,15 @@ export default function Wire(props) {
 
     const [length, setLength] = useState(props.wireLength)
 
-    useFrame((state, delta) => (meshRef.current.position.z += (props.MovementZ/60)))
-    useFrame((state, delta) => (meshRef.current.position.x += (props.MovementX/60)))
-    // useFrame((state, delta) => (meshRef.current.wireLength += 200))
+    useFrame((state, delta) => {
+        meshRef.current.position.z += (props.MovementZ / 60)
+        meshRef.current.position.x += (props.MovementX/60)
+    })
 
     useEffect(() => {
         setLength(props.wireLength)
     },[props.wireLength])
 
-    console.log(meshRef.current)
     return (
         <mesh
             {...props}
