@@ -18,19 +18,3 @@ body {
     width: 50%;
     height: auto;
 }
-
-#threeD {
-    background-color: lightblue;
-}
-
-#dataTable {
-    background-color: darkred;
-}
-
-#graph {
-    background-color: blueviolet;
-}
-
-#input {
-    background-color: green;
-}
