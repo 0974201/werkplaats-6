@@ -5,7 +5,7 @@ class Hiost:
         self.is_active = True
         self.hoist_y = 500
 
-    def movement(self):
+    def postive_movement(self):
         while self.is_active:
             time.sleep(0.25)
             
@@ -15,6 +15,19 @@ class Hiost:
             if speed >= 2.5:
                 speed = 2.5
             # print(speed)
+            move_hoist_y = speed
+            self.position(move_hoist_y)
+    
+    def negetive_movement(self):
+        while self.is_active:
+            time.sleep(0.25)
+
+            self.acceleration = self.acceleration * 1.1
+            speed = -0.83 * self.acceleration
+
+            if speed <= -2.5:
+                speed = -2.5
+            print(speed)
             move_hoist_y = speed
             self.position(move_hoist_y)
 
@@ -30,4 +43,4 @@ class Hiost:
 
 hiost_instance = Hiost()
 
-hiost_instance.movement()
+hiost_instance.negetive_movement()
