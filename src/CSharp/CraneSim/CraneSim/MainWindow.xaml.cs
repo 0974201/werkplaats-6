@@ -1,22 +1,9 @@
 ﻿using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
 using CraneSim.Core.Services;
-using CraneSim.Dtos.Trolley;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using CraneSim.Infrastructure.MicroServices;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CraneSim
 {
@@ -27,6 +14,7 @@ namespace CraneSim
     {
         Trolley _trolley;
         ITrolleyService _trolleyService;
+        ITrolleyMicroSevice _trolleyMicroSevice;
 
 
         public MainWindow()
@@ -34,12 +22,19 @@ namespace CraneSim
             InitializeComponent();
             CreateComopnents();
             CreateServices();
+            CreateMicroServices();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _trolley.IsActive = true;
             //TestTrolleyService();
+            _trolleyMicroSevice.EstablishBrokerConnection();
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void CreateComopnents()
@@ -55,6 +50,11 @@ namespace CraneSim
         private void CreateServices()
         {
             _trolleyService = new TrolleyService();
+        }
+
+        private void CreateMicroServices()
+        {
+            _trolleyMicroSevice = new TrolleyMicroService(_trolley);
         }
 
         #region Testmethodes
@@ -107,5 +107,7 @@ namespace CraneSim
         }
 
         #endregion
+
+        
     }
 }
