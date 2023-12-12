@@ -17,7 +17,7 @@ namespace CraneSim.Core.Services
         {
             _gantryMoveStopwatch = new Stopwatch();
         }
-        public float CalculateAccelaration(Gantry entity)
+        public float CalculateAcceleration(Gantry entity)
         {
             var accelTime = entity.AccelAndDecelTime;
             var currentSpeed = entity.Speed;
