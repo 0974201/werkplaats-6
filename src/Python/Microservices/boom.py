@@ -1,7 +1,8 @@
 import math
 
 class Boom:
-    def __init__(self, posX, posY, rotZ, speed):
+    def __init__(self, isActive, posX, posY, rotZ, speed):
+        self.isActive = isActive
         self.posX = posX 
         self.posY = posY 
         self.rotZ = rotZ 
