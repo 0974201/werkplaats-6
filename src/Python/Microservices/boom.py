@@ -1,18 +1,19 @@
 import math
 
 class Boom:
-    def __init__(self, isActive, posX, posY, rotZ, speed):
+    def __init__(self, isActive, positionX, positionY, rotationZ, speed):
         self.isActive = isActive
-        self.posX = posX 
-        self.posY = posY 
-        self.rotZ = rotZ 
         self.speed = speed 
+        self.positionX = positionX 
+        self.positionY = positionY 
+        self.rotationZ = rotationZ 
+        
 
     def get_coordinates(self):
-        return (self.posX, self.posY)
+        return (self.positionX, self.positionY)
 
     def get_rotation(self):
-        return self.rotZ
+        return self.rotationZ
 
     def get_speed(self):
         return self.speed
