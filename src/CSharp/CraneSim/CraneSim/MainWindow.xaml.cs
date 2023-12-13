@@ -1,7 +1,6 @@
 ﻿using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
 using CraneSim.Core.Services;
-using CraneSim.Infrastructure.MicroServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -14,27 +13,24 @@ namespace CraneSim
     {
         Trolley _trolley;
         ITrolleyService _trolleyService;
-        ITrolleyMicroSevice _trolleyMicroSevice;
-
 
         public MainWindow()
         {
             InitializeComponent();
             CreateComopnents();
             CreateServices();
-            CreateMicroServices();
         }
 
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _trolley.IsActive = true;
             //TestTrolleyService();
-            _trolleyMicroSevice.EstablishBrokerConnection();
+            _trolleyService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-
+            _trolleyService.DisconnectBrokerConnection();
         }
 
         private void CreateComopnents()
@@ -49,13 +45,9 @@ namespace CraneSim
 
         private void CreateServices()
         {
-            _trolleyService = new TrolleyService();
+            _trolleyService = new TrolleyService(_trolley);
         }
 
-        private void CreateMicroServices()
-        {
-            _trolleyMicroSevice = new TrolleyMicroService(_trolley);
-        }
 
         #region Testmethodes
         private async Task TestTrolleyService() 
