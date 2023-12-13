@@ -5,13 +5,13 @@ import './Dashboard.css'
 import CraneVisualisation from "./CraneVisualisation/CraneVisualisation.jsx";
 import DataTable from "./DataTable/DataTable.jsx";
 import AnimatedGraphs from "./AnimatedGraphs/AnimatedGraphs.jsx";
-import EmergencyButton from "./EmergencyButton/EmergencyButton.jsx";
 import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
 export default function Dashboard() {
     const [craneInfo, setCraneInfo] = useState(null)
     const [speed, setSpeed] = useState(0)
+    const [pressed, setPressed] = useState(true)
 
 
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
@@ -51,7 +51,7 @@ export default function Dashboard() {
                     <AnimatedGraphs />
                 </div>
                 <div id={"input"}>
-                    <InputVisualisation />
+                    <InputVisualisation craneInfo={craneInfo} pressed={pressed} />
                 </div>
             </div>
 
