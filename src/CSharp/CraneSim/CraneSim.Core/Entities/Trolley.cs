@@ -39,6 +39,6 @@ namespace CraneSim.Core.Entities
 
         public float PositionX { get; set; } = 0.0F;
         public float MinPositionX { get; set; } = 0.0F;
-        public float MaxPositionX { get; set; } = 136.0F;
+        public float MaxPositionX { get; set; } = 111.0F;
     }
 }

@@ -5,12 +5,15 @@ import './Dashboard.css'
 import CraneVisualisation from "./CraneVisualisation/CraneVisualisation.jsx";
 import DataTable from "./DataTable/DataTable.jsx";
 import AnimatedGraphs from "./AnimatedGraphs/AnimatedGraphs.jsx";
-import EmergencyButton from "./EmergencyButton/EmergencyButton.jsx";
 import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
 export default function Dashboard() {
     const [craneInfo, setCraneInfo] = useState(null)
+    const [speed, setSpeed] = useState(0)
+    const [pressed, setPressed] = useState(true)
+
+
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
         const options = {
@@ -35,11 +38,23 @@ export default function Dashboard() {
 
     return (
         <div id={"container"}>
-            <CraneVisualisation />
-            <DataTable craneInfo={craneInfo} />
-            <AnimatedGraphs />
-            <EmergencyButton />
-            <InputVisualisation />
+            <div>
+                <div id={"threeD"}>
+                    <CraneVisualisation speed={speed} craneInfo={craneInfo} />
+                </div>
+                <div id={"dataTable"}>
+                    <DataTable craneInfo={craneInfo} />
+                </div>
+            </div>
+            <div>
+                <div id={"graph"}>
+                    <AnimatedGraphs />
+                </div>
+                <div id={"input"}>
+                    <InputVisualisation craneInfo={craneInfo} pressed={pressed} />
+                </div>
+            </div>
+
         </div>
     )
 }
