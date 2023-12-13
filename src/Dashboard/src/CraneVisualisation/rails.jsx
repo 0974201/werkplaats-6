@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 
 export default function Rails(props) {
     const meshRef = useRef()
+    const color = 'darkgray'
 
     return (
         <>
@@ -13,7 +14,7 @@ export default function Rails(props) {
                 scale={1}
             >
                 <boxGeometry args={[3, props.dimensions[1], props.dimensions[2]]} />
-                <meshStandardMaterial color={'yellow'} />
+                <meshStandardMaterial color={color} />
             </mesh>
             <mesh
                 position={[(props.position[0])+(props.dimensions[0]/2)-1.25, props.position[1], props.position[2]]}
@@ -21,7 +22,7 @@ export default function Rails(props) {
                 scale={1}
             >
                 <boxGeometry args={[3, props.dimensions[1], props.dimensions[2]]} />
-                <meshStandardMaterial color={'yellow'} />
+                <meshStandardMaterial color={color} />
             </mesh>
         </>
     )

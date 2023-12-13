@@ -25,14 +25,14 @@ export default function CraneVisualisation(props) {
     const [posGantry, setPosGantry] = useState([-(gantrySize[0]/2), 0, 0])
     const [posBoomFront, setPosBoomFront] = useState([(boomSizeFront[0]/2), 0, posGantry[2]])
     const [posBoomBack, setPosBoomBack] = useState([-boomSizeBack[0]/2, 0, posGantry[2]])
-    const [posTrolley, setPosTrolley] = useState([-47.5+113.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), 0])
+    const [posTrolley, setPosTrolley] = useState([-47.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), 0])
     const [posHoist, setPosHoist] = useState([posTrolley[0], -10, 0])
     const [posShipContainer, setPosShipContainer] = useState([63, -((gantrySize[1]/2)-(shipContainerSize[1])/2), 0])
 
     const [wireLength, setWireLength] = useState(posTrolley[1]-posHoist[1])
 
-    const [movementX, setMovementX] = useState(0)
-    const [movementY, setMovementY] = useState(0)
+    const [movementX, setMovementX] = useState(props.speed)
+    const [movementY, setMovementY] = useState(props.speed)
     const [movementZ, setMovementZ] = useState(props.speed)
     const [rotationBoom, setRotationBoom] = useState()
 
@@ -41,6 +41,8 @@ export default function CraneVisualisation(props) {
     const [cameraLookAt, setCameraLookAt] = useState([20, 0, 0])
 
     useEffect(() => {
+        setMovementX(props.speed)
+        setMovementY(props.speed)
         setMovementZ(props.speed)
     }, [props.speed, props.craneInfo])
 
@@ -81,8 +83,6 @@ export default function CraneVisualisation(props) {
                     <CameraControls /> :
                     <CameraRig lookAt={cameraLookAt} position={cameraPosition} />
                 }
-
-
                 <ambientLight />
                 <pointLight position={[100, 100, 100]} intensity={100000} />
                 <pointLight position={[-100, 100, -100]} intensity={50000} />
@@ -119,6 +119,7 @@ export default function CraneVisualisation(props) {
                         wireLength={wireLength}
                         MovementZ={movementZ}
                         MovementX={movementX}
+                        MovementY={movementY}
                     />
                     <Hoist
                         position={posHoist}

@@ -7,7 +7,7 @@ export default function BoomFront(props) {
     const groupRef = useRef()
 
     useFrame((state, delta) => {
-        meshRef.current.position.z += (props.MovementZ / 60)
+        groupRef.current.position.z += (props.MovementZ / 60)
         // groupRef.current.rotation.z += (1/60)
     })
     const armLength = 2
