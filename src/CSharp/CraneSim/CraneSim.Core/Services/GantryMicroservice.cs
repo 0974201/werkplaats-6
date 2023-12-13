@@ -13,14 +13,25 @@ namespace CraneSim.Infrastructure.Microservices
 {
     public class GantryMicroservice : IGantryMicroservice
     {
+        HiveMQClient _client;
+        HiveMQClientOptions _options;
+
         public void Client_AfterConnect(object sender, AfterConnectEventArgs e)
         {
-            throw new NotImplementedException();
+            _client.AfterConnect += Client_AfterConnect;
+            void Client_AfterConnect(object sender, AfterConnectEventArgs e)
+            {
+                //if you have recieved a message you can find it here, and do stuff when OnMessageRecieved.
+            }
         }
 
         public void Client_BeforeConnect(object sender, BeforeConnectEventArgs e)
         {
-            throw new NotImplementedException();
+            _client.BeforeConnect += Client_BeforeConnect;
+            void Client_BeforeConnect(object sender, BeforeConnectEventArgs e)
+            {
+                //do stuff when OnMessageRecieved.
+            }
         }
 
         public void Client_OnDisconnectRecieved(object sender, OnDisconnectReceivedEventArgs e)
@@ -30,12 +41,23 @@ namespace CraneSim.Infrastructure.Microservices
 
         public void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
-            throw new NotImplementedException();
+            _client.OnMessageReceived += Client_OnMessageReceived;
+            void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
+            {
+                Console.WriteLine($"Recieved message: {e.PublishMessage.PayloadAsString}");
+                //if you have recieved a message you can find it here, and do stuff when OnMessageRecieved.
+            }
         }
 
         public Task DisconnectBrokerConnection()
         {
-            throw new NotImplementedException();
+            _client.OnDisconnectReceived += Client_OnDisconnectRecieved;
+            void Client_OnDisconnectRecieved(object sender, OnDisconnectReceivedEventArgs e)
+            {
+                //if you have recieved a message you can find it here, and do stuff when OnMessageRecieved.
+            }
+
+            return null;
         }
 
         public Task EstablishBrokerConnection()
@@ -58,8 +80,8 @@ namespace CraneSim.Infrastructure.Microservices
             options.Port = 8883;
             options.UseTLS = true;
 
-            options.UserName = "cranemqtt"; //moet gantry worden
-            options.Password = "7va@tWTv2.Jw2yk";
+            options.UserName = "gantrymqtt"; //moet gantry worden
+            options.Password = "xC7gqKU6F!GZ#qM";
 
             var client = new HiveMQClient(options);
 
