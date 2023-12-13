@@ -3,23 +3,14 @@ from dotenv import load_dotenv
 import os
 
 
-def get_environment_variables():
-    load_dotenv()
-    return {
-        "DATABASE_URL": os.getenv("DATABASE_URL")
-    }
-
-
 class Database:
     def __init__(self) -> None:
-        # get environment variables
-        self.environment_variables = get_environment_variables()
-        # create and assign a client to the running mongod instance to property
-        self.mongod_client = MongoClient(self.environment_variables["DATABASE_URL"])
-        # assign, and create if doesn't exist, database to property
-        self.db = self.mongod_client.database
-        # assign, and create if doesn't exist, collection to property
-        self.collection = self.db.collection
+        load_dotenv()
+        self.uri = os.getenv("URI")
+        self.certificate = os.path.join(os.path.dirname(__file__), "certificate/admin.pem")
+        self.client = MongoClient(self.uri, tls=True, tlsCertificateKeyFile=self.certificate)
+        self.database = self.client["st-2324-1-d-wx1-t2-2324-wx1-bear"]
+        self.collection = self.database.crane_state
 
     def insert_document(self, document) -> dict:
         insertion = {
