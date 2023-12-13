@@ -43,7 +43,7 @@ namespace CraneSim
             _trolley.IsActive = true;
             _gantry.IsActive = true;
             //TestTrolleyService();
-            //TestGantryService(); < om test te runnen
+            TestGantryService(); //< om test te runnen
         }
 
         private void CreateComopnents()
@@ -153,7 +153,7 @@ namespace CraneSim
             _gantryService.CalculatePositiveMovement(_gantry);
             var newPos = _gantry.PositionZ;
 
-            //MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
+            MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
         }
 
         private void TestGantryNegMovement()
@@ -162,7 +162,7 @@ namespace CraneSim
             _gantryService.CalculateNegativeMovement(_gantry);
             var newPos = _gantry.PositionZ;
 
-            //MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
+            MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
         }
 
         #endregion
