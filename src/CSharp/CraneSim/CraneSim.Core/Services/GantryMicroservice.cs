@@ -16,6 +16,19 @@ namespace CraneSim.Infrastructure.Microservices
         HiveMQClient _client;
         HiveMQClientOptions _options;
 
+        public void Client_Credentials()
+        {
+            _options = new HiveMQClientOptions();
+            _options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
+            _options.Port = 8883;
+            _options.UseTLS = true;
+
+            _options.UserName = "gantrymqtt"; //ik heb dit liver in een .env staan ;-;
+            _options.Password = "xC7gqKU6F!GZ#qM";
+
+            var client = new HiveMQClient(_options);
+        }
+
         public void Client_AfterConnect(object sender, AfterConnectEventArgs e)
         {
             _client.AfterConnect += Client_AfterConnect;
