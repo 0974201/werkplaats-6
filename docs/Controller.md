@@ -34,3 +34,5 @@ Er is een noodstop. Deze weerhoud alle buttons om een signaal door te geven. Toc
 
  - noodstop => meta/emergency_button
  (luistert of de bool isPressed tru of false is)
+
+ Als de Gantry of de boom bezig is kan men geen andere movement doen.
