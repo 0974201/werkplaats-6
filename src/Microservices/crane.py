@@ -94,7 +94,7 @@ class Crane:
 
     # Send the current status to an MQTT topic
     def send_status_update(self):
-        status = self.get_crane_status()
+        status = self.get_status()
         self.client.subscribe("crane/state", json.dumps(status))
 
     # Properly close the MQTT client connection
