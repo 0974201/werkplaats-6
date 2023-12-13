@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import os
 
 
-class Database:
+class Client:
     def __init__(self) -> None:
         load_dotenv()
         self.uri = os.getenv("URI")
