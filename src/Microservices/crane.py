@@ -1,10 +1,19 @@
+
 import paho.mqtt.client as mqtt
 import json
 
-# Initialize crane position, maximum dimensions, load, and error list
+# import components
+from src/python/microservices/hoist import Hoist
+from src/python/microservices/trolley import Trolley
+from src/python/microservices/boom import Boom
+from src/python/microservices/gantry import Gantry
+from src/python/microservices/spreader import Spreader
+
+# init crane position, maximum dimensions, load, and error list
 class Crane:
     def __init__(self, mqtt_broker, x=0, y=0, z=0, max_height=50, max_arm_length=35, max_load=20):
         
+        # set init position and maximum capacities
         self.x = x
         self.y = y
         self.z = z
@@ -15,7 +24,14 @@ class Crane:
         self.load = 0
         self.errors = []
 
-        # MQTT client setup
+        # init components 
+        self.hoist= Hoist()
+        self.trolley = Trolley()
+        self.boom = Boom()
+        self.gantry = Gantry()
+        self.spreader = Spreader()
+
+        # connect to the mqtt broker and start the mqtt loop
         self.client = mqtt.Client()
         self.client.connect(mqtt_broker)
         self.client.loop_start()
@@ -40,21 +56,28 @@ class Crane:
             self.is_moving = True
             self.send_status_update()
 
-    # Stop crane movement
+    # Stop the crane's movement and update status
     def stop(self):
         self.is_moving = False
         self.send_status_update()
 
-    # Change: Return the current status of the crane with separate position values
+    # Retrieve the crane's overall status and component status
     def get_status(self):
         return {
-            "x_position": self.x,
-            "y_position": self.y,
-            "z_position": self.z,
-            "moving": self.is_moving,
-            "load": self.load,
-            "errors": self.errors
-        }
+            "crane": {
+                "x_position": self.x,
+                "y_position": self.y,
+                "z_position": self.z,
+                "moving": self.is_moving,
+                "load": self.load,
+                "errors": self.errors
+            },
+            "hoist": self.hoist.get_status(),
+            "trolley": self.trolley.get_status(),
+            "boom": self.boom.get_status(),
+            "gantry": self.gantry.get_status(),
+            "spreader": self.spreader.get_status(),
+    }
 
     # Load cargo, ensuring not to exceed max load
     def load_cargo(self, weight):
@@ -71,7 +94,7 @@ class Crane:
 
     # Send the current status to an MQTT topic
     def send_status_update(self):
-        status = self.get_status()
+        status = self.get_crane_status()
         self.client.subscribe("crane/state", json.dumps(status))
 
     # Properly close the MQTT client connection
