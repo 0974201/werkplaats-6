@@ -7,4 +7,3 @@ class DatabaseAPI:
         self.client_database = database.client.Client()
         self.client_broker = broker.temp_client.Client()
 
-DatabaseAPI()
