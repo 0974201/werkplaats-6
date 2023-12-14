@@ -136,7 +136,7 @@ namespace CraneSim.Core.Services
             bool disconnectResult = await _client.DisconnectAsync().ConfigureAwait(false);
         }
 
-        public async Task SendMessage()
+        public async Task SendMessageAsync()
         {
             // Publish
             TrolleyResponseDto trolleyResponse = new TrolleyResponseDto
@@ -164,10 +164,12 @@ namespace CraneSim.Core.Services
             await _client.PublishAsync("crane/components/trolley/state", trolleyDataJson).ConfigureAwait(false);
         }
 
-        public void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
+        public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
+           
             var payload = e.PublishMessage.PayloadAsString;
             TrolleyRequestDto trolleyRequestDto = JsonSerializer.Deserialize<TrolleyRequestDto>(payload);
+
 
             if (trolleyRequestDto.Msg.Command == "0")
             {
@@ -177,7 +179,7 @@ namespace CraneSim.Core.Services
                 _activeTrolley.Speed = 0.0F;
                 _activeTrolley.IsActive = false;
 
-                SendMessage();
+                await SendMessageAsync();
             }
 
             if (trolleyRequestDto.Msg.Command == "1")
@@ -193,9 +195,7 @@ namespace CraneSim.Core.Services
                     _ = CalculateHorizontalPositiveMovement();
                     _ = ReturnStopwatchvalue();
 
-                    Thread.Sleep(1000);
-
-                    SendMessage();
+                    await SendMessageAsync();
                 }
                 else
                 {
@@ -206,12 +206,13 @@ namespace CraneSim.Core.Services
                     _ = CalculateHorizontalPositiveMovement();
                     _ = ReturnStopwatchvalue();
 
-                    Thread.Sleep(1000);
-
-                    SendMessage();
+                    await SendMessageAsync();
                 }
-                
+
             }
+
+
+
             if (trolleyRequestDto.Msg.Command == "-1")
             {
                 //beweging achteruit
@@ -225,9 +226,7 @@ namespace CraneSim.Core.Services
                     _ = CalculateHorizontalNegativeMovement();
                     _ = ReturnStopwatchvalue();
 
-                    Thread.Sleep(1000);
-
-                    SendMessage();
+                    await SendMessageAsync();
                 }
                 else
                 {
@@ -238,9 +237,7 @@ namespace CraneSim.Core.Services
                     _ = CalculateHorizontalNegativeMovement();
                     _ = ReturnStopwatchvalue();
 
-                    Thread.Sleep(1000);
-
-                    SendMessage();
+                    await SendMessageAsync();
                 }
             }
         }
