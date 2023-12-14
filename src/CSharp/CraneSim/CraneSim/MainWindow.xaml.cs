@@ -53,7 +53,6 @@ namespace CraneSim
         private async Task TestTrolleyService() 
         {
             TestTrolleyServiceTimer();
-            //_trolleyService.CalculateConstantAccelaration(_trolley);
             _trolleyService.CalculateConstantAccelaration();
             TestTrolleySpeed();
             TestTrolleyHorizontalePositiefMovement();
@@ -64,7 +63,7 @@ namespace CraneSim
         private async void TestTrolleyServiceTimer()
         {
             _trolleyService.StartStopwatch();
-            await Task.Delay(500); // wait for 1 second
+            await Task.Delay(500); // wait for 0.5 second
             _trolleyService.StopStopwatch();
 
             double result = _trolleyService.ReturnStopwatchvalue();
@@ -75,7 +74,6 @@ namespace CraneSim
         private void TestTrolleySpeed()
         {
             var speedBefore = _trolley.Speed;
-            //_trolleyService.CalculateCurrentSpeed(_trolley);
             _trolleyService.CalculateCurrentSpeed();
             var speedAfter = _trolley.Speed;
 
@@ -85,7 +83,6 @@ namespace CraneSim
         private void TestTrolleyHorizontalePositiefMovement()
         {
             var oldPositionX = _trolley.PositionX;
-            //_trolleyService.CalculateHorizontalPositiveMovement(_trolley);
             _trolleyService.CalculateHorizontalPositiveMovement();
             var newPositionX = _trolley.PositionX;
 
@@ -95,7 +92,6 @@ namespace CraneSim
         private void TestTrolleyHorizontaleNegatiefMovement()
         {
             var oldPositionX = _trolley.PositionX;
-            //_trolleyService.CalculateHorizontalNegativeMovement(_trolley);
             _trolleyService.CalculateHorizontalNegativeMovement();
             var newPositionX = _trolley.PositionX;
 
