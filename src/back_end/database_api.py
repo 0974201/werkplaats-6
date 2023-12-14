@@ -1,10 +1,10 @@
 import database.client
+import broker.client
 
 
 class DatabaseAPI:
     def __init__(self):
-        self.client_db = database.client.Client()
-        self.client_db.insert_document({"test": "tested"})
-
+        self.client_database = database.client.Client()
+        self.client_broker = broker.client.client
 
 DatabaseAPI()

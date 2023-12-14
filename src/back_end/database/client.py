@@ -6,7 +6,7 @@ import os
 class Client:
     def __init__(self) -> None:
         load_dotenv()
-        self.uri = os.getenv("URI")
+        self.uri = os.getenv("DB_URI")
         self.certificate = os.path.join(os.path.dirname(__file__), "certificate/admin.pem")
         self.client = MongoClient(self.uri, tls=True, tlsCertificateKeyFile=self.certificate)
         self.database = self.client["st-2324-1-d-wx1-t2-2324-wx1-bear"]
