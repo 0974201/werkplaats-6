@@ -38,12 +38,3 @@ class Client:
 
     def stop_loop(self):
         self.client.loop_stop()
-
-
-test_data = {
-    "test": "test"
-}
-
-client = Client()
-client.publish_one("crane/state", test_data, 1)
-client.stop_loop()
