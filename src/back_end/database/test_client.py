@@ -4,7 +4,7 @@ import client
 
 class TestDatabase(unittest.TestCase):
     def setUp(self) -> None:
-        self.database = client.Database()
+        self.database = client.Client()
         self.test_data = {
           "meta": {
                   "topic": "crane/state",
