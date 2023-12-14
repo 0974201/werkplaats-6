@@ -26,7 +26,9 @@ namespace CraneSim
     public partial class MainWindow : Window
     {
         Trolley _trolley;
+        Shipcontainer _shipcontainer;
         ITrolleyService _trolleyService;
+        IShipContainerService _shipContainerService;
 
 
         public MainWindow()
@@ -49,12 +51,19 @@ namespace CraneSim
                 Id = 1,
                 Name = "Trolley",
             };
+
+            _shipcontainer = new Shipcontainer()
+            {
+                Id = 1,
+                Name = "ShipContainer"
+            };
             
         }
 
         private void CreateServices()
         {
             _trolleyService = new TrolleyService();
+            _shipContainerService = new ShipContainerServices(_shipcontainer);
         }
 
         #region Testmethodes
