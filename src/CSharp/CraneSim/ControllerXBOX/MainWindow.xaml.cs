@@ -4,6 +4,7 @@ using SharpDX.XInput;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
+using System.Runtime.Intrinsics.X86;
 using System.Windows;
 
 namespace ControllerXBOX
@@ -16,8 +17,13 @@ namespace ControllerXBOX
         private Controller controller;
         private bool leftJoystickUp = false;
         private bool leftJoystickDown = false;
-        private DateTime _lastKeyDownTime = DateTime.MinValue;
-        private DateTime _lastKeyUpTime = DateTime.MinValue;
+        private bool _actionLeft = false;
+        private bool _actionRight = false;
+
+        private bool _arrowPadReleased = false;
+
+        private DateTime _lastTrolleyMessage = DateTime.MinValue;
+        private DateTime _lastGantryMessage = DateTime.MinValue;
         int counter = 0;
 
         private HiveMQClient _client;
@@ -56,20 +62,21 @@ namespace ControllerXBOX
 
         public void TimerTick(object sender, EventArgs e)
         {
-            var state = controller.GetState().Gamepad.LeftThumbY;
+            var gamepadState = controller.GetState().Gamepad;
 
             int joystickThreshold = 5000;
 
-            if (state > joystickThreshold && !leftJoystickUp)
+            // Check left joystick for trolley movement
+            var leftThumbY = gamepadState.LeftThumbY;
+            if (leftThumbY > joystickThreshold && !leftJoystickUp)
             {
                 leftJoystickUp = true;
             }
-            else if (state < -joystickThreshold && !leftJoystickDown)
+            else if (leftThumbY < -joystickThreshold && !leftJoystickDown)
             {
-                
                 leftJoystickDown = true;
             }
-            else if (state > -joystickThreshold && state < joystickThreshold)
+            else if (leftThumbY > -joystickThreshold && leftThumbY < joystickThreshold)
             {
                 if (leftJoystickUp || leftJoystickDown)
                 {
@@ -79,6 +86,27 @@ namespace ControllerXBOX
                 }
             }
 
+            var arrowPadState = gamepadState.Buttons;
+            if (arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
+            {
+                _actionLeft = true;
+                _actionRight = false;
+            }
+            else if (arrowPadState.HasFlag(GamepadButtonFlags.DPadRight))
+            {
+                _actionRight=true;
+                _actionLeft = false;
+            }
+            else if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
+            {
+                if (!_arrowPadReleased)
+                {
+                    ReleaseAction(); // Call ReleaseAction only once when both DPad buttons are released
+                    _arrowPadReleased = true;
+                    _actionLeft = false;
+                    _actionRight = false;
+                }
+            }
 
             if (leftJoystickUp)
             {
@@ -88,15 +116,24 @@ namespace ControllerXBOX
             {
                 TrolleyBackwards();
             }
+            else if (_actionLeft)
+            {
+                GantryLeft();
+            }
+            else if (_actionRight)
+            {
+                GantryRight();
+            }
         }
+        
 
         private async void TrolleyForward()
         {
-            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            if ((DateTime.Now - _lastTrolleyMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastKeyDownTime = DateTime.Now;
+            _lastTrolleyMessage = DateTime.Now;
 
             counter++;
             output.Content = "Left joystick is moved up!" + counter.ToString();
@@ -106,11 +143,11 @@ namespace ControllerXBOX
         private async void TrolleyBackwards()
         {
             
-            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            if ((DateTime.Now - _lastTrolleyMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastKeyDownTime = DateTime.Now;
+            _lastTrolleyMessage = DateTime.Now;
 
             counter++;
             output.Content = "Left joystick is moved down!" + counter.ToString();
@@ -120,12 +157,43 @@ namespace ControllerXBOX
 
         private async void LeftJoystickNeutral()
         {
-            // General code for both up and down scenarios.
-            // Does this once
             output.Content = "Left joystick is neutral!";
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
+
+        private async void GantryLeft()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "DPad is Left!";
+
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
+        }
+        private async void GantryRight()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "DPad is Right!";
+
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
+        }
+        private async void ReleaseAction()
+        {
+            output.Content = "DPad is neutral!";
+
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
+        }
+
     }
 }
