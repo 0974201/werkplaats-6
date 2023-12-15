@@ -61,7 +61,7 @@ namespace CraneSim.Core.Services
             var payload = e.PublishMessage.PayloadAsString;
             MainResponseDto mainRequestDto = JsonSerializer.Deserialize<MainResponseDto>(payload);
 
-            //_activeShipContainer.IsConnectedToHoist = true; // Enkel om te testen
+            _activeShipContainer.IsConnectedToHoist = true; // Enkel om te testen
 
             if (mainRequestDto.Meta.Component == "trolley")
             {
@@ -69,6 +69,7 @@ namespace CraneSim.Core.Services
                 if (_activeShipContainer.IsConnectedToHoist)
                 {
                     _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition.X;
+                    await SendMessageAsync();
                 }
             }
 
@@ -79,6 +80,7 @@ namespace CraneSim.Core.Services
                 {
                     _activeShipContainer.IsConnectedToHoist = true;
                     _activeShipContainer.PositionY = hoistRequestDto.Msg.RelativePosition.PositionY;
+                    await SendMessageAsync();
                 }
                 else
                 {
@@ -93,11 +95,10 @@ namespace CraneSim.Core.Services
                 if (_activeShipContainer.IsConnectedToHoist)
                 {
                     _activeShipContainer.PositionZ = gantryRequestDto.AbsolutePosition.PositionZ;
+                    await SendMessageAsync();
                 }
                 
             }
-
-            await SendMessageAsync();
         }
 
         public async Task SendMessageAsync()
