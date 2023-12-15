@@ -7,14 +7,13 @@ import json
 
 
 class Client:
-    def __init__(self, microservice="", topic="#", qos=0, subscribe=True):
+    def __init__(self, microservice="", topics=[("#", 0)], subscribe=True):
         self.connected = False
         self.subscribed = None
         self.microservice = microservice
-        self.qos = qos
-        self.topic = topic
+        self.topics = topics
+        self.topics.append(("meta/emergency_button", 2))
         self.subscribe = subscribe
-        self.active = True
         load_dotenv()
         self.env = {
             "username": os.getenv("BROKER_USERNAME"),
@@ -26,10 +25,10 @@ class Client:
         self.set_callbacks()
 
     def disconnect(self):
-        self.active = False
+        self.client.disconnect()
 
     def connect(self):
-        def on_connect(client, userdata, flags, rc, properties=None,):
+        def on_connect(client, userdata, flags, rc, properties=None, ):
             print(f"{self.microservice} connected to {self.env['url']}")
             self.connected = True
 
@@ -40,33 +39,34 @@ class Client:
 
     def set_callbacks(self):
         def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-            print(f"{self.microservice} subscribed to {self.topic}")
+            print(f"{self.microservice} subscribed to {self.topics}")
             self.subscribed = True
 
         def on_message(client, userdata, msg):
-            print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topic}")
+            print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
 
         self.client.on_subscribe = on_subscribe
         self.client.on_message = on_message
 
-    def publish(self, msg):
+    def publish(self, topic: str, msg: dict, qos=0):
         def on_publish(client, userdata, mid, properties=None):
-            print(f"{self.microservice} published {msg} to {self.topic}")
+            print(f"{self.microservice} published {msg} to {topic}")
+            pass
+
         self.client.on_publish = on_publish
-        self.client.publish(self.topic, json.dumps(msg), self.qos)
+        self.client.publish(topic, json.dumps(msg), qos)
 
     def serve(self):
         self.connect()
-        self.set_callbacks()
         if self.subscribe:
             self.subscribed = False
-            self.client.subscribe(self.topic)
+            self.client.subscribe(self.topics)
         self.client.loop_start()
 
         while not self.subscribed and self.subscribed is not None:
-            print(f"{self.microservice} subscribing to {self.topic}")
+            print(f"{self.microservice} subscribing to {self.topics}")
             time.sleep(0.5)
 
         while not self.connected:
-            print(f"{self.microservice} connecting to {self.topic}")
+            print(f"{self.microservice} connecting to {self.topics}")
             time.sleep(0.5)

@@ -20,36 +20,42 @@ As of now it can only subscribe and publish to one topic.
    ```python
    import broker.client
    
-   def simulate_movement():
-       data = {
-           "meta":{
-              "topic":"crane/components/hoist/state",
-              "isActive":"bool",
-                  "component":"hoist"
-           },
-           "msg":{
-              "isConnected":"bool",
-              "relativePosition":{
-                 "y":"float"
-           },
-             "speed":{
-                "activeAcceleration":{
-                    "y":"bool"
-                },
-                 "acceleration":{
-                     "y":"float"
-                 },
-               "speed":{
-                   "y":"float"
+   class Hoist:
+    def __init__(self):
+        self.client = Client("hoist", [("crane/components/hoist/command", 0)])
+        self.active = True
+        self.simulate()
+
+    def simulate(self):
+        self.client.serve()
+        while self.active:
+            data = {
+                "meta":
+                    {
+                        "topic": "crane/components/hoist/state",
+                        "isActive": True,
+                        "component": "hoist"
+                    },
+                "msg": {
+                    "isConnected": False,
+                    "relativePosition": {
+                        "y": round(random.uniform(0.0, 10.0), 2)
+                    },
+                    "speed": {
+                        "activeAcceleration": {
+                            "y": True
+                        },
+                        "acceleration": {
+                            "y": round(random.uniform(0.0, 10.0), 2)
+                        },
+                        "speed": {
+                            "y": round(random.uniform(0.0, 10.0), 2)
+                        }
+                    }
                 }
-             }
-         }
-      }    
-       # generate data
-       return data
-   
-   data = simulate_movement()
-   publisher = broker.client.Client(microservice="hoist", topic="crane/components/hoist/state", qos=0, subscribe=True) 
-   
-   publisher.publish(data)
+            }
+            self.client.publish("crane/components/hoist/state", data)
+        self.client.disconnect()
+
+   Hoist()
    ```
