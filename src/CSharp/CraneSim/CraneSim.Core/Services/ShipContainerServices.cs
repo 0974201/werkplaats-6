@@ -19,7 +19,7 @@ namespace CraneSim.Core.Services
 {
     public class ShipContainerServices : IShipContainerService
     {
-        HiveMQClient _client;
+        HiveMQClient _clientShipContainer;
         HiveMQClientOptions _options;
         private readonly Shipcontainer _activeShipContainer;
 
@@ -29,35 +29,39 @@ namespace CraneSim.Core.Services
             _options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
             _options.Port = 8883;
             _options.UseTLS = true;
-            _options.UserName = "craneMqtt"; // to check with hivemq
+            _options.UserName = "cranemqtt"; // to check with hivemq
             _options.Password = "7va@tWTv2.Jw2yk";
 
-            _client = new HiveMQClient(_options);
+            _clientShipContainer = new HiveMQClient(_options);
 
             _activeShipContainer = activeShipContainer;
         }
 
         public async Task EstablishBrokerConnection()
         {
-            var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
-
+            var connectResult = await _clientShipContainer.ConnectAsync().ConfigureAwait(false);
+            
             // Subscribe
-            await _client.SubscribeAsync("crane/components/gantry/command").ConfigureAwait(false);
-            await _client.SubscribeAsync("crane/components/trolley/command").ConfigureAwait(false);
-            await _client.SubscribeAsync("crane/components/hoist/command").ConfigureAwait(false);
+            var trolleyConnection = await _clientShipContainer.SubscribeAsync("crane/components/trolley/state").ConfigureAwait(false);
 
-            _client.OnMessageReceived += Client_OnMessageReceived;
+            var gantryConnection = await _clientShipContainer.SubscribeAsync("crane/components/gantry/state").ConfigureAwait(false);
+            
+            var craneConnection = await _clientShipContainer.SubscribeAsync("crane/components/hoist/state").ConfigureAwait(false);
+
+            _clientShipContainer.OnMessageReceived += Client_OnMessageReceived;
         }
 
         public async Task DisconnectBrokerConnection()
         {
-            bool disconnectResult = await _client.DisconnectAsync().ConfigureAwait(false);
+            bool disconnectResult = await _clientShipContainer.DisconnectAsync().ConfigureAwait(false);
         }
 
         public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
             var payload = e.PublishMessage.PayloadAsString;
             MainResponseDto mainRequestDto = JsonSerializer.Deserialize<MainResponseDto>(payload);
+
+            _activeShipContainer.IsConnectedToHoist = true; // Enkel om te testen
 
             if (mainRequestDto.Meta.Component == "trolley")
             {
@@ -130,7 +134,7 @@ namespace CraneSim.Core.Services
 
             string shipContainerDataJson = JsonSerializer.Serialize(shipContainerResponse);
 
-            await _client.PublishAsync("crane/components/trolley/state", shipContainerDataJson).ConfigureAwait(false);
+            await _clientShipContainer.PublishAsync("crane/components/trolley/state", shipContainerDataJson).ConfigureAwait(false);
         }
     }
 }
