@@ -14,6 +14,8 @@ namespace ControllerXBOX
         private Controller controller;
         private bool leftJoystickUp = false;
         private bool leftJoystickDown = false;
+        private DateTime _lastKeyDownTime = DateTime.MinValue;
+        private DateTime _lastKeyUpTime = DateTime.MinValue;
         int counter = 0;
 
         public MainWindow()
@@ -21,10 +23,6 @@ namespace ControllerXBOX
             InitializeComponent();
             ListenToXbox();
 
-            System.Windows.Threading.DispatcherTimer timerToSend = new System.Windows.Threading.DispatcherTimer();
-            timerToSend.Tick += new EventHandler(SendMessage);
-            timerToSend.Interval = TimeSpan.FromMilliseconds(1000);
-            timerToSend.Start();
         }
 
         public void ListenToXbox()
@@ -34,7 +32,7 @@ namespace ControllerXBOX
             // Start a timer to check the controller input periodically
             System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(TimerTick);
-            timer.Interval = TimeSpan.FromMilliseconds(100); /
+            timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Start();
         }
 
@@ -68,12 +66,18 @@ namespace ControllerXBOX
             // Call DoSomethingOnLeftJoystickUp every tick when the joystick is up
             if (leftJoystickUp)
             {
-                DoSomethingOnLeftJoystickUp();
+                LeftJoystickUp();
             }
         }
 
-        private void DoSomethingOnLeftJoystickUp()
+        private void LeftJoystickUp()
         {
+            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            {
+                // Ignore the key press if it's been less than a second since the last one
+                return;
+            }
+            _lastKeyDownTime = DateTime.Now;
             counter++;
             output.Content = "Left joystick is moved up!" + counter.ToString();
         }
