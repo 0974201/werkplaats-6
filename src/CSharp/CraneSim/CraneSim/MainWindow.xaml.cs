@@ -28,11 +28,13 @@ namespace CraneSim
             _trolley.IsActive = true;
             //TestTrolleyService();
             _trolleyService.EstablishBrokerConnection();
+            _shipContainerService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
+            _shipContainerService.DisconnectBrokerConnection();
         }
 
         private void CreateComopnents()
