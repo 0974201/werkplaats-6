@@ -13,7 +13,7 @@ namespace CraneSim.Core.Interfaces
 
         Task EstablishBrokerConnection();
         Task DisconnectBrokerConnection();
-        Task SendMessage();
+        Task SendMessageAsync();
         void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e);
     }
 }
