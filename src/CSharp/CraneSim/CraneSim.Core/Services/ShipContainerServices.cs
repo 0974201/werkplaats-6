@@ -29,7 +29,7 @@ namespace CraneSim.Core.Services
             _options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
             _options.Port = 8883;
             _options.UseTLS = true;
-            _options.UserName = "cranemqtt"; // to check with hivemq
+            _options.UserName = "cranemqtt";
             _options.Password = "7va@tWTv2.Jw2yk";
 
             _clientShipContainer = new HiveMQClient(_options);
