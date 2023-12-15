@@ -94,12 +94,12 @@ namespace ControllerXBOX
             }
             else if (arrowPadState.HasFlag(GamepadButtonFlags.DPadRight))
             {
-                _actionRight=true;
+                _actionRight = true;
                 _actionLeft = false;
             }
-            else if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
+            else if(_arrowPadReleased)
             {
-                if (!_arrowPadReleased)
+                if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
                 {
                     ReleaseAction(); // Call ReleaseAction only once when both DPad buttons are released
                     _arrowPadReleased = true;
@@ -107,6 +107,7 @@ namespace ControllerXBOX
                     _actionRight = false;
                 }
             }
+            
 
             if (leftJoystickUp)
             {
@@ -125,7 +126,7 @@ namespace ControllerXBOX
                 GantryRight();
             }
         }
-        
+
 
         private async void TrolleyForward()
         {
@@ -142,7 +143,7 @@ namespace ControllerXBOX
         }
         private async void TrolleyBackwards()
         {
-            
+
             if ((DateTime.Now - _lastTrolleyMessage).TotalSeconds < 1)
             {
                 return;
