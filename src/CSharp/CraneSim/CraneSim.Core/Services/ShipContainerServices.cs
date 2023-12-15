@@ -135,7 +135,7 @@ namespace CraneSim.Core.Services
 
             string shipContainerDataJson = JsonSerializer.Serialize(shipContainerResponse);
 
-            await _clientShipContainer.PublishAsync("crane/components/trolley/state", shipContainerDataJson).ConfigureAwait(false);
+            await _clientShipContainer.PublishAsync("containers/1/state", shipContainerDataJson).ConfigureAwait(false);
         }
     }
 }
