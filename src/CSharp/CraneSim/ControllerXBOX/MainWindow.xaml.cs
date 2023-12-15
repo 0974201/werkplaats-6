@@ -219,9 +219,7 @@ namespace ControllerXBOX
                 return;
             }
             _lastTrolleyMessage = DateTime.Now;
-
-            counter++;
-            output.Content = "Left joystick is moved up!" + counter.ToString();
+            output.Content = "Trolley is moved up!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
@@ -233,15 +231,13 @@ namespace ControllerXBOX
                 return;
             }
             _lastTrolleyMessage = DateTime.Now;
-
-            counter++;
-            output.Content = "Left joystick is moved down!" + counter.ToString();
+            output.Content = "Trolley is moved down!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
         private async void LeftJoystickNeutral()
         {
-            output.Content = "Left joystick is neutral!";
+            output.Content = "Trolley is neutral!";
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
@@ -254,7 +250,7 @@ namespace ControllerXBOX
                 return;
             }
             _lastGantryMessage = DateTime.Now;
-            output.Content = "DPad is Left!";
+            output.Content = "Gantry is going Left!";
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
@@ -266,14 +262,14 @@ namespace ControllerXBOX
                 return;
             }
             _lastGantryMessage = DateTime.Now;
-            output.Content = "DPad is Right!";
+            output.Content = "Gantry is going Right!";
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
         }
         private async void ReleaseAction()
         {
-            output.Content = "DPad is neutral!";
+            output.Content = "Gantry is neutral!";
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
@@ -286,7 +282,7 @@ namespace ControllerXBOX
                 return;
             }
             _lastGantryMessage = DateTime.Now;
-            output.Content = "Right joystick is moved up!";
+            output.Content = "Hoist is moved up!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
@@ -297,13 +293,13 @@ namespace ControllerXBOX
                 return;
             }
             _lastGantryMessage = DateTime.Now;
-            output.Content = "Right joystick is moved Down!";
+            output.Content = "Hoist is moved Down!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/2\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
         private async void HoistRelease()
         {
-            output.Content = "Right joystick is in neutral!";
+            output.Content = "Hoist is in neutral!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
@@ -343,7 +339,6 @@ namespace ControllerXBOX
             var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"true\"}}";
             await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
         }
-
         private async void UndoNoodStop()
         {
             output.Content = "Undid the Noodstop!";
