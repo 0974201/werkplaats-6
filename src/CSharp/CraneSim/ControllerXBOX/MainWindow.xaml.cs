@@ -23,6 +23,7 @@ namespace ControllerXBOX
         private bool _rightJoystickDown = false;
         private bool _yUp = false;
         private bool _aDown = false;
+        private bool _isInStop = false;
 
         private bool _arrowPadReleased = true;
         private bool _letterButtonsReleased = true;
@@ -66,129 +67,147 @@ namespace ControllerXBOX
 
         public void TimerTick(object sender, EventArgs e)
         {
+
             var gamepadState = controller.GetState().Gamepad;
-
-            int joystickThreshold = 5000;
-
             var leftThumbY = gamepadState.LeftThumbY;
-            if (leftThumbY > joystickThreshold && !_leftJoystickUp)
-            {
-                _leftJoystickUp = true;
-            }
-            else if (leftThumbY < -joystickThreshold && !_leftJoystickDown)
-            {
-                _leftJoystickDown = true;
-            }
-            else if (leftThumbY > -joystickThreshold && leftThumbY < joystickThreshold)
-            {
-                if (_leftJoystickUp || _leftJoystickDown)
-                {
-                    LeftJoystickNeutral();
-                    _leftJoystickUp = false;
-                    _leftJoystickDown = false;
-                }
-            }
-
-            var arrowPadState = gamepadState.Buttons;
-            if (arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
-            {
-                _actionLeft = true;
-                _actionRight = false;
-                _arrowPadReleased = false;
-            }
-            else if (arrowPadState.HasFlag(GamepadButtonFlags.DPadRight))
-            {
-                _actionRight = true;
-                _actionLeft = false;
-                _arrowPadReleased = false;
-            }
-            else if (!_arrowPadReleased)
-            {
-                if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
-                {
-                    ReleaseAction();
-                    _arrowPadReleased = true;
-                    _actionLeft = false;
-                    _actionRight = false;
-                }
-            }
-            if (arrowPadState.HasFlag(GamepadButtonFlags.Y))
-            {
-                _yUp = true;
-                _aDown = false;
-                _letterButtonsReleased = false;
-            }
-            else if (arrowPadState.HasFlag(GamepadButtonFlags.A))
-            {
-                _aDown = true;
-                _yUp = false;
-                _letterButtonsReleased = false;
-            }
-            else if (!_letterButtonsReleased)
-            {
-                if (!arrowPadState.HasFlag(GamepadButtonFlags.Y) && !arrowPadState.HasFlag(GamepadButtonFlags.A))
-                {
-                    BoomRelease();
-                    _letterButtonsReleased = true;
-                    _yUp = false;
-                    _aDown = false;
-                }
-            }
-
             var rightThumbY = gamepadState.RightThumbY;
-            if (rightThumbY > joystickThreshold && !_rightJoystickUp)
+            int joystickThreshold = 5000;
+            var arrowPadState = gamepadState.Buttons;
+
+
+            if (_isInStop)
             {
-                _rightJoystickUp = true;
-            }
-            else if (rightThumbY < -joystickThreshold && !_rightJoystickDown)
-            {
-                _rightJoystickDown = true;
-            }
-            else if (rightThumbY > -joystickThreshold && rightThumbY < joystickThreshold)
-            {
-                if (_rightJoystickUp || _rightJoystickDown)
+                if (arrowPadState.HasFlag(GamepadButtonFlags.X))
                 {
-                    HoistRelease();
-                    _rightJoystickUp = false;
-                    _rightJoystickDown = false;
+                    UndoNoodStop();
+                    _isInStop = false;
                 }
             }
+            else
+            {
+                if (leftThumbY > joystickThreshold && !_leftJoystickUp)
+                {
+                    _leftJoystickUp = true;
+                }
+                else if (leftThumbY < -joystickThreshold && !_leftJoystickDown)
+                {
+                    _leftJoystickDown = true;
+                }
+                else if (leftThumbY > -joystickThreshold && leftThumbY < joystickThreshold)
+                {
+                    if (_leftJoystickUp || _leftJoystickDown)
+                    {
+                        LeftJoystickNeutral();
+                        _leftJoystickUp = false;
+                        _leftJoystickDown = false;
+                    }
+                }
 
 
-            if (_leftJoystickUp)
-            {
-                TrolleyForward();
-            }
-            else if (_leftJoystickDown)
-            {
-                TrolleyBackwards();
-            }
+                if (arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
+                {
+                    _actionLeft = true;
+                    _actionRight = false;
+                    _arrowPadReleased = false;
+                }
+                else if (arrowPadState.HasFlag(GamepadButtonFlags.DPadRight))
+                {
+                    _actionRight = true;
+                    _actionLeft = false;
+                    _arrowPadReleased = false;
+                }
+                else if (!_arrowPadReleased)
+                {
+                    if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
+                    {
+                        ReleaseAction();
+                        _arrowPadReleased = true;
+                        _actionLeft = false;
+                        _actionRight = false;
+                    }
+                }
+                if (arrowPadState.HasFlag(GamepadButtonFlags.Y))
+                {
+                    _yUp = true;
+                    _aDown = false;
+                    _letterButtonsReleased = false;
+                }
+                else if (arrowPadState.HasFlag(GamepadButtonFlags.A))
+                {
+                    _aDown = true;
+                    _yUp = false;
+                    _letterButtonsReleased = false;
+                }
+                else if (!_letterButtonsReleased)
+                {
+                    if (!arrowPadState.HasFlag(GamepadButtonFlags.Y) && !arrowPadState.HasFlag(GamepadButtonFlags.A))
+                    {
+                        BoomRelease();
+                        _letterButtonsReleased = true;
+                        _yUp = false;
+                        _aDown = false;
+                    }
+                }
+                if (arrowPadState.HasFlag(GamepadButtonFlags.B))
+                {
+                    NoodStop();
+                    _isInStop = true;
+                }
 
-            else if (_actionLeft)
-            {
-                GantryLeft();
-            }
-            else if (_actionRight)
-            {
-                GantryRight();
-            }
+                if (rightThumbY > joystickThreshold && !_rightJoystickUp)
+                {
+                    _rightJoystickUp = true;
+                }
+                else if (rightThumbY < -joystickThreshold && !_rightJoystickDown)
+                {
+                    _rightJoystickDown = true;
+                }
+                else if (rightThumbY > -joystickThreshold && rightThumbY < joystickThreshold)
+                {
+                    if (_rightJoystickUp || _rightJoystickDown)
+                    {
+                        HoistRelease();
+                        _rightJoystickUp = false;
+                        _rightJoystickDown = false;
+                    }
+                }
 
-            else if (_rightJoystickUp)
-            {
-                HoistUp();
-            }
-            else if (_rightJoystickDown)
-            {
-                HoistDown();
-            }
 
-            else if (_yUp)
-            {
-                BoomUp();
-            }
-            else if (_aDown)
-            {
-                BoomDown();
+                if (_leftJoystickUp)
+                {
+                    TrolleyForward();
+                }
+                else if (_leftJoystickDown)
+                {
+                    TrolleyBackwards();
+                }
+
+                else if (_actionLeft)
+                {
+                    GantryLeft();
+                }
+                else if (_actionRight)
+                {
+                    GantryRight();
+                }
+
+                else if (_rightJoystickUp)
+                {
+                    HoistUp();
+                }
+                else if (_rightJoystickDown)
+                {
+                    HoistDown();
+                }
+
+                else if (_yUp)
+                {
+                    BoomUp();
+                }
+                else if (_aDown)
+                {
+                    BoomDown();
+                }
             }
         }
 
@@ -297,7 +316,8 @@ namespace ControllerXBOX
             }
             _lastGantryMessage = DateTime.Now;
             output.Content = "Boom is moved up!";
-
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/1\"},\"msg\":{\"target\":\"Boom\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         private async void BoomDown()
         {
@@ -307,12 +327,28 @@ namespace ControllerXBOX
             }
             _lastGantryMessage = DateTime.Now;
             output.Content = "Boom is moved Down!";
-
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/2\"},\"msg\":{\"target\":\"Boom\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         private async void BoomRelease()
         {
             output.Content = "Boom is in neutral!";
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/command\"},\"msg\":{\"target\":\"Boom\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
 
+        private async void NoodStop()
+        {
+            output.Content = "Noodstop has been pressed!!!!\nPress X to reset";
+            var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"true\"}}";
+            await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
+        }
+
+        private async void UndoNoodStop()
+        {
+            output.Content = "Undid the Noodstop!";
+            var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"false\"}}";
+            await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
+        }
     }
 }
