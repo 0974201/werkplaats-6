@@ -1,22 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using HiveMQtt.Client;
-using HiveMQtt.Client.Events;
 using HiveMQtt.Client.Options;
-using NLog.Targets;
 
 namespace Controller.wpf
 {
@@ -27,6 +13,9 @@ namespace Controller.wpf
         private HiveMQClient _client;
         private bool _gantryMovement = false;
         private bool _boomMovement = false;
+
+        private DateTime _lastKeyDownTime = DateTime.MinValue;
+        private DateTime _lastKeyUpTime = DateTime.MinValue;
         public MainWindow()
         {
             InitializeComponent();
@@ -48,11 +37,25 @@ namespace Controller.wpf
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            {
+                // Ignore the key press if it's been less than a second since the last one
+                return;
+            }
+
+            _lastKeyDownTime = DateTime.Now;
             HandleKeyPress(e.Key);
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
+            if ((DateTime.Now - _lastKeyUpTime).TotalSeconds < 1)
+            {
+                // Ignore the key release if it's been less than a second since the last one
+                return;
+            }
+
+            _lastKeyUpTime = DateTime.Now;
             HandleKeyRelease(e.Key);
         }
         private void HandleKeyPress(Key key)
