@@ -21,8 +21,11 @@ namespace ControllerXBOX
         private bool _actionRight = false;
         private bool _rightJoystickUp = false;
         private bool _rightJoystickDown = false;
+        private bool _yUp = false;
+        private bool _aDown = false;
 
         private bool _arrowPadReleased = true;
+        private bool _letterButtonsReleased = true;
 
         private DateTime _lastTrolleyMessage = DateTime.MinValue;
         private DateTime _lastGantryMessage = DateTime.MinValue;
@@ -55,7 +58,6 @@ namespace ControllerXBOX
         {
             controller = new Controller(UserIndex.One);
 
-            // Start a timer to check the controller input periodically
             System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(TimerTick);
             timer.Interval = TimeSpan.FromMilliseconds(100);
@@ -68,7 +70,6 @@ namespace ControllerXBOX
 
             int joystickThreshold = 5000;
 
-            // Check left joystick for trolley movement
             var leftThumbY = gamepadState.LeftThumbY;
             if (leftThumbY > joystickThreshold && !_leftJoystickUp)
             {
@@ -101,14 +102,36 @@ namespace ControllerXBOX
                 _actionLeft = false;
                 _arrowPadReleased = false;
             }
-            else if(!_arrowPadReleased)
+            else if (!_arrowPadReleased)
             {
                 if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
                 {
-                    ReleaseAction(); // Call ReleaseAction only once when both DPad buttons are released
+                    ReleaseAction();
                     _arrowPadReleased = true;
                     _actionLeft = false;
                     _actionRight = false;
+                }
+            }
+            if (arrowPadState.HasFlag(GamepadButtonFlags.Y))
+            {
+                _yUp = true;
+                _aDown = false;
+                _letterButtonsReleased = false;
+            }
+            else if (arrowPadState.HasFlag(GamepadButtonFlags.A))
+            {
+                _aDown = true;
+                _yUp = false;
+                _letterButtonsReleased = false;
+            }
+            else if (!_letterButtonsReleased)
+            {
+                if (!arrowPadState.HasFlag(GamepadButtonFlags.Y) && !arrowPadState.HasFlag(GamepadButtonFlags.A))
+                {
+                    BoomRelease();
+                    _letterButtonsReleased = true;
+                    _yUp = false;
+                    _aDown = false;
                 }
             }
 
@@ -157,6 +180,15 @@ namespace ControllerXBOX
             else if (_rightJoystickDown)
             {
                 HoistDown();
+            }
+
+            else if (_yUp)
+            {
+                BoomUp();
+            }
+            else if (_aDown)
+            {
+                BoomDown();
             }
         }
 
@@ -236,7 +268,6 @@ namespace ControllerXBOX
             }
             _lastGantryMessage = DateTime.Now;
             output.Content = "Right joystick is moved up!";
-
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
@@ -256,6 +287,31 @@ namespace ControllerXBOX
             output.Content = "Right joystick is in neutral!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
+        }
+
+        private async void BoomUp()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "Boom is moved up!";
+
+        }
+        private async void BoomDown()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "Boom is moved Down!";
+
+        }
+        private async void BoomRelease()
+        {
+            output.Content = "Boom is in neutral!";
         }
 
     }
