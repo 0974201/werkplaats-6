@@ -1,18 +1,28 @@
 import database.client
-import broker.temp_client
+import broker.client
+import json
 
 
 class DatabaseAPI:
-    def __init__(self):
+    def __init__(self, active=True):
+        self.active = active
         self.client_database = database.client.Client()
-        self.client_broker = broker.temp_client.Client()
+        self.client_broker = broker.client.Client(
+            "database_api",
+            [("crane/state", 1)]
+        )
+        self.set_callbacks()
+        self.serve()
 
-    def insert_message(self, topic, qos):
-        self.client_broker.connect()
-        self.client_broker.subscribe_one(topic=topic, qos=qos)
+    def set_callbacks(self):
+        def insert_document(client, userdata, msg):
+            print(msg.payload.decode("utf-8"))
 
+        self.client_broker.client.on_message = insert_document
 
-database_api = DatabaseAPI()
+    def serve(self):
+        self.client_broker.serve()
+        while self.active:
+            pass
 
-database_api.loop()
-database_api.insert_message("#", 1)
+        self.client_broker.disconnect()

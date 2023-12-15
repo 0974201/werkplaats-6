@@ -44,6 +44,7 @@ class Client:
 
         def on_message(client, userdata, msg):
             print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
+            return msg
 
         self.client.on_subscribe = on_subscribe
         self.client.on_message = on_message
