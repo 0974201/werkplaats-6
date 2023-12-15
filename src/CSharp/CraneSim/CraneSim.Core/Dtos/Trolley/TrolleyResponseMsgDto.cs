@@ -9,8 +9,11 @@ namespace CraneSim.Core.Dtos.Trolley
 {
     public class TrolleyResponseMsgDto
     {
+        //[JsonPropertyName("relativePosition")]
+        //public float RelativePosition { get; set; }
+
         [JsonPropertyName("relativePosition")]
-        public float RelativePosition { get; set; }
+        public TrolleyResponseRelPosDto RelativePosition { get; set; }
 
         [JsonPropertyName("speed")]
         public TrolleyResponseSpeedDto Speed { get; set; }
