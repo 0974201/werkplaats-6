@@ -20,7 +20,7 @@ namespace ControllerXBOX
         private bool _actionLeft = false;
         private bool _actionRight = false;
 
-        private bool _arrowPadReleased = false;
+        private bool _arrowPadReleased = true;
 
         private DateTime _lastTrolleyMessage = DateTime.MinValue;
         private DateTime _lastGantryMessage = DateTime.MinValue;
@@ -91,13 +91,15 @@ namespace ControllerXBOX
             {
                 _actionLeft = true;
                 _actionRight = false;
+                _arrowPadReleased = false;
             }
             else if (arrowPadState.HasFlag(GamepadButtonFlags.DPadRight))
             {
                 _actionRight = true;
                 _actionLeft = false;
+                _arrowPadReleased = false;
             }
-            else if(_arrowPadReleased)
+            else if(!_arrowPadReleased)
             {
                 if (!arrowPadState.HasFlag(GamepadButtonFlags.DPadRight) && !arrowPadState.HasFlag(GamepadButtonFlags.DPadLeft))
                 {
@@ -108,7 +110,6 @@ namespace ControllerXBOX
                 }
             }
             
-
             if (leftJoystickUp)
             {
                 TrolleyForward();
