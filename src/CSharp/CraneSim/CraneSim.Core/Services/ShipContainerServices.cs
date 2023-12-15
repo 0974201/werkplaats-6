@@ -2,6 +2,7 @@
 using CraneSim.Core.Dtos.Hoist;
 using CraneSim.Core.Dtos.Main;
 using CraneSim.Core.Dtos.ShipContainer;
+using CraneSim.Core.Dtos.Trolley;
 using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
 using HiveMQtt.Client;
@@ -56,28 +57,43 @@ namespace CraneSim.Core.Services
         public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
             var payload = e.PublishMessage.PayloadAsString;
-            MainRequestDto mainRequestDto = JsonSerializer.Deserialize<MainRequestDto>(payload);
+            MainResponseDto mainRequestDto = JsonSerializer.Deserialize<MainResponseDto>(payload);
 
             if (mainRequestDto.Meta.Component == "trolley")
             {
-                //TrolleyRequestDto trolleyRequestDto = JsonSerializer.Deserialize<MainRequestDto>(payload);
-                _activeShipContainer.PositionX = 0.0F;
+                TrolleyResponseDto trolleyRequestDto = JsonSerializer.Deserialize<TrolleyResponseDto>(payload);
+                if (_activeShipContainer.IsConnectedToHoist)
+                {
+                    _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition.X;
+                }
             }
 
             if (mainRequestDto.Meta.Component == "hoist")
             {
-                HoistRequestDto hoistRequestDto = JsonSerializer.Deserialize<HoistRequestDto>(payload);
-                _activeShipContainer.PositionY = 0.0F;
+                HoistResponseDto hoistRequestDto = JsonSerializer.Deserialize<HoistResponseDto>(payload);
+                if (hoistRequestDto.Msg.IsConnected)
+                {
+                    _activeShipContainer.IsConnectedToHoist = true;
+                    _activeShipContainer.PositionY = hoistRequestDto.Msg.RelativePosition.PositionY;
+                }
+                else
+                {
+                    _activeShipContainer.IsConnectedToHoist = false;
+                }
+                
             }
 
             if (mainRequestDto.Meta.Component == "gantry")
             {
-                GantryRequestDto gantryRequestDto = JsonSerializer.Deserialize<GantryRequestDto>(payload);
-                _activeShipContainer.PositionZ = 0.0F;
+                GantryResponseDto gantryRequestDto = JsonSerializer.Deserialize<GantryResponseDto>(payload);
+                if (_activeShipContainer.IsConnectedToHoist)
+                {
+                    _activeShipContainer.PositionZ = gantryRequestDto.AbsolutePosition.PositionZ;
+                }
+                
             }
 
             await SendMessageAsync();
-
         }
 
         public async Task SendMessageAsync()
