@@ -20,17 +20,21 @@ namespace ControllerXBOX
         {
             InitializeComponent();
             ListenToXbox();
+
+            System.Windows.Threading.DispatcherTimer timerToSend = new System.Windows.Threading.DispatcherTimer();
+            timerToSend.Tick += new EventHandler(SendMessage);
+            timerToSend.Interval = TimeSpan.FromMilliseconds(1000);
+            timerToSend.Start();
         }
 
         public void ListenToXbox()
         {
-            // Initialize the controller
             controller = new Controller(UserIndex.One);
 
             // Start a timer to check the controller input periodically
             System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(TimerTick);
-            timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust the interval as needed
+            timer.Interval = TimeSpan.FromMilliseconds(100); /
             timer.Start();
         }
 
@@ -86,5 +90,8 @@ namespace ControllerXBOX
             output.Content = "Left joystick is neutral!";
         }
 
+        public void SendMessage(object sender, EventArgs e)
+        {
+        }
     }
 }
