@@ -13,7 +13,7 @@ namespace CraneSim.Core.Dtos.ShipContainer
         public bool IsConnected { get; set; }
 
         [JsonPropertyName("absolutePosition")]
-        public ShipContainerResponseAbsolPosDto ShipCont { get; set; }
+        public ShipContainerResponseAbsolPosDto ShipContAbsolPos { get; set; }
 
         [JsonPropertyName("speed")]
         public ShipContainerResponseSpeedDto Speed { get; set; }

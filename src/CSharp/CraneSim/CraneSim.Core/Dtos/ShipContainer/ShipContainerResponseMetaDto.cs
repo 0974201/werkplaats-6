@@ -12,7 +12,7 @@ namespace CraneSim.Core.Dtos.ShipContainer
         [JsonPropertyName("topic")]
         public string Topic { get; set; } = "containers/id/state";
         [JsonPropertyName("id")]
-        public bool Id { get; set; }
+        public int Id { get; set; }
         [JsonPropertyName("component")]
         public string Component { get; set; } = "container";
 

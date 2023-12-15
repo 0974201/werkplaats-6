@@ -13,6 +13,6 @@ namespace CraneSim.Core.Dtos.ShipContainer
         public ShipContainerResponseMetaDto Meta { get; set; }
 
         [JsonPropertyName("msg")]
-        public ShipContainerResponseSpeedDto Msg { get; set; }
+        public ShipContainerResponseMsgDto Msg { get; set; }
     }
 }
