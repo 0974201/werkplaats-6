@@ -53,10 +53,9 @@ namespace CraneSim
 
         private void CreateServices()
         {
-            _trolleyService = new TrolleyService();
+            _trolleyService = new TrolleyService(_trolley);
             _shipContainerService = new ShipContainerServices(_shipcontainer);
         }
-
 
         #region Testmethodes
         private async Task TestTrolleyService() 
