@@ -8,7 +8,7 @@ using HiveMQtt.Client.Events;
 
 namespace CraneSim.Core.Interfaces
 {
-    internal interface IGantryService
+    public interface IGantryService
     {
         /* calculate pos */
 
