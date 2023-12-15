@@ -1,4 +1,6 @@
-﻿using SharpDX.XInput;
+﻿using HiveMQtt.Client;
+using HiveMQtt.Client.Options;
+using SharpDX.XInput;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
@@ -18,11 +20,27 @@ namespace ControllerXBOX
         private DateTime _lastKeyUpTime = DateTime.MinValue;
         int counter = 0;
 
+        private HiveMQClient _client;
+
         public MainWindow()
         {
             InitializeComponent();
             ListenToXbox();
+            InitConnection();
+        }
+        private async void InitConnection()
+        {
+            HiveMQClientOptions options = new HiveMQClientOptions();
+            options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
+            options.Port = 8883;
+            options.UseTLS = true;
 
+            options.UserName = "cranemqtt";
+            options.Password = "7va@tWTv2.Jw2yk";
+
+            _client = new HiveMQClient(options);
+
+            var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
         }
 
         public void ListenToXbox()
@@ -38,10 +56,8 @@ namespace ControllerXBOX
 
         public void TimerTick(object sender, EventArgs e)
         {
-            // Get the current state of the left joystick Y-axis
             var state = controller.GetState().Gamepad.LeftThumbY;
 
-            // Define a threshold for joystick movement
             int joystickThreshold = 5000;
 
             if (state > joystickThreshold && !leftJoystickUp)
@@ -50,52 +66,66 @@ namespace ControllerXBOX
             }
             else if (state < -joystickThreshold && !leftJoystickDown)
             {
-                DoSomethingOnLeftJoystickDown();
+                
                 leftJoystickDown = true;
             }
             else if (state > -joystickThreshold && state < joystickThreshold)
             {
                 if (leftJoystickUp || leftJoystickDown)
                 {
-                    DoSomethingOnLeftJoystickNeutral();
+                    LeftJoystickNeutral();
                     leftJoystickUp = false;
                     leftJoystickDown = false;
                 }
             }
 
-            // Call DoSomethingOnLeftJoystickUp every tick when the joystick is up
+
             if (leftJoystickUp)
             {
-                LeftJoystickUp();
+                TrolleyForward();
+            }
+            else if (leftJoystickDown)
+            {
+                TrolleyBackwards();
             }
         }
 
-        private void LeftJoystickUp()
+        private async void TrolleyForward()
         {
             if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
             {
-                // Ignore the key press if it's been less than a second since the last one
                 return;
             }
             _lastKeyDownTime = DateTime.Now;
+
             counter++;
             output.Content = "Left joystick is moved up!" + counter.ToString();
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
-
-        private void DoSomethingOnLeftJoystickDown()
+        private async void TrolleyBackwards()
         {
-            output.Content = "Left joystick is moved down!";
+            
+            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastKeyDownTime = DateTime.Now;
+
+            counter++;
+            output.Content = "Left joystick is moved down!" + counter.ToString();
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
 
-        private void DoSomethingOnLeftJoystickNeutral()
+        private async void LeftJoystickNeutral()
         {
             // General code for both up and down scenarios.
             // Does this once
             output.Content = "Left joystick is neutral!";
-        }
 
-        public void SendMessage(object sender, EventArgs e)
-        {
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
     }
 }
