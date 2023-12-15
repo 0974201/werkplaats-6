@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CraneSim.Core\CraneSim.Core.csproj" />
+    <ProjectReference Include="..\CraneSim.Infrastructure\CraneSim.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
