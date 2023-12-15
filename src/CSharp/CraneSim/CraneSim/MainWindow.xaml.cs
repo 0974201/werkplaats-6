@@ -43,7 +43,7 @@ namespace CraneSim
             _trolley.IsActive = true;
             _gantry.IsActive = true;
             //TestTrolleyService();
-            TestGantryService(); //< om test te runnen
+            //TestGantryService(); < om test te runnen
         }
 
         private void CreateComopnents()
