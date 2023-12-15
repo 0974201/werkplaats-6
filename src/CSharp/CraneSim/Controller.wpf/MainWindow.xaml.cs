@@ -1,22 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using HiveMQtt.Client;
-using HiveMQtt.Client.Events;
 using HiveMQtt.Client.Options;
-using NLog.Targets;
 
 namespace Controller.wpf
 {
@@ -25,6 +11,11 @@ namespace Controller.wpf
 
         private bool _isStop = false;
         private HiveMQClient _client;
+        private bool _gantryMovement = false;
+        private bool _boomMovement = false;
+
+        private DateTime _lastKeyDownTime = DateTime.MinValue;
+        private DateTime _lastKeyUpTime = DateTime.MinValue;
         public MainWindow()
         {
             InitializeComponent();
@@ -46,60 +37,79 @@ namespace Controller.wpf
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            if ((DateTime.Now - _lastKeyDownTime).TotalSeconds < 1)
+            {
+                // Ignore the key press if it's been less than a second since the last one
+                return;
+            }
+
+            _lastKeyDownTime = DateTime.Now;
             HandleKeyPress(e.Key);
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
+            if ((DateTime.Now - _lastKeyUpTime).TotalSeconds < 1)
+            {
+                // Ignore the key release if it's been less than a second since the last one
+                return;
+            }
+
+            _lastKeyUpTime = DateTime.Now;
             HandleKeyRelease(e.Key);
         }
         private void HandleKeyPress(Key key)
         {
             if (!_isStop)
             {
-                if (key == Key.W)
+                if (!_boomMovement && !_gantryMovement)
                 {
-                    infoLabel.Content = "Trolley forward!";
-                    SendTrolleyForward();
-                }
-                if (key == Key.S)
-                {
-                    infoLabel.Content = "Trolley backwards!";
-                    SendTrolleyBackward();
-                }
+                    if (key == Key.W)
+                    {
+                        infoLabel.Content = "Trolley forward!";
+                        SendTrolleyForward();
+                    }
+                    if (key == Key.S)
+                    {
+                        infoLabel.Content = "Trolley backwards!";
+                        SendTrolleyBackward();
+                    }
 
-                if (key == Key.A)
-                {
-                    infoLabel.Content = "Gantry left!";
-                    SendGantryLeft();
-                }
-                if (key == Key.D)
-                {
-                    infoLabel.Content = "Gantry right!";
-                    SendGantryRight();
-                }
+                    if (key == Key.Up)
+                    {
+                        infoLabel.Content = "Hoist up!";
+                        SendHoistUp();
+                    }
+                    if (key == Key.Down)
+                    {
+                        infoLabel.Content = "Hoist down!";
+                        SendHoistDown();
+                    }
 
-                if (key == Key.Up)
-                {
-                    infoLabel.Content = "Hoist up!";
-                    SendHoistUp();
-                }
-                if (key == Key.Down)
-                {
-                    infoLabel.Content = "Hoist down!";
-                    SendHoistDown();
-                }
-
-
-                if (key == Key.Q)
-                {
-                    infoLabel.Content = "Boom Up!";
-                    SendBoomUp();
-                }
-                if (key == Key.E)
-                {
-                    infoLabel.Content = "Boom Down!";
-                    SendBoomDown();
+                    if (key == Key.A)
+                    {
+                        infoLabel.Content = "Gantry left!";
+                        _gantryMovement = true;
+                        SendGantryLeft();
+                    }
+                    if (key == Key.D)
+                    {
+                        infoLabel.Content = "Gantry right!";
+                        _gantryMovement = true;
+                        SendGantryRight();
+                    }
+                    if (key == Key.Q)
+                    {
+                        infoLabel.Content = "Boom Up!";
+                        _boomMovement = true;
+                        SendBoomUp();
+                    }
+                    if (key == Key.E)
+                    {
+                        infoLabel.Content = "Boom Down!";
+                        _boomMovement = true;
+                        SendBoomDown();
+                    }
                 }
 
 
@@ -125,48 +135,60 @@ namespace Controller.wpf
         {
             if (!_isStop)
             {
-                if (key == Key.W)
+                if (!_boomMovement && !_gantryMovement)
                 {
-                    infoLabel.Content = "Trolley stopped!";
-                    TrolleyStop();
-                }
-                if (key == Key.S)
-                {
-                    infoLabel.Content = "Trolley stopped!";
-                    TrolleyStop();
-                }
+                    if (key == Key.W)
+                    {
+                        infoLabel.Content = "Trolley stopped!";
+                        TrolleyStop();
+                    }
+                    if (key == Key.S)
+                    {
+                        infoLabel.Content = "Trolley stopped!";
+                        TrolleyStop();
+                    }
 
-                if (key == Key.A)
-                {
-                    infoLabel.Content = "Gantry stopped!";
-                    GantryStop();
-                }
-                if (key == Key.D)
-                {
-                    infoLabel.Content = "Gantry stopped!";
-                    GantryStop();
-                }
 
-                if (key == Key.Up)
-                {
-                    infoLabel.Content = "Hoist stopped!";
-                    HoistStop();
+                    if (key == Key.Up)
+                    {
+                        infoLabel.Content = "Hoist stopped!";
+                        HoistStop();
+                    }
+                    if (key == Key.Down)
+                    {
+                        infoLabel.Content = "Hoist stopped!";
+                        HoistStop();
+                    }
                 }
-                if (key == Key.Down)
+                if (!_boomMovement)
                 {
-                    infoLabel.Content = "Hoist stopped!";
-                    HoistStop();
+                    if (key == Key.A)
+                    {
+                        infoLabel.Content = "Gantry stopped!";
+                        _gantryMovement = false;
+                        GantryStop();
+                    }
+                    if (key == Key.D)
+                    {
+                        infoLabel.Content = "Gantry stopped!";
+                        _gantryMovement = false;
+                        GantryStop();
+                    }
                 }
-
-                if (key == Key.Q)
+                if (!_gantryMovement)
                 {
-                    infoLabel.Content = "Boom stopped!";
-                    BoomStop();
-                }
-                if (key == Key.E)
-                {
-                    infoLabel.Content = "Boom stopped!";
-                    BoomStop();
+                    if (key == Key.Q)
+                    {
+                        infoLabel.Content = "Boom stopped!";
+                        _boomMovement = false;
+                        BoomStop();
+                    }
+                    if (key == Key.E)
+                    {
+                        infoLabel.Content = "Boom stopped!";
+                        _boomMovement = false;
+                        BoomStop();
+                    }
                 }
             }
         }
@@ -174,43 +196,43 @@ namespace Controller.wpf
         #region press
         private async void SendTrolleyForward()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/1\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
-            await _client.PublishAsync("crane/components/trolley/1", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
         private async void SendTrolleyBackward()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/2\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"2\"}}";
-            await _client.PublishAsync("crane/components/trolley/2", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
         private async void SendGantryLeft()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/2\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"2\"}}";
-            await _client.PublishAsync("crane/components/gantry/2", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
         }
         private async void SendGantryRight()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/1\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"1\"}}";
-            await _client.PublishAsync("crane/components/gantry/1", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
         }
         private async void SendHoistUp()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/1\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
-            await _client.PublishAsync("crane/components/hoist/1", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
+            await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
         private async void SendHoistDown()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/2\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"2\"}}";
-            await _client.PublishAsync("crane/components/hoist/2", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/2\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
         private async void SendBoomUp()
         {
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/1\"},\"msg\":{\"target\":\"Boom\",\"command\":\"1\"}}";
-            await _client.PublishAsync("crane/components/boom/1", jsonString).ConfigureAwait(false);
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         private async void SendBoomDown()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/2\"},\"msg\":{\"target\":\"Boom\",\"command\":\"2\"}}";
-            await _client.PublishAsync("crane/components/boom/2", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/2\"},\"msg\":{\"target\":\"Boom\",\"command\":\"-1\"}}";
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         private async void SendNoodstop()
         {
@@ -227,23 +249,23 @@ namespace Controller.wpf
         #region release
         private async void TrolleyStop()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/0\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
-            await _client.PublishAsync("crane/components/trolley/0", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
         private async void GantryStop()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/0\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
-            await _client.PublishAsync("crane/components/gantry/0", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
         }
         private async void HoistStop()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/0\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"0\"}}";
-            await _client.PublishAsync("crane/components/hoist/0", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
         private async void BoomStop()
         {
-            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/0\"},\"msg\":{\"target\":\"Boom\",\"command\":\"0\"}}";
-            await _client.PublishAsync("crane/components/boom/0", jsonString).ConfigureAwait(false);
+            var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/command\"},\"msg\":{\"target\":\"Boom\",\"command\":\"0\"}}";
+            await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         #endregion
     }
