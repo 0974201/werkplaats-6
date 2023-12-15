@@ -15,10 +15,12 @@ namespace ControllerXBOX
     public partial class MainWindow : Window
     {
         private Controller controller;
-        private bool leftJoystickUp = false;
-        private bool leftJoystickDown = false;
+        private bool _leftJoystickUp = false;
+        private bool _leftJoystickDown = false;
         private bool _actionLeft = false;
         private bool _actionRight = false;
+        private bool _rightJoystickUp = false;
+        private bool _rightJoystickDown = false;
 
         private bool _arrowPadReleased = true;
 
@@ -68,21 +70,21 @@ namespace ControllerXBOX
 
             // Check left joystick for trolley movement
             var leftThumbY = gamepadState.LeftThumbY;
-            if (leftThumbY > joystickThreshold && !leftJoystickUp)
+            if (leftThumbY > joystickThreshold && !_leftJoystickUp)
             {
-                leftJoystickUp = true;
+                _leftJoystickUp = true;
             }
-            else if (leftThumbY < -joystickThreshold && !leftJoystickDown)
+            else if (leftThumbY < -joystickThreshold && !_leftJoystickDown)
             {
-                leftJoystickDown = true;
+                _leftJoystickDown = true;
             }
             else if (leftThumbY > -joystickThreshold && leftThumbY < joystickThreshold)
             {
-                if (leftJoystickUp || leftJoystickDown)
+                if (_leftJoystickUp || _leftJoystickDown)
                 {
                     LeftJoystickNeutral();
-                    leftJoystickUp = false;
-                    leftJoystickDown = false;
+                    _leftJoystickUp = false;
+                    _leftJoystickDown = false;
                 }
             }
 
@@ -109,15 +111,36 @@ namespace ControllerXBOX
                     _actionRight = false;
                 }
             }
-            
-            if (leftJoystickUp)
+
+            var rightThumbY = gamepadState.RightThumbY;
+            if (rightThumbY > joystickThreshold && !_rightJoystickUp)
+            {
+                _rightJoystickUp = true;
+            }
+            else if (rightThumbY < -joystickThreshold && !_rightJoystickDown)
+            {
+                _rightJoystickDown = true;
+            }
+            else if (rightThumbY > -joystickThreshold && rightThumbY < joystickThreshold)
+            {
+                if (_rightJoystickUp || _rightJoystickDown)
+                {
+                    HoistRelease();
+                    _rightJoystickUp = false;
+                    _rightJoystickDown = false;
+                }
+            }
+
+
+            if (_leftJoystickUp)
             {
                 TrolleyForward();
             }
-            else if (leftJoystickDown)
+            else if (_leftJoystickDown)
             {
                 TrolleyBackwards();
             }
+
             else if (_actionLeft)
             {
                 GantryLeft();
@@ -125,6 +148,15 @@ namespace ControllerXBOX
             else if (_actionRight)
             {
                 GantryRight();
+            }
+
+            else if (_rightJoystickUp)
+            {
+                HoistUp();
+            }
+            else if (_rightJoystickDown)
+            {
+                HoistDown();
             }
         }
 
@@ -156,7 +188,6 @@ namespace ControllerXBOX
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/trolley/command\"},\"msg\":{\"target\":\"Trolley\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/trolley/command", jsonString).ConfigureAwait(false);
         }
-
         private async void LeftJoystickNeutral()
         {
             output.Content = "Left joystick is neutral!";
@@ -195,6 +226,29 @@ namespace ControllerXBOX
 
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/gantry/command\"},\"msg\":{\"target\":\"Gantry\",\"command\":\"0\"}}";
             await _client.PublishAsync("crane/components/gantry/command", jsonString).ConfigureAwait(false);
+        }
+
+        private async void HoistUp()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "Right joystick is moved up!";
+        }
+        private async void HoistDown()
+        {
+            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastGantryMessage = DateTime.Now;
+            output.Content = "Right joystick is moved Down!";
+        }
+        private async void HoistRelease()
+        {
+            output.Content = "Right joystick is in neutral!";
         }
 
     }
