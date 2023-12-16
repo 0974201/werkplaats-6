@@ -31,11 +31,13 @@ namespace CraneSim
             //TestTrolleyService();
             //TestGantryService(); < om test te runnen
             _trolleyService.EstablishBrokerConnection();
+            _gantryService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
+            _gantryService.EstablishBrokerConnection();
         }
 
         private void CreateComponents()
