@@ -43,13 +43,16 @@ class Boom:
 
   # publish the current status of the boom to an mqtt topic
   def publish_status(self):
-    status = {
-        "isActive": self.isActive,
-        "position": {"x": self._positionX, "y": self._positionY},
-        "rotation": self._rotationZ,
-        "speed": self._speed
-    }
-    self.client.publish("boom/state", json.dumps(status))
+    try:
+        status = {
+            "isActive": self.isActive,
+            "position": {"x": self._positionX, "y": self._positionY},
+            "rotation": self._rotationZ,
+            "speed": self._speed
+        }
+        self.client.publish("boom/state", json.dumps(status))
+    except Exception as e:
+        print(f"Failed to publish status: {e}")
 
   # stop the mqtt client
   def stop_mqtt(self):
