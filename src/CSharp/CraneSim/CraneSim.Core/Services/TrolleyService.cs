@@ -1,88 +1,100 @@
 ﻿using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
-using System;
-using System.Collections.Generic;
+using HiveMQtt.Client.Options;
+using HiveMQtt.Client;
 using System.Diagnostics;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+using HiveMQtt.Client.Events;
+using System.Text.Json;
+using CraneSim.Core.Dtos.Trolley;
 
 namespace CraneSim.Core.Services
 {
     public class TrolleyService : ITrolleyService
     {
-        public readonly Stopwatch _trolleyMoveStopwatch;
+        public static readonly Stopwatch _trolleyMoveStopwatch = new Stopwatch();
 
-        public TrolleyService()
+        HiveMQClient _client;
+        HiveMQClientOptions _options;
+        public readonly Trolley _activeTrolley;
+
+        public TrolleyService(Trolley activeTrolley)
         {
-            _trolleyMoveStopwatch = new Stopwatch();
+            _options = new HiveMQClientOptions();
+            _options.Host = "c0bbe3829ad14fe3b24e5c51247f57c1.s2.eu.hivemq.cloud";
+            _options.Port = 8883;
+            _options.UseTLS = true;
+            _options.UserName = "cranemqtt";
+            _options.Password = "7va@tWTv2.Jw2yk";
+
+            _client = new HiveMQClient(_options);
+
+            _activeTrolley = activeTrolley;
+
         }
 
-        public float CalculateConstantAccelaration(Trolley entity)
+        public float CalculateConstantAccelaration()
         {
-            var accelerationTime = entity.AccelAndDecelarationTime;
-            var currentSpeed = entity.Speed;
-            var topspeed = entity.MaximumSpeedValue;
+            var accelerationTime = _activeTrolley.AccelAndDecelarationTime;
+            var currentSpeed = _activeTrolley.Speed;
+            var topspeed = _activeTrolley.MaximumSpeedValue;
 
             float result = (topspeed - currentSpeed) / accelerationTime;
 
-            entity.Acceleration = result;
+            _activeTrolley.Acceleration = result;
             return result;
         }
 
-        public float CalculateCurrentSpeed(Trolley entity)
+        public float CalculateCurrentSpeed()
         {
             var timePast = (float)ReturnStopwatchvalue();
 
-            if (timePast < entity.AccelAndDecelarationTime)
+            if (timePast < _activeTrolley.AccelAndDecelarationTime)
             {
-                entity.Speed = entity.Acceleration * timePast;
+                _activeTrolley.Speed = _activeTrolley.Acceleration * timePast;
             }
             else
             {
-                entity.Speed = entity.MaximumSpeedValue;
+                _activeTrolley.Speed = _activeTrolley.MaximumSpeedValue;
             }
 
-            entity.Speed = Math.Min(entity.MaximumSpeedValue, entity.Speed);
+            _activeTrolley.Speed = Math.Min(_activeTrolley.MaximumSpeedValue, _activeTrolley.Speed);
 
-            return entity.Speed;
+            return _activeTrolley.Speed;
         }
 
-        public float CalculateHorizontalNegativeMovement(Trolley entity)
+        public float CalculateHorizontalNegativeMovement()
         {
 
             var timePast = (float)ReturnStopwatchvalue();
-            var currentSpeed = entity.Speed;
+            var currentSpeed = _activeTrolley.Speed;
             var travelledDistance = currentSpeed * timePast;
 
-            float newPositionX = entity.PositionX - travelledDistance;
+            float newPositionX = _activeTrolley.PositionX - travelledDistance;
 
-            if (newPositionX < entity.MinPositionX)
+            if (newPositionX < _activeTrolley.MinPositionX)
             {
-                newPositionX = 0.0F;
+                newPositionX = _activeTrolley.MinPositionX;
             }
 
-            entity.PositionX = newPositionX;
+            _activeTrolley.PositionX = newPositionX;
 
             return newPositionX;
         }
 
-        public float CalculateHorizontalPositiveMovement(Trolley entity)
+        public float CalculateHorizontalPositiveMovement()
         {
             var timePast = (float)ReturnStopwatchvalue();
-            var currentSpeed = entity.Speed;
+            var currentSpeed = _activeTrolley.Speed;
             var travelledDistance = currentSpeed * timePast;
 
-            float newPositionX = entity.PositionX + travelledDistance;
+            float newPositionX = _activeTrolley.PositionX + travelledDistance;
 
-            if (newPositionX > entity.MaxPositionX)
+            if (newPositionX > _activeTrolley.MaxPositionX)
             {
-                newPositionX = 136.0F;
+                newPositionX = _activeTrolley.MaxPositionX;
             }
 
-            entity.PositionX = newPositionX;
+            _activeTrolley.PositionX = newPositionX;
 
             return newPositionX;
         }
@@ -106,5 +118,129 @@ namespace CraneSim.Core.Services
         {
             return (double)(_trolleyMoveStopwatch.ElapsedMilliseconds) / 1000;
         }
+
+        //============== ⬇⬇⬇⬇ Mqtt code ⬇⬇⬇⬇ ==================
+
+        public async Task EstablishBrokerConnection()
+        {
+            var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
+
+            // Subscribe
+            await _client.SubscribeAsync("crane/components/trolley/command").ConfigureAwait(false);
+
+            _client.OnMessageReceived += Client_OnMessageReceived;
+        }
+
+        public async Task DisconnectBrokerConnection()
+        {
+            bool disconnectResult = await _client.DisconnectAsync().ConfigureAwait(false);
+        }
+
+        public async Task SendMessageAsync()
+        {
+            // Publish
+            TrolleyResponseDto trolleyResponse = new TrolleyResponseDto
+            {
+                Meta = new TrolleyResponseMetaDto
+                {
+                    Component = "trolley",
+                    IsActive = _activeTrolley.IsActive,
+                    Topic = "crane/components/trolley/state"
+                },
+                Msg = new TrolleyResponseMsgDto
+                {
+                    RelativePosition = _activeTrolley.PositionX,
+                    Speed = new TrolleyResponseSpeedDto
+                    {
+                        Acceleration = _activeTrolley.Acceleration,
+                        ActiveAcceleration = _activeTrolley.IsActive,
+                        Speed = _activeTrolley.Speed
+                    }
+                }
+            };
+
+            string trolleyDataJson = JsonSerializer.Serialize(trolleyResponse);
+
+            await _client.PublishAsync("crane/components/trolley/state", trolleyDataJson).ConfigureAwait(false);
+        }
+
+        public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
+        {
+           
+            var payload = e.PublishMessage.PayloadAsString;
+            TrolleyRequestDto trolleyRequestDto = JsonSerializer.Deserialize<TrolleyRequestDto>(payload);
+
+
+            if (trolleyRequestDto.Msg.Command == "0")
+            {
+                //beweging stopt
+                StopStopwatch();
+                ResetStopWatch();
+                _activeTrolley.Speed = 0.0F;
+                _activeTrolley.IsActive = false;
+
+                await SendMessageAsync();
+            }
+
+            if (trolleyRequestDto.Msg.Command == "1")
+            {
+                //beweging vooruit
+                if (_trolleyMoveStopwatch.ElapsedMilliseconds == 0.0)
+                {
+                    StartStopwatch();
+                    _activeTrolley.IsActive = true;
+
+                    _ = CalculateConstantAccelaration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateHorizontalPositiveMovement();
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessageAsync();
+                }
+                else
+                {
+                    _activeTrolley.IsActive = true;
+
+                    _ = CalculateConstantAccelaration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateHorizontalPositiveMovement();
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessageAsync();
+                }
+
+            }
+
+
+
+            if (trolleyRequestDto.Msg.Command == "-1")
+            {
+                //beweging achteruit
+                if (_trolleyMoveStopwatch.ElapsedMilliseconds == 0.0)
+                {
+                    StartStopwatch();
+                    _activeTrolley.IsActive = true;
+
+                    _ = CalculateConstantAccelaration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateHorizontalNegativeMovement();
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessageAsync();
+                }
+                else
+                {
+                    _activeTrolley.IsActive = true;
+
+                    _ = CalculateConstantAccelaration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateHorizontalNegativeMovement();
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessageAsync();
+                }
+            }
+        }
+
     }
 }
