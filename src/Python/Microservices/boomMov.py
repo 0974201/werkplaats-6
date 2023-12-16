@@ -11,3 +11,13 @@ class Boom:
     self.positionX = positionX 
     self.positionY = positionY 
     self.rotationZ = rotationZ 
+
+      # method to move the boom up or down
+  def move(self, direction):
+    # Check if the boom is active
+    if self.isActive:
+      # Check the direction of the movement
+      if direction == "up":
+        # Increase the vertical position by the speed times the sine of the angle
+        self.positionY += self.Speed * math.sin(math.radians(self.rotationZ))
+
