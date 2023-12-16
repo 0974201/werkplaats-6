@@ -56,8 +56,11 @@ class Boom:
 
   # stop the mqtt client
   def stop_mqtt(self):
-      self.client.loop_stop()
-      self.client.disconnect
+    try:
+        self.client.loop_stop()
+        self.client.disconnect()
+    except Exception as e:
+        print(f"Failed to stop MQTT: {e}")
 
 # template_mqtt
 # boom = Boom('mqtt_broker_address', True, 0, 0, 90, 5)
