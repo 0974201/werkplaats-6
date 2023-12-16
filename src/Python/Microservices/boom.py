@@ -25,10 +25,13 @@ class Boom:
 
   # update the position of the boom x moves right and left position y moves up and down
   def update_position(self, deltaX, deltaY):
-    self._positionX += deltaX
-    self._positionY += deltaY
-    self.publish_status()
-
+    try:
+        self._positionX += deltaX
+        self._positionY += deltaY
+        self.publish_status()
+    except Exception as e:
+        print(f"Failed to update position: {e}")
+        
   # update the rotation of the boom
   def update_rotation(self, deltaZ):
         self._rotationZ += deltaZ # update the rotation angle with deltaZ
