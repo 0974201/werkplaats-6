@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
+using CraneSim.Dtos.Gantry;
 using HiveMQtt.Client;
 using HiveMQtt.Client.Events;
 using HiveMQtt.Client.Options;
@@ -142,9 +144,16 @@ namespace CraneSim.Core.Services
             bool disconnectResult = await _client.DisconnectAsync().ConfigureAwait(false);
         }
 
-        public Task SendMessage()
+        public async Task SendMessage()
         {
-            throw new NotImplementedException();
+            GantryResponseDto gantryResponse = new GantryResponseDto
+            {
+
+            };
+
+            string GantryData = JsonSerializer.Serialize(gantryResponse);
+
+            await _client.PublishAsync("crane/components/gantry/state", GantryData).ConfigureAwait(false);
         }
         
         public void Client_AfterConnect(object sender, AfterConnectEventArgs e)
