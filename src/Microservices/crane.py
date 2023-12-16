@@ -7,7 +7,6 @@ import json
 # from src/python/microservices/trolley import Trolley
 # from src/python/microservices/boom import Boom
 # from src/python/microservices/gantry import Gantry
-# from src/python/microservices/spreader import Spreader
 
 # init crane position, maximum dimensions, load, and error list
 class Crane:
@@ -34,7 +33,7 @@ class Crane:
         # connect to the mqtt broker and start the mqtt loop
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
-        # self.client.on_message = self.on_message
+        self.client.on_message = self.on_message
         self.client.connect(mqtt_broker)
         self.client.loop_start()
 
@@ -54,7 +53,7 @@ class Crane:
             self.stop()
             return
 
-       # Update crane position within allowed limits
+       # update crane position within allowed limits
         new_x_position = min(max(self.x + x_position_change, 0), self.max_arm_length)
         new_y_position = min(max(self.y + y_position_change, 0), self.max_height)
         new_z_position = min(max(self.z + z_position_change, 0), self.max_load)
@@ -66,28 +65,62 @@ class Crane:
             self.is_moving = True
             self.send_status_update()
 
-    # Stop the crane's movement and update status
+    # stop the crane's movement and update status
     def stop(self):
         self.is_moving = False
         self.send_status_update()
 
-    # Retrieve the crane's overall status and component status
+    # retrieve the crane's overall status and component status
     def get_status(self):
-        return {
-            "crane": {
-                "x_position": self.x,
-                "y_position": self.y,
-                "z_position": self.z,
-                "moving": self.is_moving,
-                "load": self.load,
-                "errors": self.errors
+        # create a detailed status of the crane and its components
+        crane_status = {
+            "meta": {
+                "topic": "crane/state",
+                "isActive": self.is_moving
             },
-            "hoist": self.hoist.get_status(),
-            "trolley": self.trolley.get_status(),
-            "boom": self.boom.get_status(),
-            "gantry": self.gantry.get_status(),
-            "spreader": self.spreader.get_status(),
-    }
+            "absolutePosition": {
+                "x": self.x,
+                "y": self.y,
+                "z": self.z
+            },
+            "container": {
+                "id": self.load > 0,  # containerid
+                "isConnected": self.load > 0  # connection
+            },
+            # correct attributes?
+            "components": [
+                {
+                    "component": "hoist",
+                    "isActive": self.hoist.isActive,
+                    "isConnected": True,  
+                    "absolutePosition": self.hoist.get_position(),  
+                    "speed": self.hoist.get_speed()  
+                },
+                {
+                    "component": "trolley",
+                    "isActive": self.trolley.isActive,
+                    "isConnected": True,  
+                    "absolutePosition": self.trolley.get_position(),  
+                    "speed": self.trolley.get_speed()  # 
+                },
+                {
+                    "component": "boom",
+                    "isActive": self.boom.isActive,
+                    "isConnected": True,  
+                    "absolutePosition": self.boom.get_position(),  
+                    "speed": self.boom.get_speed()  
+                },
+                {
+                    "component": "gantry",
+                    "isActive": self.gantry.isActive,
+                    "isConnected": True,  
+                    "absolutePosition": self.gantry.get_position(),  
+                    "speed": self.gantry.get_speed() 
+                },
+                
+            ]
+        }
+        return crane_status
 
     # Send the current status to an MQTT topic
     def send_status_update(self):
