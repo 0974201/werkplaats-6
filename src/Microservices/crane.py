@@ -3,11 +3,11 @@ import paho.mqtt.client as mqtt
 import json
 
 # import components
-from src/python/microservices/hoist import Hoist
-from src/python/microservices/trolley import Trolley
-from src/python/microservices/boom import Boom
-from src/python/microservices/gantry import Gantry
-from src/python/microservices/spreader import Spreader
+# from src/python/microservices/hoist import Hoist
+# from src/python/microservices/trolley import Trolley
+# from src/python/microservices/boom import Boom
+# from src/python/microservices/gantry import Gantry
+# from src/python/microservices/spreader import Spreader
 
 # init crane position, maximum dimensions, load, and error list
 class Crane:
@@ -33,8 +33,18 @@ class Crane:
 
         # connect to the mqtt broker and start the mqtt loop
         self.client = mqtt.Client()
+        self.client.on_connect = self.on_connect
+        # self.client.on_message = self.on_message
         self.client.connect(mqtt_broker)
         self.client.loop_start()
+
+    # subscribe to topics
+    def on_connect(self, client, userdata, flags, rc):
+        self.client.subscribe("containers/id/state") # ?
+        self.client.subscribe("crane/components/hoist/state")
+        self.client.subscribe("crane/components/trolley/state")
+        self.client.subscribe("crane/components/boom/state")
+        self.client.subscribe("crane/components/gantry/state")
 
     # Change: Check whether the crane is moving and check overload condition
     def move(self, x_position_change, y_position_change, z_position_change):
@@ -79,25 +89,25 @@ class Crane:
             "spreader": self.spreader.get_status(),
     }
 
-    # Load cargo, ensuring not to exceed max load
-    def load_cargo(self, weight):
-        if weight <= self.max_load - self.load:
-            self.load += weight
-            self.send_status_update()
-        else:
-            self.errors.append("Error: Overload")
-
-    # Unload the cargo
-    def unload_cargo(self):
-        self.load = 0
-        self.send_status_update()
-
     # Send the current status to an MQTT topic
     def send_status_update(self):
         status = self.get_status()
-        self.client.subscribe("crane/state", json.dumps(status))
+        self.client.publish("crane/state", json.dumps(status))
 
     # Properly close the MQTT client connection
     def close(self):
         self.client.loop_stop()
         self.client.disconnect()
+
+ # Load cargo, ensuring not to exceed max load
+    # def load_cargo(self, weight):
+    #     if weight <= self.max_load - self.load:
+    #         self.load += weight
+    #         self.send_status_update()
+    #     else:
+    #         self.errors.append("Error: Overload")
+
+    # # Unload the cargo
+    # def unload_cargo(self):
+    #     self.load = 0
+    #     self.send_status_update()
