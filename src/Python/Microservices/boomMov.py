@@ -26,3 +26,7 @@ class Boom:
       else:
         # Invalid direction
         print("Invalid direction. Please enter 'up' or 'down'.")
+    else:
+      # boom is not active
+      print("The boom is not active. Please activate it first.")
+
