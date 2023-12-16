@@ -31,12 +31,15 @@ class Boom:
         self.publish_status()
     except Exception as e:
         print(f"Failed to update position: {e}")
-        
+
   # update the rotation of the boom
   def update_rotation(self, deltaZ):
+    try:
         self._rotationZ += deltaZ # update the rotation angle with deltaZ
         self._rotationZ %= 360  # Normalize angle to 0-360
         self.publish_status() # publish new status
+    except Exception as e:
+        print(f"Failed to update rotation: {e}")
 
   # publish the current status of the boom to an mqtt topic
   def publish_status(self):
