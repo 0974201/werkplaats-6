@@ -15,10 +15,13 @@ class Boom:
     self.rotationZ = rotationZ # rotationangle of the boom Z axis
     # self.angle = angle
     
-  # mqtt connection
+    # mqtt connection
     self.client = mqtt.Client()
-    self.client.connect(mqtt_broker)
-    self.client.loop_start()
+    try:
+        self.client.connect(mqtt_broker)
+        self.client.loop_start()
+    except Exception as e:
+        print(f"Failed to connect to MQTT broker: {e}")
 
   # update the position of the boom x moves right and left position y moves up and down
   def update_position(self, deltaX, deltaY):
