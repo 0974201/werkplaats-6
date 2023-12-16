@@ -1,6 +1,9 @@
+import json
+
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import asyncio
 
 
 class Client:
@@ -12,13 +15,18 @@ class Client:
         self.database = self.client["st-2324-1-d-wx1-t2-2324-wx1-bear"]
         self.collection = self.database.crane_state
 
-    def insert_document(self, document) -> dict:
+    async def insert_document(self, document) -> dict:
+        document_document = {
+            "document": document
+        }
+        self.collection.insert_one(document_document)
         insertion = {
             "inserted": bool,
             "document": object
         }
         try:
-            insert_one_result = self.collection.insert_one(document)
+            task = asyncio.create_task(self.collection.insert_one(document))
+            insert_one_result = await task
             insertion["document_id"] = insert_one_result.inserted_id
             insertion["inserted"] = True
         except:

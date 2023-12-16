@@ -1,6 +1,6 @@
 import database.client
 import broker.client
-import json
+import asyncio
 
 
 class DatabaseAPI:
@@ -16,7 +16,7 @@ class DatabaseAPI:
 
     def set_callbacks(self):
         def insert_document(client, userdata, msg):
-            print(msg.payload.decode("utf-8"))
+            insertion = asyncio.run(self.client_database.insert_document(msg.payload.decode("utf-8")))
 
         self.client_broker.client.on_message = insert_document
 
