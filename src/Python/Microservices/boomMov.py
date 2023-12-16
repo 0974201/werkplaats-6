@@ -30,3 +30,10 @@ class Boom:
       # boom is not active
       print("The boom is not active. Please activate it first.")
 
+  # method to rotate the boom
+  def rotate(self, angle):
+    if self.isActive:
+      # Add the angle to the rotation angle
+      self.rotationZ += angle
+    else:
+      print("The boom is not active. Please activate it first.")
