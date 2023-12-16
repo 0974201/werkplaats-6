@@ -20,4 +20,6 @@ class Boom:
       if direction == "up":
         # Increase the vertical position by the speed times the sine of the angle
         self.positionY += self.Speed * math.sin(math.radians(self.rotationZ))
-
+      elif direction == "down":
+        # Decrease the vertical position by the speed times the sine of the angle
+        self.positionY -= self.Speed * math.sin(math.radians(self.rotationZ))
