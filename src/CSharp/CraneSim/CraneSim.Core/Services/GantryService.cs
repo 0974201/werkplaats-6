@@ -148,7 +148,8 @@ namespace CraneSim.Core.Services
         {
             GantryResponseDto gantryResponse = new GantryResponseDto
             {
-
+                Name = "gantry",
+                IsActive = _activeGantry.IsActive,
             };
 
             string GantryData = JsonSerializer.Serialize(gantryResponse);
