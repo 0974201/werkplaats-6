@@ -323,6 +323,12 @@ each message will have a topic property, this is equal to its MQTT topic
         }
       }
     }
+  ],
+  "commands": [
+    {
+      "target": "str",
+      "command": "int"
+    }
   ]
 }
 ```
