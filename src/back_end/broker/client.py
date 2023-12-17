@@ -1,9 +1,9 @@
 import paho.mqtt.client as paho
 from paho import mqtt
 from dotenv import load_dotenv
-import os
 import time
 import json
+import os
 
 
 class Client:

@@ -1,4 +1,6 @@
 from database_api import DatabaseAPI
-import asyncio
-if __name__=="__main__":
-    database_api = DatabaseAPI()
+
+
+if __name__ == "__main__":
+    frequency = 0.1
+    database_api = DatabaseAPI(frequency)

@@ -1,9 +1,9 @@
-import json
-
 from pymongo import MongoClient
+from datetime import datetime
+import ast
+import pytz
 from dotenv import load_dotenv
 import os
-import asyncio
 
 
 class Client:
@@ -15,23 +15,27 @@ class Client:
         self.database = self.client["st-2324-1-d-wx1-t2-2324-wx1-bear"]
         self.collection = self.database.crane_state
 
-    async def insert_document(self, document) -> dict:
-        document_document = {
-            "document": document
+    def insert_document(self, msg: str) -> dict:
+        timezone = pytz.timezone("Europe/Amsterdam")
+        datetime_insertion = datetime.now(timezone)
+
+        formatted_datetime_insertion = datetime_insertion.strftime("%Y-%m-%d/%H:%M:%S")
+        document = {
+            "datetime": formatted_datetime_insertion,
+            "msg": ast.literal_eval(msg)
         }
-        self.collection.insert_one(document_document)
         insertion = {
             "inserted": bool,
             "document": object
         }
         try:
-            task = asyncio.create_task(self.collection.insert_one(document))
-            insert_one_result = await task
+            insert_one_result = self.collection.insert_one(document)
             insertion["document_id"] = insert_one_result.inserted_id
             insertion["inserted"] = True
-        except:
+        except Exception as error:
             insertion["document_id"] = None
             insertion["inserted"] = False
+            print(error)
         finally:
             return insertion
 

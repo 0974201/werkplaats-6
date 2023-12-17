@@ -1,5 +1,5 @@
-import unittest
 import client
+import unittest
 
 
 class TestDatabase(unittest.TestCase):
