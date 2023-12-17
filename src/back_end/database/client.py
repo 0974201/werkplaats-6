@@ -19,17 +19,23 @@ class Client:
         datetime_insertion = datetime.now(timezone)
 
         msg_object = ast.literal_eval(msg)
-        topic = msg_object["meta"]["topic"]
 
         formatted_datetime_insertion = datetime_insertion.strftime("%Y-%m-%d/%H:%M:%S")
         document = {
             "datetime": formatted_datetime_insertion,
             "msg": msg_object
         }
+
+        try:
+            topic = msg_object["meta"]["topic"]
+        except:
+            topic = "no_topic"
+
         insertion = {
             "inserted": bool,
             "document": object
         }
+
         try:
             insert_one_result = self.database[topic].insert_one(document)
             insertion["document_id"] = insert_one_result.inserted_id
@@ -41,8 +47,8 @@ class Client:
         finally:
             return insertion
 
-    def find_document(self, query=None):
+    def find_document(self, topic, query=None):
         found_document = {
-            "document": self.collection.find_one(filter=query)
+            "document": self.database[topic].find_one(filter=query)
         }
         return found_document
