@@ -156,9 +156,9 @@ class Crane:
     #     self.client.publish("crane/state", json.dumps(status))
 
     # # Properly close the MQTT client connection
-    # def close(self):
-    #     self.client.loop_stop()
-    #     self.client.disconnect()
+    def close(self):
+        self.client.loop_stop()
+        self.client.disconnect()
 
  # Load cargo, ensuring not to exceed max load
     # def load_cargo(self, weight):
