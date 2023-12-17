@@ -37,15 +37,14 @@ class Crane:
         self.client.connect(mqtt_broker)
         self.client.loop_start()
 
-        # subscribe to topics
-        self.client.subscribe("containers/id/state")  
-        self.client.subscribe("crane/components/hoist/state")
-        self.client.subscribe("crane/components/trolley/state")
-        self.client.subscribe("crane/components/boom/state")
-        self.client.subscribe("crane/components/gantry/state")
-
+    # subscribe to topics
     def on_connect(self, client, userdata, flags, rc):
-        pass
+        if rc == 0:  # Succesvol verbonden
+            client.subscribe("containers/id/state")
+            client.subscribe("crane/components/hoist/state")
+            client.subscribe("crane/components/trolley/state")
+            client.subscribe("crane/components/boom/state")
+            client.subscribe("crane/components/gantry/state")
 
     def on_message(self, client, userdata, msg):
         # handle messages from container state topic
