@@ -1,6 +1,6 @@
-from database_api import DatabaseAPI
+from db_mqtt_client import DbMqttClient
 
 
 if __name__ == "__main__":
     frequency = 0.1
-    database_api = DatabaseAPI(frequency)
+    database_api = DbMqttClient(frequency)

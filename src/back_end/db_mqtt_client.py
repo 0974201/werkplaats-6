@@ -3,14 +3,14 @@ import broker.client
 import time
 
 
-class DatabaseAPI:
+class DbMqttClient:
     def __init__(self, frequency: float, active=True):
         self.frequency = frequency
         self.active = active
         self.client_database = database.client.Client()
         self.client_broker = broker.client.Client(
-            "database_api",
-            [("crane/state", 1)]
+            "db_mqtt_client",
+            [("crane/state", 1), ("meta/errors", 2)]
         )
         self.set_callbacks()
         self.serve()
