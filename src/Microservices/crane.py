@@ -3,10 +3,10 @@ import paho.mqtt.client as mqtt
 import json
 
 # import components
-# from src/python/microservices/hoist import Hoist
-# from src/python/microservices/trolley import Trolley
-# from src/python/microservices/boom import Boom
-# from src/python/microservices/gantry import Gantry
+from hoist import Hoist
+from trolley import Trolley
+from boom import Boom
+from gantry import Gantry
 
 # init crane position, maximum dimensions, load, and error list
 class Crane:
@@ -37,13 +37,53 @@ class Crane:
         self.client.connect(mqtt_broker)
         self.client.loop_start()
 
-    # subscribe to topics
-    def on_connect(self, client, userdata, flags, rc):
-        self.client.subscribe("containers/id/state") # ?
+        # subscribe to topics
+        self.client.subscribe("containers/id/state")  
         self.client.subscribe("crane/components/hoist/state")
         self.client.subscribe("crane/components/trolley/state")
         self.client.subscribe("crane/components/boom/state")
         self.client.subscribe("crane/components/gantry/state")
+
+    def on_connect(self, client, userdata, flags, rc):
+        pass
+
+    def on_message(self, client, userdata, msg):
+        # handle messages from container state topic
+        if msg.topic == "containers/id/state":
+            container_id = msg.payload.decode("utf-8")
+            if container_id == "connected":
+                self.load = 1
+            elif container_id == "disconnected":
+                self.load = 0
+
+        # handle messages from crane component state topics
+        elif msg.topic == "crane/components/hoist/state":
+            hoist_state = json.loads(msg.payload.decode("utf-8"))
+            if hoist_state["isActive"]:
+                self.is_moving = True
+            else:
+                self.is_moving = False
+
+        elif msg.topic == "crane/components/trolley/state":
+            trolley_state = json.loads(msg.payload.decode("utf-8"))
+            if trolley_state["isActive"]:
+                self.is_moving = True
+            else:
+                self.is_moving = False
+
+        elif msg.topic == "crane/components/boom/state":
+            boom_state = json.loads(msg.payload.decode("utf-8"))
+            if boom_state["isActive"]:
+                self.is_moving = True
+            else:
+                self.is_moving = False
+
+        elif msg.topic == "crane/components/gantry/state":
+            gantry_state = json.loads(msg.payload.decode("utf-8"))
+            if gantry_state["isActive"]:
+                self.is_moving = True
+            else:
+                self.is_moving = False
 
     # Change: Check whether the crane is moving and check overload condition
     def move(self, x_position_change, y_position_change, z_position_change):
@@ -71,9 +111,9 @@ class Crane:
         self.send_status_update()
 
     # retrieve the crane's overall status and component status
-    def get_status(self):
-        # create a detailed status of the crane and its components
-        crane_status = {
+    def send_status_update(self):
+        # Send crane status update to MQTT broker
+        self.client.publish("crane/state", json.dumps({
             "meta": {
                 "topic": "crane/state",
                 "isActive": self.is_moving
@@ -87,50 +127,39 @@ class Crane:
                 "id": self.load > 0,  # containerid
                 "isConnected": self.load > 0  # connection
             },
-            # correct attributes?
             "components": [
                 {
                     "component": "hoist",
                     "isActive": self.hoist.isActive,
-                    "isConnected": True,  
-                    "absolutePosition": self.hoist.get_position(),  
-                    "speed": self.hoist.get_speed()  
+                    "isConnected": self.hoist.isConnected
                 },
                 {
                     "component": "trolley",
                     "isActive": self.trolley.isActive,
-                    "isConnected": True,  
-                    "absolutePosition": self.trolley.get_position(),  
-                    "speed": self.trolley.get_speed()  # 
+                    "isConnected": self.trolley.isConnected
                 },
                 {
                     "component": "boom",
                     "isActive": self.boom.isActive,
-                    "isConnected": True,  
-                    "absolutePosition": self.boom.get_position(),  
-                    "speed": self.boom.get_speed()  
+                    "isConnected": self.boom.isConnected
                 },
                 {
                     "component": "gantry",
                     "isActive": self.gantry.isActive,
-                    "isConnected": True,  
-                    "absolutePosition": self.gantry.get_position(),  
-                    "speed": self.gantry.get_speed() 
-                },
-                
+                    "isConnected": self.gantry.isConnected
+                }
             ]
-        }
-        return crane_status
+        }))
 
     # Send the current status to an MQTT topic
-    def send_status_update(self):
-        status = self.get_status()
-        self.client.publish("crane/state", json.dumps(status))
+    # def send_status_update(self):
+    #     status = self.get_status()
+    #     self.client.publish("crane/state", json.dumps(status))
 
-    # Properly close the MQTT client connection
-    def close(self):
-        self.client.loop_stop()
-        self.client.disconnect()
+    # # Properly close the MQTT client connection
+    # def close(self):
+    #     self.client.loop_stop()
+    #     self.client.disconnect()
 
  # Load cargo, ensuring not to exceed max load
     # def load_cargo(self, weight):
