@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using CraneSim.Core.Dtos.Gantry;
+using CraneSim.Core.Dtos.Trolley;
 using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
 using CraneSim.Dtos.Gantry;
@@ -134,7 +136,7 @@ namespace CraneSim.Core.Services
         {
             var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
 
-            await _client.SubscribeAsync("crane/components/gantry.command").ConfigureAwait(false);
+            await _client.SubscribeAsync("gantry/state.command").ConfigureAwait(false);
 
             _client.OnMessageReceived += Client_OnMessageReceived;
         }
@@ -148,13 +150,26 @@ namespace CraneSim.Core.Services
         {
             GantryResponseDto gantryResponse = new GantryResponseDto
             {
-                Name = "gantry",
-                IsActive = _activeGantry.IsActive,
+                Meta = new GantryResponseMetaDto
+                {
+                    Name = "trolley",
+                    IsActive = _activeGantry.IsActive,
+                    Topic = "gantry/state"
+                },
+                Msg = new GantryResponseMsgDto
+                {
+                    PositionZ = _activeGantry.PositionZ,
+                    Speed = new GantryResponseSpeedDto
+                    {
+                        Acceleration = _activeGantry.Acceleration,
+                        Speed = _activeGantry.Speed
+                    }
+                }
             };
 
             string GantryData = JsonSerializer.Serialize(gantryResponse);
 
-            await _client.PublishAsync("crane/components/gantry/state", GantryData).ConfigureAwait(false);
+            await _client.PublishAsync("gantry/state", GantryData).ConfigureAwait(false);
         }
         
         public void Client_AfterConnect(object sender, AfterConnectEventArgs e)
@@ -180,15 +195,79 @@ namespace CraneSim.Core.Services
             throw new NotImplementedException();
         }
 
-        public void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
+        public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
-            _client.OnMessageReceived += Client_OnMessageReceived;
-            void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
+            var payload = e.PublishMessage.PayloadAsString;
+            GantryRequestDto gantryRequestDto = JsonSerializer.Deserialize<GantryRequestDto>(payload);
+
+
+            if (gantryRequestDto.Msg.Command == "0")
             {
-                Console.WriteLine($"Recieved message: {e.PublishMessage.PayloadAsString}");
-                //if you have recieved a message you can find it here, and do stuff when OnMessageRecieved.
+                //beweging stopt
+                StopStopwatch();
+                ResetStopWatch();
+                _activeGantry.Speed = 0.0F;
+                _activeGantry.IsActive = false;
+
+                await SendMessage();
+            }
+
+            if (gantryRequestDto.Msg.Command == "1")
+            {
+                //beweging vooruit
+                if (_gantryMoveStopwatch.ElapsedMilliseconds == 0.0)
+                {
+                    StartStopwatch();
+                    _activeGantry.IsActive = true;
+
+                    _ = CalculateAcceleration;
+                    _ = CalculateCurrentSpeed;
+                    _ = CalculatePositiveMovement;
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessage();
+                }
+                else
+                {
+                    _activeGantry.IsActive = true;
+
+                    _ = CalculateAcceleration;
+                    _ = CalculateCurrentSpeed;
+                    _ = CalculatePositiveMovement;
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessage();
+                }
+
+            }
+
+            if (gantryRequestDto.Msg.Command == "-1")
+            {
+                //beweging achteruit
+                if (_gantryMoveStopwatch.ElapsedMilliseconds == 0.0)
+                {
+                    StartStopwatch();
+                    _activeGantry.IsActive = true;
+
+                    _ =CalculateAcceleration;
+                    _ = CalculateCurrentSpeed;
+                    _ = CalculateNegativeMovement;
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessage();
+                }
+                else
+                {
+                    _activeGantry.IsActive = true;
+
+                    _ = CalculateAcceleration;
+                    _ = CalculateCurrentSpeed;
+                    _ = CalculateNegativeMovement;
+                    _ = ReturnStopwatchvalue();
+
+                    await SendMessage();
+                }
             }
         }
-
     }
 }
