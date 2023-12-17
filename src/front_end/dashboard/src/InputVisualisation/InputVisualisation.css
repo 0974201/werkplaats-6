@@ -79,6 +79,7 @@
 
 #emergencyButton {
     height: fit-content;
+    width: fit-content;
     background-color: #f3d032;
     border-radius: 20px;
 }
