@@ -1,0 +1,102 @@
+# Dimensions
+![crane_dimensions.png](crane_dimensions.png)
+
+## World Properties
+- Water
+- Shore
+
+## Objects
+- Rails
+- Crane
+- Container
+
+## Components
+- Gantry
+  - Dimension:
+    - Height = 77.8
+    - Width = 16.2
+    - Depth = 30.5
+  - Head component = Rails
+  - Start absolute position
+    - X = 1000
+    - Y = 200
+    - Z = 1000
+  - Relative start position: 
+    - Place of start position = left back
+    - Z = 0
+  - Relative end position (determent by depth of rails - depth of Gantry)
+    - Z = 983.8
+- Boom
+  - Dimension:
+    - Height = 
+    - Width = 
+    - Depth = 
+  - Head component = 
+  - Start absolute position
+    - X = 
+    - Y = 
+    - Z = 
+  - Relative start position: 
+    - Place of start position = 
+    - 
+  - Relative end position:
+    - 
+- Trolley
+  - Dimension:
+    - Height = 
+    - Width = 
+    - Depth = 
+  - Head component = 
+  - Start absolute position
+    - X = 
+    - Y = 
+    - Z = 
+  - Relative start position: 
+    - Place of start position = 
+    - 
+  - Relative end position:
+    -  
+- Boom
+  - Dimension:
+    - Height = 
+    - Width = 
+    - Depth = 
+  - Head component = 
+  - Start absolute position
+    - X = 
+    - Y = 
+    - Z = 
+  - Relative start position: 
+    - Place of start position = 
+    - 
+  - Relative end position:
+    - 
+- Spreader
+ - Dimension:
+    - Height = 
+    - Width = 
+    - Depth = 
+  - Head component = 
+  - Start absolute position
+    - X = 
+    - Y = 
+    - Z = 
+  - Relative start position: 
+    - Place of start position = 
+    - Z = 
+  - Relative end position:
+    - Z = 
+- Hoist
+ - Dimension:
+    - Height = 
+    - Width = 
+    - Depth = 
+  - Head component = 
+  - Start absolute position
+    - X = 
+    - Y = 
+    - Z = 
+  - Relative start position: 
+    - Place of start position:
+    - 
+  - Relative end position 
