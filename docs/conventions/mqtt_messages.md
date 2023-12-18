@@ -79,10 +79,10 @@ each message will have a topic property, this is equal to its MQTT topic
 {
    "meta":{
       "topic":"containers/id/state",
-      "id":"int",
       "component":"container"
    },
    "msg":{
+      "id":"int",
       "isConnected":"bool",
       "absolutePosition":{
          "x":"float",
