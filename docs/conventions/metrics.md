@@ -1,6 +1,6 @@
 **eenheden**
 
-** Trolley**
+**Trolley**
   -  m/s
     acceleration/deceleration
     min/maxspeed value
@@ -17,7 +17,7 @@
   - s
     accel/deccel time
     
-**Gantry **
+**Gantry**
   -  m/s
     acceleration/deceleration
     min/maxspeed value
