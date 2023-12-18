@@ -234,10 +234,6 @@ each message will have a topic property, this is equal to its MQTT topic
     "y": "float",
     "z": "float"
   },
-  "container": {
-      "id": "bool",
-      "isConnected": "bool"
-    },
   "components": [
     {
       "component": "hoist",
@@ -324,6 +320,15 @@ each message will have a topic property, this is equal to its MQTT topic
       }
     }
   ],
+  "container": {
+      "id":"int",
+      "isConnected":"bool",
+      "absolutePosition":{
+         "x":"float",
+         "y":"float",
+         "z":"float"
+      }
+  },
   "commands": [
     {
       "target": "str",
