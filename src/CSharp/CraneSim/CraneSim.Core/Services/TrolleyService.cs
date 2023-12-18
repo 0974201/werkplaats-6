@@ -149,7 +149,11 @@ namespace CraneSim.Core.Services
                 },
                 Msg = new TrolleyResponseMsgDto
                 {
-                    RelativePosition = _activeTrolley.PositionX,
+                    //RelativePosition = _activeTrolley.PositionX,
+                    RelativePosition = new TrolleyResponseRelPosDto
+                    {
+                        X = _activeTrolley.PositionX
+                    },
                     Speed = new TrolleyResponseSpeedDto
                     {
                         Acceleration = _activeTrolley.Acceleration,

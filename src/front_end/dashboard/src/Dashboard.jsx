@@ -4,7 +4,6 @@ import mqtt from 'mqtt';
 import './Dashboard.css'
 import CraneVisualisation from "./CraneVisualisation/CraneVisualisation.jsx";
 import DataTable from "./DataTable/DataTable.jsx";
-import AnimatedGraphs from "./AnimatedGraphs/AnimatedGraphs.jsx";
 import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
@@ -40,23 +39,17 @@ export default function Dashboard() {
         <div id={"container"}>
             <button onClick={() => setSpeed(50)}>+</button>
             <button onClick={() => setSpeed(-50)}>-</button>
-            <div>
+            <div id={"visualisation"}>
                 <div id={"threeD"}>
                     <CraneVisualisation speed={speed} craneInfo={craneInfo} />
-                </div>
-                <div id={"dataTable"}>
-                    <DataTable craneInfo={craneInfo} />
-                </div>
-            </div>
-            <div>
-                <div id={"graph"}>
-                    <AnimatedGraphs />
                 </div>
                 <div id={"input"}>
                     <InputVisualisation craneInfo={craneInfo} pressed={pressed} />
                 </div>
             </div>
-
+            <div id={"dataTable"}>
+                <DataTable craneInfo={craneInfo} />
+            </div>
         </div>
     )
 }
