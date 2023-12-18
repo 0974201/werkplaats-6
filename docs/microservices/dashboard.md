@@ -9,6 +9,6 @@ npm install
 
 Wanneer je de live development omgeving wil starten zet dit dan in de terminal:
 ````
-cd src/Dashboard
+cd src/front_end/Dashboard
 npm run dev
 ````
