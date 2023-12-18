@@ -13,7 +13,7 @@ As of now it can only subscribe and publish to one topic.
    ```python
    import broker.client
    
-   publisher = broker.client.Client(microservice="hoist", topic="crane/components/hoist/state", qos=0, subscribe=True) 
+   publisher = broker.client.Client(microservice="hoist", topic=[("crane/components/hoist/state", 0)], subscribe=True) 
    ```
 3. Now send the generated data to the broker
    - This can be done by envoking the publish method:
