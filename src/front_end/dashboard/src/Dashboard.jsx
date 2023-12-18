@@ -37,6 +37,8 @@ export default function Dashboard() {
 
     return (
         <div id={"container"}>
+            <button onClick={() => setSpeed(50)}>+</button>
+            <button onClick={() => setSpeed(-50)}>-</button>
             <div id={"visualisation"}>
                 <div id={"threeD"}>
                     <CraneVisualisation speed={speed} craneInfo={craneInfo} />
