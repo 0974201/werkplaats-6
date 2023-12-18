@@ -152,7 +152,7 @@ namespace CraneSim.Core.Services
             {
                 Meta = new GantryResponseMetaDto
                 {
-                    Name = "trolley",
+                    Name = "gantry",
                     IsActive = _activeGantry.IsActive,
                     Topic = "gantry/state"
                 },
