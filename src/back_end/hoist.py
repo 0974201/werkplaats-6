@@ -1,3 +1,7 @@
+import broker.client 
+
+publisher = broker.client.Client(microservice="hoist", topics="crane/components/hoist/state", qos=0, subscribe=True) 
+
 class Hoist:
     def __init__(self):
         self.is_active = False
