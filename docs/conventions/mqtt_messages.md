@@ -327,6 +327,13 @@ each message will have a topic property, this is equal to its MQTT topic
          "x":"float",
          "y":"float",
          "z":"float"
+      },
+       "speed":{
+         "speed":{
+            "x":"float",
+            "y":"float",
+            "z":"float"
+         }
       }
   },
   "commands": [
