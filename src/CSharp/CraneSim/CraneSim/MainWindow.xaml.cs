@@ -12,7 +12,9 @@ namespace CraneSim
     public partial class MainWindow : Window
     {
         Trolley _trolley;
+        Shipcontainer _shipcontainer;
         ITrolleyService _trolleyService;
+        IShipContainerService _shipContainerService;
 
         public MainWindow()
         {
@@ -26,11 +28,13 @@ namespace CraneSim
             _trolley.IsActive = true;
             //TestTrolleyService();
             _trolleyService.EstablishBrokerConnection();
+            _shipContainerService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
+            _shipContainerService.DisconnectBrokerConnection();
         }
 
         private void CreateComopnents()
@@ -40,14 +44,20 @@ namespace CraneSim
                 Id = 1,
                 Name = "Trolley",
             };
+
+            _shipcontainer = new Shipcontainer()
+            {
+                Id = 1,
+                Name = "ShipContainer"
+            };
             
         }
 
         private void CreateServices()
         {
             _trolleyService = new TrolleyService(_trolley);
+            _shipContainerService = new ShipContainerServices(_shipcontainer);
         }
-
 
         #region Testmethodes
         private async Task TestTrolleyService() 
