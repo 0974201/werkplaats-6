@@ -5,7 +5,19 @@ export default function DataTable(props) {
 
     return (
         <>
-            hi
+            {console.log(props)}
+            <div className='datatable_container'>
+                <table className='datatable_table'>
+                    <tbody>
+                        <tr>
+                            <th>table</th>
+                        </tr>
+                        <tr key={props.craneInfo}>
+                            <td>{props.craneInfo}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }
