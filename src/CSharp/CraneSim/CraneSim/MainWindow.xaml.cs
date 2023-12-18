@@ -57,6 +57,7 @@ namespace CraneSim
             {
                 Id = 1,
                 Name = "Gantry",
+            };
 
             _shipcontainer = new Shipcontainer()
             {
