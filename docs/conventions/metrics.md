@@ -1,54 +1,35 @@
-**EENHEDEN**
+# Units
 
-**Trolley**
-  -  m/s
+## Trolley
+- **m/s**
+  - acceleration/deceleration
+  - min/max speed value
+  - speed
+  - min/max acceleration value
 
-    acceleration/deceleration
+- **m**
+  - height
+  - width
+  - length
+  - Position x
+  - min/max position x
 
-    min/maxspeed value
-    
-    speed
-    
-    min/max accelerationvalue
+- **s**
+  - acceleration/deceleration time
 
-  - m
+## Gantry
+- **m/s**
+  - acceleration/deceleration
+  - min/max speed value
+  - speed
+  - min/max acceleration value
 
-  height
+- **M**
+  - height
+  - width
+  - length
+  - Position x
+  - min/max position x
 
-  width
-  
-  length
-  
-  Position x
-  
-  min/ max position x
-
-  - s
-    
-    accel/deccel time
-    
-**Gantry**
-  -  m/s
-    
-    acceleration/deceleration
-    
-    min/maxspeed value
-    
-    speed
-    
-    min/max accelerationvalue
-
-  - M
-    height
-    
-    width
-    
-    length
-    
-    Position x
-    
-    min/ max position x
-
-    - s
-    
-    accel/deccel time
+- **s**
+  - acceleration/deceleration time
