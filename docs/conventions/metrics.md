@@ -33,3 +33,6 @@
 
 - **s**
   - acceleration/deceleration time
+
+
+Al de rest ook eh ;)
