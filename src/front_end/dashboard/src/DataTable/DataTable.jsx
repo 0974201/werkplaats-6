@@ -5,7 +5,7 @@ export default function DataTable(props) {
 
     return (
         <>
-            hi
+            Tabellen
         </>
     )
 }
