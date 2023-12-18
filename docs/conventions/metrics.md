@@ -1,4 +1,4 @@
-**eenheden**
+#Eenheden
 
 **Trolley**
   -  m/s
@@ -7,7 +7,7 @@
     speed
     min/max accelerationvalue
 
-  - M
+  - m
   height
   width
   length
