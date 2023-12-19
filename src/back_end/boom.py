@@ -29,12 +29,12 @@ class Boom:
         while self.loop:
             if keys == 2:
                 while oldRotation > self.rotationZ:
-                    # Call boomData
-                    self.boomData()
                     # Update rotationZ by adding the speed
                     self.rotationZ -= self.speed
                     # Print the current rotationZ
                     print("rotationZ =", self.rotationZ)
+                    # Call boomData
+                    self.boomData()
             elif keys == 1:
                 while self.rotationZ < self.angle:
                     # Call boomData
