@@ -1,3 +1,7 @@
+#inputContainer {
+    display: flex;
+}
+
 .inputLetter {
     display: flex;
     width: 100%;
