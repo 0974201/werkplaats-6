@@ -45,9 +45,9 @@ class Client:
 
         def on_message(client, userdata, msg):
             msg_object = ast.literal_eval(msg.payload.decode("utf-8"))
-            if msg_object["msg"]["isPressed"]:
+            if msg_object["meta"]["topic"] == "meta/emergency_button" and msg_object["msg"]["isPressed"]:
                 print(f"{self.microservice} acknowledged emergency button state True")
-                return {"eb": True}
+                return {"EB_pressed": True}
             print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
             return msg
 
