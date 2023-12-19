@@ -6,12 +6,12 @@ import CraneVisualisation from "./CraneVisualisation/CraneVisualisation.jsx";
 import DataTable from "./DataTable/DataTable.jsx";
 import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
+import shit from "./testdata.json";
 
 export default function Dashboard() {
-    const [craneInfo, setCraneInfo] = useState(null)
+    const [craneInfo, setCraneInfo] = useState(shit)
     const [speed, setSpeed] = useState(0)
     const [pressed, setPressed] = useState(true)
-
 
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {

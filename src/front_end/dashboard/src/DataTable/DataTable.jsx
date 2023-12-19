@@ -12,9 +12,14 @@ export default function DataTable(props) {
                         <tr>
                             <th>table</th>
                         </tr>
-                        <tr key={props.craneInfo}>
-                            <td>{props.craneInfo}</td>
-                        </tr>
+                        {Object.keys(props.list).map(key => {
+                            return (
+                                <tr key={key}>
+                                    <td>{key}</td>
+                                    <td>{props.list[key].craneInfo}</td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>
