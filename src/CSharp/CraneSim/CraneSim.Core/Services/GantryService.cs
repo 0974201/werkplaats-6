@@ -78,7 +78,7 @@ namespace CraneSim.Core.Services
 
             if (newPosZ < _activeGantry.MinPosZ)
             {
-                newPosZ = 0.0F;
+                newPosZ = _activeGantry.MinPosZ;
             }
 
             _activeGantry.PositionZ = newPosZ;
@@ -96,7 +96,7 @@ namespace CraneSim.Core.Services
 
             if (newPosZ > _activeGantry.MaxPosZ)
             {
-                newPosZ = 1000.0F;
+                newPosZ = _activeGantry.MaxPosZ;
             }
 
             _activeGantry.PositionZ = newPosZ;
@@ -179,6 +179,7 @@ namespace CraneSim.Core.Services
                 StopStopwatch();
                 ResetStopWatch();
                 _activeGantry.Speed = 0.0F;
+                _activeGantry.Acceleration = 0.0F;
                 _activeGantry.IsActive = false;
 
                 await SendMessageAsync();
@@ -186,16 +187,16 @@ namespace CraneSim.Core.Services
 
             if (gantryRequestDto.Msg.Command == "1")
             {
-                //beweging vooruit
+                //beweging rechts
                 if (_gantryMoveStopwatch.ElapsedMilliseconds == 0.0)
                 {
                     StartStopwatch();
                     _activeGantry.IsActive = true;
 
-                    var acceleration = CalculateAcceleration();
-                    var speed = CalculateCurrentSpeed();
-                    var positiveMovement = CalculatePositiveMovement();
-                    var stopwatch = ReturnStopwatchvalue();
+                    _ = CalculateAcceleration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculatePositiveMovement();
+                    _ = ReturnStopwatchvalue();
 
                     await SendMessageAsync();
                 }
@@ -215,16 +216,16 @@ namespace CraneSim.Core.Services
 
             if (gantryRequestDto.Msg.Command == "-1")
             {
-                //beweging achteruit
+                //beweging links
                 if (_gantryMoveStopwatch.ElapsedMilliseconds == 0.0)
                 {
                     StartStopwatch();
                     _activeGantry.IsActive = true;
 
-                    var acceleration = CalculateAcceleration();
-                    var speed = CalculateCurrentSpeed();
-                    var negativeMovement = CalculateNegativeMovement();
-                    var stopwatch = ReturnStopwatchvalue();
+                    _ = CalculateAcceleration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateNegativeMovement();
+                    _ = ReturnStopwatchvalue();
 
                     await SendMessageAsync();
                 }
