@@ -69,7 +69,7 @@ namespace CraneSim.Core.Services
                 TrolleyResponseDto trolleyRequestDto = JsonSerializer.Deserialize<TrolleyResponseDto>(payload);
                 if (_activeShipContainer.IsConnectedToHoist)
                 {
-                    _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition.X;
+                    _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition;
                     await SendMessageAsync();
                 }
             }
