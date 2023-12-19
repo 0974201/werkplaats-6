@@ -1,0 +1,86 @@
+.inputLetter {
+    display: flex;
+    width: 100%;
+    font-size: 80px;
+    justify-content: center;
+    text-align: center;
+}
+
+#controllerInput {
+    display: flex;
+}
+
+#joystick {
+    display: flex;
+    position: relative;
+    height: 200px;
+    width: 200px;
+    margin: 10px;
+    background-color: firebrick;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#shadow {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    background-color: darkgoldenrod;
+}
+
+#stick {
+    display: flex;
+    height: 140px;
+    width: 140px;
+    background-color: #f3d032;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+#joystick span {
+    font-size: 120px;
+}
+
+#keyboardInput {
+    display: flex;
+}
+
+#inputButton {
+    height: 100px;
+    width: 100px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.inputLetter {
+    display: flex;
+    width: 100%;
+    font-size: 80px;
+    justify-content: center;
+    text-align: center;
+}
+
+#letterCluster, #letterCluster > div, #opCluster, #arrowCluster {
+    display: flex;
+    margin: 0 20px;
+}
+
+#letterCluster, #arrowCluster {
+    flex-direction: column;
+}
+
+#letterCluster > div, #opCluster {
+    flex-direction: row;
+}
+
+#emergencyButton {
+    height: fit-content;
+    width: fit-content;
+    background-color: #f3d032;
+    border-radius: 20px;
+}
+

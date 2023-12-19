@@ -8,11 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="HiveMQtt" Version="0.6.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CraneSim.Core\CraneSim.Core.csproj" />
-    <ProjectReference Include="..\CraneSim.Infrastructure\CraneSim.Infrastructure.csproj" />
+    <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
   </ItemGroup>
 
 </Project>
