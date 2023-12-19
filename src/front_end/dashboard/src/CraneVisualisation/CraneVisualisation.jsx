@@ -12,13 +12,10 @@ import Rails from "./rails.jsx";
 import BoomFront from "./boomFront.jsx";
 import BoomBack from "./boomBack.jsx";
 import CameraRig from "./camera.jsx";
-import CameraRig2 from "./camera2.jsx";
 
 export default function CraneVisualisation(props) {
 
-    console.log(props.craneInfo.components[0].speed.speed.y)
-
-    const [railsSize, setRailsSize] = useState([31, 1, 1000])
+    const [railsSize, setRailsSize] = useState([31, 1, 400])
     const [gantrySize, setGantrySize] = useState([30.5, 76.1, 20.2])
     const [shipContainerSize, setShipContainerSize] = useState([2.44, 2.59, 13.71])
     const [boomSizeFront, setBoomSizeFront] = useState([76.8, 2, 8])
@@ -30,20 +27,17 @@ export default function CraneVisualisation(props) {
     const [posGantry, setPosGantry] = useState([-(gantrySize[0]/2), 0, -(railsSize[2]/2)+gantrySize[2]/2])
     const [posBoomFront, setPosBoomFront] = useState([(boomSizeFront[0]/2), 0, posGantry[2]])
     const [posBoomBack, setPosBoomBack] = useState([-boomSizeBack[0]/2, 0, posGantry[2]])
-    const [posTrolley, setPosTrolley] = useState([47.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), posGantry[2]])
+    const [posTrolley, setPosTrolley] = useState([-47.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), posGantry[2]])
     const [posHoist, setPosHoist] = useState([posTrolley[0], -10, posGantry[2]])
     const [posShipContainer, setPosShipContainer] = useState([63, -((gantrySize[1]/2)-(shipContainerSize[1])/2), posGantry[2]])
 
     const [wireLength, setWireLength] = useState(posTrolley[1]-posHoist[1])
 
-    const [movementX, setMovementX] = useState(props.speed)
-    const [movementY, setMovementY] = useState(props.speed)
-    const [movementZ, setMovementZ] = useState(props.speed)
-    const [rotationBoom, setRotationBoom] = useState()
+    const [movementX, setMovementX] = useState(props.craneInfo.components[1].speed.speed.x)
+    const [movementY, setMovementY] = useState(props.craneInfo.components[0].speed.speed.y)
+    const [movementZ, setMovementZ] = useState(props.craneInfo.components[3].speed.speed.z)
+    const [rotationBoom, setRotationBoom] = useState(props.craneInfo.components[2].speed.speed.y)
 
-    const [freeCamera, setFreeCamera] = useState(true)
-    const [cameraPosition, setCameraPosition] = useState([80, 30, 80])
-    const [cameraLookAt, setCameraLookAt] = useState([20, 0, 0])
 
     useEffect(() => {
         setMovementX(props.speed)
@@ -51,65 +45,12 @@ export default function CraneVisualisation(props) {
         setMovementZ(props.speed)
     }, [props.speed, props.craneInfo])
 
-    useEffect(() => {
-        setWireLength(posTrolley[1]-posHoist[1])
-    }, [posHoist])
-
-    useEffect(() => {
-        setCameraPosition(cameraPosition)
-    }, [cameraPosition])
-
-    const fov = 60;
-    const aspect = 1920 / 1080;
-    const near = 1.0;
-    const far = 1000.0;
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(70, 20, -400);
-    camera.rotation.set(
-        THREE.MathUtils.degToRad(-20),
-        THREE.MathUtils.degToRad(30),
-        THREE.MathUtils.degToRad(10))
-
     return (
         <div id={"container3d"}>
-
-            {/*<div id={"cameraButtons"}>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setFreeCamera(true)*/}
-            {/*    }}>Free</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([70, 30, 80])*/}
-            {/*        setCameraLookAt([20, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Standard</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([20, 100, 0])*/}
-            {/*        setCameraLookAt([20, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Top</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([0, 0, 100])*/}
-            {/*        setCameraLookAt([0, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Side</button>*/}
-
-            {/*</div>*/}
-
-
-
             <Canvas>
-                {/*{freeCamera ?*/}
-                {/*    <CameraControls /> :*/}
-                {/*    <CameraRig lookAt={cameraLookAt} position={cameraPosition} />*/}
-                {/*}*/}
                 <ambientLight />
                 <pointLight position={[100, 100, 100]} intensity={100000} />
                 <pointLight position={[-100, 100, -100]} intensity={50000} />
-                {/*<PerspectiveCamera {...camera} />*/}
-                {/*<CameraRig2*/}
-                {/*    camera={camera}*/}
-                {/*    MovementZ={movementZ}*/}
-                {/*/>*/}
                 <CameraRig MovementZ={movementZ} posGantry={posGantry} />
                 <group>
                     <Rails
@@ -158,10 +99,10 @@ export default function CraneVisualisation(props) {
                         MovementZ={movementZ}
                         MovementX={movementX}
                         MovementY={movementY}
-                        isConnected={props.isConnected}
+                        isConnected={props.craneInfo.components[0]}
                     />
                 </group>
-                <Box args={[200, 1, 1000]} position={[0, -(76.1/2), 0]} material-color={"gray"} />
+                <Box args={[200, 1, 400]} position={[0, -(76.1/2), 0]} material-color={"gray"} />
             </Canvas>
         </div>
     )

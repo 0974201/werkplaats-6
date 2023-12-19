@@ -14,122 +14,128 @@ export default function Dashboard() {
             "isActive":"bool"
         },
         "absolutePosition": {
-            "x": "float",
-            "y": "float",
-            "z": "float"
+            "x": 1,
+            "y": 1,
+            "z": 1
         },
         "components": [
             {
                 "component": "hoist",
-                "isActive": "bool",
-                "isConnected": "bool",
+                "isActive": true,
+                "isConnected": false,
                 "absolutePosition": {
-                    "x": "float",
-                    "y": "float",
-                    "z": "float"
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
                 },
                 "speed": {
                     "activeAcceleration": {
-                        "y": "bool"
+                        "y": false
                     },
                     "acceleration": {
-                        "y": "float"
+                        "y": 1
                     },
                     "speed": {
-                        "y": "float"
+                        "y": 1
                     }
                 }
             },
             {
                 "component": "trolley",
-                "isActive": "bool",
+                "isActive": true,
                 "absolutePosition": {
-                    "x": "float",
-                    "y": "float",
-                    "z": "float"
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
                 },
                 "speed": {
                     "activeAcceleration": {
-                        "x": "bool"
+                        "x": false
                     },
                     "acceleration": {
-                        "x": "float"
+                        "x": 1
                     },
                     "speed": {
-                        "x": "float"
+                        "x": 1
                     }
                 }
             },
             {
                 "component": "boom",
-                "isActive": "bool",
+                "isActive": true,
                 "absolutePosition": {
-                    "x": "float",
-                    "y": "float",
-                    "z": "float"
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
                 },
                 "speed": {
                     "activeAcceleration": {
-                        "x": "bool",
-                        "y": "bool"
+                        "x": false,
+                        "y": false
                     },
                     "acceleration": {
-                        "x": "float",
-                        "y": "float"
+                        "x": 1,
+                        "y": 1
                     },
                     "speed": {
-                        "X": "float",
-                        "y": "float"
+                        "X": 1,
+                        "y": 1
                     }
                 }
             },
             {
                 "component": "gantry",
-                "isActive": "bool",
+                "isActive": false,
                 "absolutePosition": {
-                    "x": "float",
-                    "y": "float",
-                    "z": "float"
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
                 },
                 "speed": {
                     "activeAcceleration": {
-                        "z": "bool"
+                        "z": false
                     },
                     "acceleration": {
-                        "z": "float"
+                        "z": 1
                     },
                     "speed": {
-                        "z": "float"
+                        "z": 1
                     }
                 }
             }
         ],
         "container": {
-            "id":"int",
-            "isConnected":"bool",
+            "id":13,
+            "isConnected":false,
             "absolutePosition":{
-                "x":"float",
-                "y":"float",
-                "z":"float"
+                "x":1,
+                "y":1,
+                "z":1
             },
             "speed":{
                 "speed":{
-                    "x":"float",
-                    "y":"float",
-                    "z":"float"
+                    "x":1,
+                    "y":1,
+                    "z":1
                 }
             }
         },
         "commands": [
             {
                 "target": "str",
-                "command": "int"
+                "command": 0
             }
         ]
     })
-    const [speed, setSpeed] = useState(0)
-    const [pressed, setPressed] = useState(true)
 
+    const [speed, setSpeed] = useState(0)
+
+    const [trolleyCommand, setTrolleyCommand] = useState(0)
+    const [gantryCommand, setGantryCommand] = useState(0)
+    const [hoistCommand, setHoistCommand] = useState(0)
+    const [boomCommand, setBoomCommand] = useState(0)
+    const [emergencyCommand, setEmergencyCommand] = useState(false)
+    const [spreaderCommand, setSpreaderCommand] = useState(false)
 
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
@@ -147,22 +153,58 @@ export default function Dashboard() {
             console.log("ERROR", error);
         });
         client.on("message", (topic,message)=>{
-            console.log("RECEIVE", message.toString())
-            setCraneInfo(message.toString())
+            switch (topic) {
+                case "crane/state":
+                    setCraneInfo(JSON.parse(message.toString()))
+                    break
+                case "crane/components/trolley/command":
+                    setTrolleyCommand(JSON.parse(message.toString()).msg.command)
+                    break
+                case "crane/components/gantry/command":
+                    setGantryCommand(JSON.parse(message.toString()).msg.command)
+                    break
+                case "crane/components/hoist/command":
+                    setHoistCommand(JSON.parse(message.toString()).msg.command)
+                    break
+                case "crane/components/boom/command":
+                    setBoomCommand(JSON.parse(message.toString()).msg.command)
+                    break
+                case "meta/emergency_button":
+                    setEmergencyCommand(JSON.parse(message.toString()).msg.isPressed)
+                    break
+                case "crane/connectrequest":
+                    setSpreaderCommand(JSON.parse(message.toString()).msg.isconnecting)
+                    break
+                default:
+                    console.log(JSON.parse(message.toString()))
+            }
+            console.log("RECEIVE", JSON.parse(message.toString()))
+
         });
-        client.subscribe('my/test/topic');
+        client.subscribe('crane/components/trolley/command');
+        client.subscribe('crane/components/gantry/command');
+        client.subscribe('crane/components/hoist/command');
+        client.subscribe('crane/components/boom/command');
+        client.subscribe('meta/emergency_button');
+        client.subscribe('crane/connectrequest');
+        client.subscribe('crane/state');
     }, []);
 
     return (
         <div id={"container"}>
-            <button onClick={() => setSpeed(50)}>+</button>
-            <button onClick={() => setSpeed(-50)}>-</button>
             <div id={"visualisation"}>
                 <div id={"threeD"}>
                     <CraneVisualisation speed={speed} craneInfo={craneInfo} />
                 </div>
                 <div id={"input"}>
-                    <InputVisualisation craneInfo={craneInfo} pressed={pressed} />
+                    <InputVisualisation
+                        trolleyCommand={trolleyCommand}
+                        gantryCommand={gantryCommand}
+                        hoistCommand={hoistCommand}
+                        boomCommand={boomCommand}
+                        emergencyCommand={emergencyCommand}
+                        spreaderCommand={spreaderCommand}
+                    />
                 </div>
             </div>
             <div id={"dataTable"}>

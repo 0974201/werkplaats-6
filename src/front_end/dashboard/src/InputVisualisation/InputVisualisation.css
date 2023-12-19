@@ -60,15 +60,7 @@
     border-radius: 5px;
 }
 
-.inputLetter {
-    display: flex;
-    width: 100%;
-    font-size: 40px;
-    justify-content: center;
-    text-align: center;
-}
-
-#letterCluster, #letterCluster > div, #opCluster, #arrowCluster {
+#letterCluster, #letterCluster > div {
     display: flex;
     margin: 0 20px;
 }
@@ -88,8 +80,21 @@
     border-radius: 20px;
 }
 
+#onOffButtons {
+    display: flex;
+    flex-direction: column;
+}
+
 #emergencyButton > img {
     height: 100px;
+}
+
+#spreaderButton {
+    border-radius: 10px;
+    font-size: 50px;
+    height: fit-content;
+    padding: 5px;
+    margin: 6px;
 }
 
 #ABXYContainer {
