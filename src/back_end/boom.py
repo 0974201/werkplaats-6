@@ -13,17 +13,40 @@ class Boom:
         self.rotationZ = rotationZ  # rotation angle of the boom Z axis
         self.speed = speed
         self.angle = angle
+        self.loop = True
+
+    def on_message(self, client, userdata, msg):
+        print("Message received: ", msg.payload)
+        data_dict = json.loads(msg.payload.decode('utf-8'))
+        self.is_active = data_dict.get('meta', {}).get('isActive')
+        keys = data_dict.get('msg', {}).get('key') 
+        oldRotation = data_dict.get('msg', {}).get('rotationZ') 
+
+        self.update_rotation(keys, oldRotation)
 
     # update the rotation of the boom
-    def update_rotation(self):
-        while self.rotationZ < self.angle:
-            self.boomData()
-            # Update rotationZ by adding the speed
-            self.rotationZ += self.speed
-            # Print the current rotationZ
-            print("rotationZ =", self.rotationZ)
-            # Call boomData after the loop completes
-        self.client.disconnect()
+    def update_rotation(self, oldRotation, keys=None):
+        while self.loop:
+            if keys == 2:
+                while oldRotation > self.rotationZ:
+                    # Call boomData
+                    self.boomData()
+                    # Update rotationZ by adding the speed
+                    self.rotationZ -= self.speed
+                    # Print the current rotationZ
+                    print("rotationZ =", self.rotationZ)
+            elif keys == 1:
+                while self.rotationZ < self.angle:
+                    # Call boomData
+                    self.boomData()
+                    # Update rotationZ by adding the speed
+                    self.rotationZ += self.speed
+                    # Print the current rotationZ
+                    print("rotationZ =", self.rotationZ)
+            else:
+                print("No key Pressed")
+            # self.client.disconnect()
+                    
         
 
     def boomData(self):
@@ -42,6 +65,6 @@ class Boom:
         self.client.publish("crane/components/boom/state", data)
 
 # Create an instance of Boom
-boom = Boom(True, 0, 5, 90)
+boom = Boom(True, 0, 5, 75)
 # Call the update_rotation method
 boom.update_rotation()
