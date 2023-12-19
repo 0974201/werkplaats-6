@@ -20,9 +20,6 @@ namespace CraneSim
 
         IShipContainerService _shipContainerService;
 
-        Gantry _gantry;
-        IGantryService _gantryService;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -78,7 +75,6 @@ namespace CraneSim
 
         private void CreateServices()
         {
-            _gantryService = new GantryService();
             _trolleyService = new TrolleyService(_trolley);
             _gantryService = new GantryService(_gantry);
             _shipContainerService = new ShipContainerServices(_shipcontainer);
