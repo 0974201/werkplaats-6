@@ -5,11 +5,11 @@ import json
 
 # class for the emergency button
 class EmergencyButton:
-    def __init__(self, topic, sender):
-        self.client = broker.client.Client("hoist", "crane/components/hoist/state", 0) 
+    def __init__(self):
+        self.client = broker.client.Client("emergencyButton", "crane/components/emergencyButton/state", 0) 
         self.client.serve()
-        self.topic = topic # topic of emergency message
-        self.sender = sender # sender of emergency message
+        self.topic = "meta/emergency_button" # topic of emergency message
+        self.sender = "controller" # sender of emergency message
 
     # method to stop the system when the emergency button is pressed
     def stop_system(self):
@@ -29,23 +29,11 @@ class EmergencyButton:
                     "component": "emergencyButton"
                 },
             "msg": {
-                "isConnected": False,
-                "relativePosition": {
-                    "y": round(random.uniform(0.0, 10.0), 2)
-                },
-                "speed": {
-                    "activeAcceleration": {
-                        "y": True
-                    },
-                    "acceleration": {
-                        "y": round(random.uniform(0.0, 10.0), 2)
-                    },
-                    "speed": {
-                        "y": round(random.uniform(0.0, 10.0), 2)
-                    }
+                "command": "stop_system",
+                "topic": self.topic,
+                "sender": self.sender,
                 }
             }
-        }
         self.client.publish("crane/components/emergencyButton/state", data)
         self.client.disconnect()
 
