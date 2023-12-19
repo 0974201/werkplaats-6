@@ -7,7 +7,8 @@ import os
 
 
 class Client:
-    def __init__(self) -> None:
+    def __init__(self, session_ID) -> None:
+        self.session_ID = session_ID
         load_dotenv()
         self.uri = os.getenv("DB_URI")
         self.certificate = os.path.join(os.path.dirname(__file__), "certificate/admin.pem")
@@ -22,6 +23,7 @@ class Client:
 
         formatted_datetime_insertion = datetime_insertion.strftime("%Y-%m-%d/%H:%M:%S")
         document = {
+            "sessionID": self.session_ID,
             "datetime": formatted_datetime_insertion,
             "msg": msg_object
         }
