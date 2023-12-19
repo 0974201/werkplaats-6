@@ -5,9 +5,10 @@ import json
 
 # class for the emergency button
 class EmergencyButton:
-    def __init__(self):
+    def __init__(self, isActive):
         self.client = broker.client.Client("emergencyButton", "crane/components/emergencyButton/state", 0) 
         self.client.serve()
+        self.isActive = isActive
         self.topic = "meta/emergency_button" # topic of emergency message
         self.sender = "controller" # sender of emergency message
 
@@ -15,23 +16,21 @@ class EmergencyButton:
     def stop_system(self):
         # print message
         print(f"Emergency button pressed! Stopping the system for topic '{self.topic}' by sender '{self.sender}'.")
-        # create message
-        message = json.dumps({"command": "stop_system"})
-        # publish it to the topic 
-        self.client.publish(self.topic, message)
+        if self.isActive:
+            self.emergencyData()
 
-    def simulate(self):
+    def emergencyData(self):
         data = {
             "meta":
                 {
                     "topic": "crane/components/emergencyButton/state",
-                    "isActive": True,
+                    "isActive": self.isActive,
                     "component": "emergencyButton"
                 },
             "msg": {
                 "command": "stop_system",
                 "topic": self.topic,
-                "sender": self.sender,
+                "sender": self.sender
                 }
             }
         self.client.publish("crane/components/emergencyButton/state", data)
