@@ -5,18 +5,18 @@ export default function DataTable(props) {
 
     return (
         <>
-            {console.log(props)}
+            {console.log(props.craneInfo)}
             <div className='datatable_container'>
                 <table className='datatable_table'>
                     <tbody>
                         <tr>
                             <th>table</th>
                         </tr>
-                        {Object.keys(props.list).map(key => {
+                        {Object.keys(props.craneInfo).map(key => {
                             return (
                                 <tr key={key}>
                                     <td>{key}</td>
-                                    <td>{props.list[key].craneInfo}</td>
+                                    <td>{key}</td>
                                 </tr>
                             )
                         })}
