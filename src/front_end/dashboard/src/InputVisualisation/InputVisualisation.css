@@ -128,3 +128,24 @@
     text-align: center;
 }
 
+.verticalHalfButtons {
+    display: flex;
+}
+
+.verticalHalfButtons > #inputButton {
+    width:47px;
+}
+
+.horizontalHalfButtons {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontalHalfButtons > #inputButton {
+    height: 47px;
+}
+
+.horizontalHalfButtons .inputLetter {
+    font-size: 40px;
+}
+

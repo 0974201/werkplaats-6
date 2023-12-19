@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './InputVisualisation.css'
 
 export default function InputVisualisation(props) {
-    const [controllerConnected, setControllerConnected] = useState(false)
+    const [controllerConnected, setControllerConnected] = useState(true)
     const [commands, setCommands] = useState(props)
 
     useEffect(() => {
@@ -26,15 +26,15 @@ export default function InputVisualisation(props) {
     function Joystick(props) {
         const posY = () => {
             switch (props.Y) {
-                case 1:
+                case "1":
                     return {
                         alignItems: 'flex-start'
                     }
-                case 0:
+                case "0":
                     return {
                         alignItems: 'center'
                     }
-                case -1:
+                case "-1":
                     return {
                         alignItems: 'flex-end'
                     }
@@ -46,15 +46,15 @@ export default function InputVisualisation(props) {
         }
         const posX = () => {
             switch (props.X) {
-                case 1:
+                case "1":
                     return {
                         justifyContent: 'flex-start'
                     }
-                case 0:
+                case "0":
                     return {
                         justifyContent: 'center'
                     }
-                case -1:
+                case "-1":
                     return {
                         justifyContent: 'flex-end'
                     }
@@ -92,10 +92,20 @@ export default function InputVisualisation(props) {
 
     const Controller = () => (
         <div id={"controllerInput"}>
-            <Joystick letter={"L"} Y={0} X={0} />
-            <Joystick letter={"R"} Y={0} X={0} />
-            <ABXYButtons />
-            <Button letter={"RB"} active={false} />
+            <div>
+                <Joystick letter={"L"} Y={commands.trolleyCommand} X={0} />
+                <div className={"verticalHalfButtons"}>
+                    <Button letter={"<"} active={commands.gantryCommand === "-1"} />
+                    <Button letter={">"} active={commands.gantryCommand === "1"} />
+                </div>
+            </div>
+            <div>
+                <div className={"horizontalHalfButtons"}>
+                    <Button letter={String.fromCharCode(8593)} active={commands.boomCommand === "1"} />
+                    <Button letter={String.fromCharCode(8595)} active={commands.boomCommand === "-1"} />
+                </div>
+                <Joystick letter={"R"} Y={commands.hoistCommand} X={0} />
+            </div>
         </div>
     )
 
@@ -116,21 +126,6 @@ export default function InputVisualisation(props) {
                     <Button letter={"D"} active={commands.gantryCommand === "1"} />
                     <Button letter={String.fromCharCode(8595)} active={commands.hoistCommand === "-1"} />
                 </div>
-            </div>
-        </div>
-    )
-
-    const ABXYButtons = () => (
-        <div id={"ABXYContainer"}>
-            <div id={"ABXYRowSide"}>
-                <Button letter={"X"} active={false} />
-            </div>
-            <div id={"ABXYRowMiddle"}>
-                <Button letter={"Y"} active={false} />
-                <Button letter={"A"} active={false} />
-            </div>
-            <div id={"ABXYRowSide"}>
-                <Button letter={"B"} active={false} />
             </div>
         </div>
     )
