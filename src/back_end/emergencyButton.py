@@ -6,7 +6,7 @@ import json
 # class for the emergency button
 class EmergencyButton:
     def __init__(self, isActive):
-        self.client = broker.client.Client("emergencyButton", "crane/components/emergencyButton/state", 0) 
+        self.client = broker.client.Client("emergencyButton", [("crane/components/emergencyButton/state")], 0)
         self.client.serve()
         self.isActive = isActive
         self.topic = "meta/emergency_button" # topic of emergency message
@@ -36,4 +36,5 @@ class EmergencyButton:
         self.client.publish("crane/components/emergencyButton/state", data)
         self.client.disconnect()
 
-EmergencyButton()
+emergency = EmergencyButton(True)
+emergency.stop_system()
