@@ -2,6 +2,7 @@
 
 Het doel van dit project is om een interactieve kraansimulatie te creëren. Het zal MQTT gebruiken voor real-time communicatie, 
 React.js gebruiken voor de frontend, Python gebruiken voor de backend en MongoDB gebruiken voor het opslaan van data. 
+
 ## Kenmerken
 
 * Realistische 3D-simulatie van een kraan.
@@ -18,14 +19,15 @@ React.js gebruiken voor de frontend, Python gebruiken voor de backend en MongoDB
 
 ### Benodigdheden
 
-* Node.js en npm
+* Node.js
+* React.js
+* Vite.js
 * Python 3.x
 * C Sharp
-* HiveMQ MQTT Broker
+* HiveMQ (Mqtt broker)
 * MongoDB
 
 ## Backend 
-
 1. Open een Terminal 
 2. Navigeer naar de Backend Map:
     *  Gebruik het commando ```cd pad/naar/jouw/project/backend``` om naar de backend map te gaan.
@@ -67,40 +69,55 @@ MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het op
 
 ## Projectstructuur
 
-    kraan-simulatie/
+    st-2324-1-d-wx1-t2-2324-wx1-bear/
     │
-    ├── backend/                     # 
-    │   ├── mqtt/                    # 
-    │   │   ├── mqtt_client.py       # 
-    │   │   └── ...                  # 
+    ├── docs/                    
+    │   ├── conventions/                   
+    │   │   ├── base_positions.md      
+    │   │   ├── components.md         
+    │   │   ├── metrics.md            
+    │   │   ├── mqtt_messages.md      
+    │   │   └── ...                  
     │   │
-    │   ├── simulation/              #
-    │   │   ├── engine.py            # 
-    │   │   └── ...                  # 
-    │   │
-    │   ├── main.py                  # 
-    │   ├── requirements.txt         #
-    │   └── ...
+    │   ├── microservices/              
+    │   │   ├── broker.md            
+    │   │   ├── controller.md
+    │   │   ├── dashboard.md
+    │   │   ├── database.md
+    │   │   └── ...    
     │
-    ├── frontend/                    # 
-    │   ├── public/                  # 
-    │   │   ├── index.html           #
-    │   │   └── ...                  # 
-    │   │
-    │   ├── src/                     # 
-    │   │   ├── components/          # 
-    │   │   │   ├── CraneModel.js    #  
-    │   │   │   └── ...              # 
+    ├── run/                     
+    │   │   ├── linux_mac.sh       
+    │   │   ├── windows.bat        
+    │   │   └── ...                   
+    │
+    ├── src/                     
+    │   ├── CSharp/  
+    │   │   ├── Controller.wpf          
+    │   │   ├── ControllerXBOX          
+    │   │   ├── CraneSim.Core         
+    │   │   ├── CraneSim.Infrastructure         
+    │   │   ├── CraneSim       
+    │   │   ├── MQTTTemplate         
+    │   │   ├── CraneSim.sln          
+    │   │   └── ...                   
+    │   ├── Python/  
+    │   │   ├── README.md         
+    │   │   ├── boom.py         
+    │   │   ├── emergencyButton.py   
+    │   │   └── ...  
+    ├── Python/                      
+    │   │   ├── components/           
+    │   │   │   ├── CraneModel.js      
+    │   │   │   └── ...               
     │   │   │
-    │   │   ├── App.js               # 
-    │   │   ├── index.js             # 
+    │   │   ├── App.js                
+    │   │   ├── index.js              
     │   │   └── ...
     │   │
-    │   ├── package.json             # 
-    │   └── ...
     │
     ├── README.md                    # Projectdocumentatie
-    └── ...
+    └── Requirements.txt             # Packages
 
 ## Gebruik
 
