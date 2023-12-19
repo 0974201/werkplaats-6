@@ -9,6 +9,9 @@ namespace CraneSim.Core.Dtos.Gantry
 {
     public class GantryResponseSpeedDto
     {
+        [JsonPropertyName("activeAcceleration")]
+        public bool ActiveAcceleration { get; set; }
+
         [JsonPropertyName("acceleration")]
         public float Acceleration { get; set; }
 
