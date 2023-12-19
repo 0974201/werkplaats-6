@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 from paho import mqtt
 import broker.client
+import time
 import json
 
 # class for the emergency button
@@ -38,6 +39,7 @@ class EmergencyButton:
                     print("Emergency button is not active.")
             else:
                 print("No key pressed!")
+                time.sleep(1)
                 
 
     def emergencyData(self):
