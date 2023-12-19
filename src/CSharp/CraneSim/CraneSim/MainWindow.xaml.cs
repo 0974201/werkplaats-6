@@ -12,7 +12,9 @@ namespace CraneSim
     public partial class MainWindow : Window
     {
         Trolley _trolley;
+        Shipcontainer _shipcontainer;
         ITrolleyService _trolleyService;
+        IShipContainerService _shipContainerService;
 
         Gantry _gantry;
         IGantryService _gantryService;
@@ -32,12 +34,14 @@ namespace CraneSim
             //TestGantryService(); < om test te runnen
             _trolleyService.EstablishBrokerConnection();
             _gantryService.EstablishBrokerConnection();
+            _shipContainerService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
             _gantryService.EstablishBrokerConnection();
+            _shipContainerService.DisconnectBrokerConnection();
         }
 
         private void CreateComponents()
@@ -54,14 +58,21 @@ namespace CraneSim
                 Name = "Gantry",
             };
 
+
+            _shipcontainer = new Shipcontainer()
+            {
+                Id = 1,
+                Name = "ShipContainer"
+            };
+            
         }
 
         private void CreateServices()
         {
             _trolleyService = new TrolleyService(_trolley);
             _gantryService = new GantryService(_gantry);
+            _shipContainerService = new ShipContainerServices(_shipcontainer);
         }
-
 
         #region Testmethodes
         private async Task TestTrolleyService() 
