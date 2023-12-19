@@ -141,6 +141,7 @@ export default function InputVisualisation(props) {
             <div id={"onOffButton"}>
                 <EmergencyButton pressed={commands.emergencyCommand === "true"} />
                 <SpreaderButton active={commands.spreaderCommand === "true"} />
+                <button onClick={() => setControllerConnected(!controllerConnected)}>Switch Mode</button>
             </div>
 
         </div>
