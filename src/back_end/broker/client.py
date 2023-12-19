@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import time
 import json
 import os
+import ast
 
 
 class Client:
@@ -43,6 +44,10 @@ class Client:
             self.subscribed = True
 
         def on_message(client, userdata, msg):
+            msg_object = ast.literal_eval(msg.payload.decode("utf-8"))
+            if msg_object["msg"]["isPressed"]:
+                print(f"{self.microservice} acknowledged emergency button state True")
+                return {"eb": True}
             print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
             return msg
 
