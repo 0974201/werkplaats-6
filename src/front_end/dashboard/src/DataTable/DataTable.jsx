@@ -25,6 +25,7 @@ export default function DataTable(props) {
                 </tr>
                 {Object.keys(props.craneInfo).map(key => {
                     return (
+                        <>
                         <tr key={key}>
                             <td>{key}</td>
                             <td>{props.craneInfo.meta.topic}</td>
@@ -32,6 +33,8 @@ export default function DataTable(props) {
                             <td>{props.craneInfo.absolutePosition.x}</td>
                             <td>{props.craneInfo.absolutePosition.y}</td>
                             <td>{props.craneInfo.absolutePosition.z}</td>
+                        </tr>
+                        <tr key={key}>
                             <td>{props.craneInfo.components[0].component}</td>
                             <td>{props.craneInfo.components[0].isActive}</td>
                             <td>{props.craneInfo.components[0].isConnected}</td>
@@ -41,6 +44,8 @@ export default function DataTable(props) {
                             <td>{props.craneInfo.components[0].speed.acceleration.y}</td>
                             <td>{props.craneInfo.components[0].speed.activeAcceleration.y}</td>
                             <td>{props.craneInfo.components[0].speed.speed.y}</td>
+                        </tr>
+                        <tr key={key}>
                             <td>{props.craneInfo.container.id}</td>
                             <td>{props.craneInfo.container.isConnected}</td>
                             <td>{props.craneInfo.container[0].absolutePosition.x}</td>
@@ -49,9 +54,12 @@ export default function DataTable(props) {
                             <td>{props.craneInfo.container[0].speed.x}</td>
                             <td>{props.craneInfo.container[0].speed.y}</td>
                             <td>{props.craneInfo.container[0].speed.z}</td>
+                        </tr>
+                        <tr key={key}>
                             <td>{props.craneInfo.commands[0].command}</td>
                             <td>{props.craneInfo.commands[0].target}</td>
                         </tr>
+                        </>
                     )
                 })
             }
