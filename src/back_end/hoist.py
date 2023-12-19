@@ -13,7 +13,6 @@ class Hoist:
         self.move = True
         self.frequency = 0.1
         self.hoist_y = 0
-        self.positive_movement()
 
     def on_message(self, client, userdata, msg):
         print("Message received: ", msg.payload)
@@ -28,11 +27,13 @@ class Hoist:
         hoistX = data_dict.get('msg', {}).get('TrollyX')
         hoistZ = data_dict.get('msg', {}).get('Gantryz')
 
+        print(self.is_active)
+
         self.container_connect(isConnected, containerX, containerY, containerZ, hoistX, hoistZ)
     broker.client.Client.on_message = on_message
 
     def positive_movement(self):
-        while self.is_active is "true":
+        while self.is_active == "true":
             time.sleep(self.frequency)
 
             self.acceleration = self.acceleration * 1.1
@@ -55,7 +56,7 @@ class Hoist:
             speed = -2.5
         # print(speed)
         move_hoist_y = speed
-        self.deceleration(speed)
+        self.deceleration(speed) 
         self.position(move_hoist_y)
 
     def deceleration(self, speed):
@@ -81,10 +82,10 @@ class Hoist:
         # print(pos)
 
     def container_connect(self, isConnected, containerX,containerY,containerZ ,hoist_y, hoistX, hoistZ):
-            Math.sqrt
-        
-        
-            isConnected = True
+            connected = (math.sqrt((hoistX - containerX)**2), math.sqrt((hoist_y - containerY)**2), math.sqrt((hoistZ - containerZ)**2))
+            if connected <= (10,10,10):
+                isConnected = True
+            print(connected)
             self.Hoist_data(isConnected)
 
     
@@ -114,10 +115,7 @@ class Hoist:
                 }
             }
         }
-        # self.client.publish("crane/components/hoist/state", data)
-
-
-
+        self.client.publish("crane/components/hoist/state", data)
 
     def serve(self):
         self.broker.serve()
