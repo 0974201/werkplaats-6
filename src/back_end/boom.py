@@ -20,16 +20,16 @@ class Boom:
         data_dict = json.loads(msg.payload.decode('utf-8'))
         self.is_active = data_dict.get('meta', {}).get('isActive')
         keys = data_dict.get('msg', {}).get('key') 
-        oldRotation = data_dict.get('msg', {}).get('rotationZ') 
+        # oldRotation = data_dict.get('msg', {}).get('rotationZ') 
 
-        self.update_rotation(keys, oldRotation)
+        self.update_rotation(keys)
 
     # update the rotation of the boom
-    def update_rotation(self, oldRotation, keys=None):
+    def update_rotation(self, keys=None):
         while self.loop:
             if keys == 2:
-                while oldRotation > self.rotationZ:
-                    # Update rotationZ by adding the speed
+                while self.rotationZ > 0:
+                    # Update rotationZ by subtracting the speed
                     self.rotationZ -= self.speed
                     # Print the current rotationZ
                     print("rotationZ =", self.rotationZ)
