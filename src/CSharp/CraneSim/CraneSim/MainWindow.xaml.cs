@@ -14,6 +14,10 @@ namespace CraneSim
         Trolley _trolley;
         Shipcontainer _shipcontainer;
         ITrolleyService _trolleyService;
+
+        Gantry _gantry;
+        IGantryService _gantryService;
+
         IShipContainerService _shipContainerService;
 
         Gantry _gantry;
@@ -62,13 +66,19 @@ namespace CraneSim
             _shipcontainer = new Shipcontainer()
             {
                 Id = 1,
-                Name = "ShipContainer"
+                Name = "Gantry",
             };
-            
+
+            _shipcontainer = new Shipcontainer()
+            {
+                Id = 1,
+                Name = "ShipContainer",
+            };
         }
 
         private void CreateServices()
         {
+            _gantryService = new GantryService();
             _trolleyService = new TrolleyService(_trolley);
             _gantryService = new GantryService(_gantry);
             _shipContainerService = new ShipContainerServices(_shipcontainer);
