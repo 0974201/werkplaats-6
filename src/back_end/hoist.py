@@ -1,53 +1,32 @@
 import broker.client
 import random
 import time
+import json
 
 class Hoist:
     def __init__(self):
-        self.is_active = False
         self.client = broker.client.Client("hoist", [("crane/components/hoist/command", 0)])
-        self.active = True
-        self.Hoist_data()
-        self.acceleration = 1
-        self.is_active = True
-        self.hoist_y = 500
-        self.move = False 
-
-    
-    def Hoist_data(self):
         self.client.serve()
-        while self.active:
-            data = {
-                "meta":
-                    {
-                        "topic": "crane/components/hoist/state",
-                        "isActive": True,
-                        "component": "hoist"
-                    },
-                "msg": {
-                    "isConnected": False,
-                    "relativePosition": {
-                        "y": round(random.uniform(0.0, 10.0), 2)
-                    },
-                    "speed": {
-                        "activeAcceleration": {
-                            "y": True
-                        },
-                        "acceleration": {
-                            "y": round(random.uniform(0.0, 10.0), 2)
-                        },
-                        "speed": {
-                            "y": round(random.uniform(0.0, 10.0), 2)
-                        }
-                    }
-                }
-            }
-            # self.client.publish("crane/components/hoist/state", data)
-        self.client.disconnect()
+        self.is_active = []
+        self.acceleration = 1
+        self.move = True
+        self.frequency = 0.1
+        self.hoist_y = 0
+        self.positive_movement()
+
+    def on_message(self, client, userdata, msg):
+        print("Message received: ", msg.payload)
+        data_dict = json.loads(msg.payload.decode('utf-8'))
+
+        isConnected = data_dict.get('msg', {}).get('isConnected')
+        self.is_active = data_dict.get('meta', {}).get('isActive')
+        keys = data_dict.get('msg', {}).get('key')        
+
+    broker.client.Client.on_message = on_message
 
     def positive_movement(self):
-        while self.is_active:
-            time.sleep(0.25)
+        while self.is_active is "true":
+            time.sleep(self.frequency)
 
             self.acceleration = self.acceleration * 1.1
             speed = 0.83 * self.acceleration
@@ -56,46 +35,80 @@ class Hoist:
                 speed = 2.5
             # print(speed)
             move_hoist_y = speed
-            self.deceleration(speed)
             self.position(move_hoist_y)
 
     def negative_movement(self):
-        while self.is_active:
-            while self.move:
-                time.sleep(0.25)
+        time.sleep(self.frequency)
 
 
-                self.acceleration = self.acceleration * 1.1
-                speed = -0.83 * self.acceleration
+        self.acceleration = self.acceleration * 1.1
+        speed = -0.83 * self.acceleration
 
-                if speed <= -2.5:
-                    speed = -2.5
-                print(speed)
-                move_hoist_y = speed
-                self.deceleration(speed)
-                self.position(move_hoist_y)
+        if speed <= -2.5:
+            speed = -2.5
+        # print(speed)
+        move_hoist_y = speed
+        self.deceleration(speed)
+        self.position(move_hoist_y)
 
     def deceleration(self, speed):
         while not self.move:
-            time.sleep(0.25)
+            time.sleep(self.frequency)
             if -0.5 <= speed <= 0.5:
                 speed = 0
             elif speed >= 0.5:
                 speed -= 0.2
             else:
                 speed += 0.2
-            move_hoist_y = speed
-            self.position(move_hoist_y)
+            self.position(speed)
 
-    def position(self, move_hoist_y):
+    def position(self, speed):
+        move_hoist_y = speed
         self.hoist_y += move_hoist_y
-        print(self.hoist_y)
+        pos = self.hoist_y
+        max_pos = 40
+        if pos > max_pos:
+            pos = 40
+
+        self.Hoist_data(speed, pos)
+        # print(pos)
 
     def container_connect(self):
-        # placeholders until the container interaction is implemented
         is_connected = False
         can_connect = False
     
+    def Hoist_data(self, speed, pos):  
+
+        data = {
+            "meta":
+                {
+                    "topic": "crane/components/hoist/state",
+                    "isActive": True,
+                    "component": "hoist"
+                },
+            "msg": {
+                "isConnected": False,
+                "relativePosition": {
+                    "y": pos
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "y": True
+                    },
+                    "acceleration": {
+                        "y": self.acceleration
+                    },
+                    "speed": {
+                        "y": speed
+                    }
+                }
+            }
+        }
+        # self.client.publish("crane/components/hoist/state", data)
+
+
+
+
     def serve(self):
         self.broker.serve()
         while self.active:
@@ -105,4 +118,3 @@ class Hoist:
 
 
 Hoist()
-

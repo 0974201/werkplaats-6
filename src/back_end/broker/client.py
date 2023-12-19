@@ -38,16 +38,18 @@ class Client:
         self.client.connect(self.env["url"], self.env["port"])
 
     def set_callbacks(self):
-        def on_subscribe(client, userdata, mid, granted_qos, properties=None):
-            print(f"{self.microservice} subscribed to {self.topics}")
-            self.subscribed = True
+        self.client.on_subscribe = self.on_subscribe
+        self.client.on_message = self.on_message
 
-        def on_message(client, userdata, msg):
-            print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
-            return msg
+    def on_subscribe(self, client, userdata, mid, granted_qos, properties=None):
+        print(f"{self.microservice} subscribed to {self.topics}")
+        self.subscribed = True
 
-        self.client.on_subscribe = on_subscribe
-        self.client.on_message = on_message
+    def on_message(self, client, userdata, msg):
+        print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
+
+
+
 
     def publish(self, topic: str, msg: dict, qos=0):
         def on_publish(client, userdata, mid, properties=None):
