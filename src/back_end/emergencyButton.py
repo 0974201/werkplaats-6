@@ -1,20 +1,15 @@
 import paho.mqtt.client as mqtt
 from paho import mqtt
+import broker.client
 import json
 
 # class for the emergency button
 class EmergencyButton:
-    def __init__(self, mqtt_broker, topic, sender):
+    def __init__(self, topic, sender):
+        self.client = broker.client.Client("hoist", "crane/components/hoist/state", 0) 
+        self.client.serve()
         self.topic = topic # topic of emergency message
         self.sender = sender # sender of emergency message
-
-        # mqtt connection
-        self.client = mqtt.Client()
-        try:
-            self.client.connect(mqtt_broker)
-            self.client.loop_start()
-        except Exception as e:
-            print(f"Failed to connect to MQTT broker: {e}")
 
     # method to stop the system when the emergency button is pressed
     def stop_system(self):
@@ -25,10 +20,33 @@ class EmergencyButton:
         # publish it to the topic 
         self.client.publish(self.topic, message)
 
-    # stop the mqtt client
-    def stop_mqtt(self):
-        try:
-            self.client.loop_stop()
-            self.client.disconnect()
-        except Exception as e:
-            print(f"Failed to stop MQTT: {e}")
+    def simulate(self):
+        data = {
+            "meta":
+                {
+                    "topic": "crane/components/emergencyButton/state",
+                    "isActive": True,
+                    "component": "emergencyButton"
+                },
+            "msg": {
+                "isConnected": False,
+                "relativePosition": {
+                    "y": round(random.uniform(0.0, 10.0), 2)
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "y": True
+                    },
+                    "acceleration": {
+                        "y": round(random.uniform(0.0, 10.0), 2)
+                    },
+                    "speed": {
+                        "y": round(random.uniform(0.0, 10.0), 2)
+                    }
+                }
+            }
+        }
+        self.client.publish("crane/components/emergencyButton/state", data)
+        self.client.disconnect()
+
+EmergencyButton()
