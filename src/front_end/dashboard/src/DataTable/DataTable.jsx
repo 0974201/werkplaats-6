@@ -20,16 +20,21 @@ export default function DataTable(props) {
     <div className='datatable_container'>
         <table className='datatable_table'>
             <tbody>
-                <tr>
-                    <th>table</th>
-                </tr>
                 {Object.keys(props.craneInfo).map(key => {
                     return (
                         <>
                         <tr key={key}>
-                            <td>{key}</td>
+                            <th>{key}</th>
+                            <th>{key}</th>
+                            <th>{key}</th>
+                            <th>{key}</th>
+                            <th>{key}</th>
+                        </tr>
+                        <tr key={key}>
                             <td>{props.craneInfo.meta.topic}</td>
                             <td>{props.craneInfo.meta.isActive}</td>
+                        </tr>
+                        <tr>
                             <td>{props.craneInfo.absolutePosition.x}</td>
                             <td>{props.craneInfo.absolutePosition.y}</td>
                             <td>{props.craneInfo.absolutePosition.z}</td>
