@@ -40,7 +40,7 @@ namespace CraneSim
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
-            _gantryService.EstablishBrokerConnection();
+            _gantryService.DisconnectBrokerConnection();
             _shipContainerService.DisconnectBrokerConnection();
         }
 
