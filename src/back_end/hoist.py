@@ -6,13 +6,14 @@ import math
 
 class Hoist:
     def __init__(self):
+        self.loop = True
         self.client = broker.client.Client("hoist", [("crane/components/hoist/command", 0)])
         self.client.serve()
         self.is_active = []
         self.acceleration = 1
-        self.move = True
         self.frequency = 0.1
         self.hoist_y = 0
+        self.movement()
 
     def on_message(self, client, userdata, msg):
         print("Message received: ", msg.payload)
@@ -26,69 +27,78 @@ class Hoist:
         containerZ = data_dict.get('msg', {}).get('containerZ')
         hoistX = data_dict.get('msg', {}).get('TrollyX')
         hoistZ = data_dict.get('msg', {}).get('Gantryz')
-
-        print(self.is_active)
-
+        
+        self.movement(keys)
         self.container_connect(isConnected, containerX, containerY, containerZ, hoistX, hoistZ)
+
     broker.client.Client.on_message = on_message
 
-    def positive_movement(self):
-        while self.is_active == "true":
+    def movement(self, keys= None):
+        while self.loop == True:
+            keys = 0
             time.sleep(self.frequency)
+            if keys == 2:
+                print(f"keys: {keys}")
+                
+                self.acceleration = self.acceleration * 1.1
+                speed = 0.83 * self.acceleration
+                print(f"speed: {speed}")
 
-            self.acceleration = self.acceleration * 1.1
-            speed = 0.83 * self.acceleration
+                if speed >= 2.5:
+                    speed = 2.5
+                move_hoist_y = speed
+                print(f"move_hoist_y: {move_hoist_y}")
+                
+                self.position(move_hoist_y)
 
-            if speed >= 2.5:
-                speed = 2.5
-            # print(speed)
-            move_hoist_y = speed
-            self.position(move_hoist_y)
-
-    def negative_movement(self):
-        time.sleep(self.frequency)
-
-
-        self.acceleration = self.acceleration * 1.1
-        speed = -0.83 * self.acceleration
-
-        if speed <= -2.5:
-            speed = -2.5
-        # print(speed)
-        move_hoist_y = speed
-        self.deceleration(speed) 
-        self.position(move_hoist_y)
-
-    def deceleration(self, speed):
-        while not self.move:
-            time.sleep(self.frequency)
-            if -0.5 <= speed <= 0.5:
-                speed = 0
-            elif speed >= 0.5:
-                speed -= 0.2
+            elif keys == 1:
+                print(f"keys: {keys}")
+                self.acceleration = self.acceleration * 1.1
+                speed = -0.83 * self.acceleration
+                print(f"speed: {speed}")
+                
+                if speed <= -2.5:
+                    speed = -2.5
+                # print(speed)
+                move_hoist_y = speed
+                print(f"move_hoist_y: {move_hoist_y}")
+                
+                self.position(move_hoist_y)
             else:
-                speed += 0.2
-            self.position(speed)
+                print("no key press")
 
     def position(self, speed):
         move_hoist_y = speed
         self.hoist_y += move_hoist_y
         pos = self.hoist_y
         max_pos = 40
+        min_pos = 0
+
         if pos > max_pos:
             pos = 40
+        elif pos < min_pos:
+            pos = 0
 
+        print(f"pos: {pos}")
         self.Hoist_data(speed, pos)
-        # print(pos)
 
     def container_connect(self, isConnected, containerX,containerY,containerZ ,hoist_y, hoistX, hoistZ):
+            # testdata to check container
+            containerX = 10
+            containerY = 10
+            containerZ = 10 
+            hoistX = 20
+            hoist_y = 20
+            hoistZ =20
             connected = (math.sqrt((hoistX - containerX)**2), math.sqrt((hoist_y - containerY)**2), math.sqrt((hoistZ - containerZ)**2))
             if connected <= (10,10,10):
                 isConnected = True
+            else:
+                print("to far away")
             print(connected)
             self.Hoist_data(isConnected)
 
-    
+
     def Hoist_data(self, speed, pos, isConnected):  
         data = {
             "meta":
@@ -116,13 +126,5 @@ class Hoist:
             }
         }
         self.client.publish("crane/components/hoist/state", data)
-
-    def serve(self):
-        self.broker.serve()
-        while self.active:
-            time.sleep(self.frequency)
-
-        self.client_broker.disconnect()
-
-
+        # self.client.disconnect()
 Hoist()
