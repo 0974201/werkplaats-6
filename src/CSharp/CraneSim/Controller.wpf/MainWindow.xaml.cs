@@ -13,7 +13,7 @@ namespace Controller.wpf
         private HiveMQClient _client;
         private bool _gantryMovement = false;
         private bool _boomMovement = false;
-        private bool _pickUp=false;
+        private bool _pickUp = false;
 
         private DateTime _lastKeyDownTime = DateTime.MinValue;
         private DateTime _lastKeyUpTime = DateTime.MinValue;
@@ -65,7 +65,7 @@ namespace Controller.wpf
             {
                 if (!_boomMovement && !_gantryMovement)
                 {
-                    if(key == Key.R)
+                    if (key == Key.R)
                     {
                         infoLabel.Content = "Grabbing or releasing container";
                         _pickUp = !_pickUp;
@@ -92,32 +92,32 @@ namespace Controller.wpf
                         infoLabel.Content = "Hoist down!";
                         SendHoistDown();
                     }
-
-                    if (key == Key.A)
-                    {
-                        infoLabel.Content = "Gantry left!";
-                        _gantryMovement = true;
-                        SendGantryLeft();
-                    }
-                    if (key == Key.D)
-                    {
-                        infoLabel.Content = "Gantry right!";
-                        _gantryMovement = true;
-                        SendGantryRight();
-                    }
-                    if (key == Key.Q)
-                    {
-                        infoLabel.Content = "Boom Up!";
-                        _boomMovement = true;
-                        SendBoomUp();
-                    }
-                    if (key == Key.E)
-                    {
-                        infoLabel.Content = "Boom Down!";
-                        _boomMovement = true;
-                        SendBoomDown();
-                    }
                 }
+                if (key == Key.A)
+                {
+                    infoLabel.Content = "Gantry left!";
+                    _gantryMovement = true;
+                    SendGantryLeft();
+                }
+                if (key == Key.D)
+                {
+                    infoLabel.Content = "Gantry right!";
+                    _gantryMovement = true;
+                    SendGantryRight();
+                }
+                if (key == Key.Q)
+                {
+                    infoLabel.Content = "Boom Up!";
+                    _boomMovement = true;
+                    SendBoomUp();
+                }
+                if (key == Key.E)
+                {
+                    infoLabel.Content = "Boom Down!";
+                    _boomMovement = true;
+                    SendBoomDown();
+                }
+
 
 
                 if (key == Key.O)
