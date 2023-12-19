@@ -106,18 +106,22 @@ MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het op
     │   │   ├── boom.py         
     │   │   ├── emergencyButton.py   
     │   │   └── ...  
-    ├── Python/                      
-    │   │   ├── components/           
-    │   │   │   ├── CraneModel.js      
-    │   │   │   └── ...               
-    │   │   │
-    │   │   ├── App.js                
-    │   │   ├── index.js              
+    │   ├── back_end/  
+    │   │   ├──          
+    │   │   ├── container.py        
+    │   │   ├── db_mqtt_client.py 
+    │   │   ├── hoist.py
+    │   │   ├── main.py 
+    │   │   ├── setup.py 
+    │   │   ├── spreader.py 
     │   │   └── ...
-    │   │
+    │   ├── front_end/  
+    │   │   ├──          
+    │   │   └── ...   
     │
+    ├── .gitignore  
     ├── README.md                    # Projectdocumentatie
-    └── Requirements.txt             # Packages
+    ├── Requirements.txt             # Packages
 
 ## Gebruik
 
