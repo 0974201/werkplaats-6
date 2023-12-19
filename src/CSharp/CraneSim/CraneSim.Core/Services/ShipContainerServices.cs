@@ -1,4 +1,5 @@
 ﻿using CraneSim.Core.Dtos.Crane;
+using CraneSim.Core.Dtos.Gantry;
 using CraneSim.Core.Dtos.Hoist;
 using CraneSim.Core.Dtos.Main;
 using CraneSim.Core.Dtos.ShipContainer;
