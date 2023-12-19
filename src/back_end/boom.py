@@ -1,5 +1,6 @@
 # imports
 import broker.client
+import time
 import json
 
 # define class boom
@@ -35,6 +36,7 @@ class Boom:
                     print("rotationZ =", self.rotationZ)
                     # Call boomData
                     self.boomData()
+                    time.sleep(0.01)
             elif keys == 1:
                 while self.rotationZ < self.angle:
                     # Call boomData
@@ -43,6 +45,7 @@ class Boom:
                     self.rotationZ += self.speed
                     # Print the current rotationZ
                     print("rotationZ =", self.rotationZ)
+                    time.sleep(0.01)
             else:
                 print("No key Pressed")
             # self.client.disconnect()
