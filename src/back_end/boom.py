@@ -30,26 +30,14 @@ class Boom:
     data = {
         "meta":
             {
-                "topic": "crane/components/hoist/state",
+                "topic": "crane/components/boom/state",
                 "isActive": True,
-                "component": "hoist"
+                "component": "boom"
             },
         "msg": {
-            "isConnected": False,
-            "relativePosition": {
-                "y": round(random.uniform(0.0, 10.0), 2)
+            "Rotation": {
+                "Z": self.rotationZ
             },
-            "speed": {
-                "activeAcceleration": {
-                    "y": True
-                },
-                "acceleration": {
-                    "y": round(random.uniform(0.0, 10.0), 2)
-                },
-                "speed": {
-                    "y": round(random.uniform(0.0, 10.0), 2)
-                }
-            }
         }
     }
     self.client.publish("crane/components/hoist/state", data)
