@@ -62,7 +62,7 @@ namespace CraneSim.Core.Services
             var payload = e.PublishMessage.PayloadAsString;
             MainResponseDto mainRequestDto = JsonSerializer.Deserialize<MainResponseDto>(payload);
 
-            _activeShipContainer.IsConnectedToHoist = true; // Enkel om te testen
+            //_activeShipContainer.IsConnectedToHoist = true; // Enkel om te testen
 
             if (mainRequestDto.Meta.Component == "trolley")
             {
