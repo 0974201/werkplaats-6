@@ -34,5 +34,27 @@
 - **s**
   - acceleration/deceleration time
 
+## Container
+- **m**
+  - weight
+  - dimensions
+  - position
+  - is_lifted
+  - errors
+
+## Boom
+- **m**
+  - Rotation Z
+  - update_rotation
+  - publish_status
+  - stop_mqtt'
+
+## Spreader
+- **m**
+  - Position
+  - attached_container
+  - errors
+  - is_moving
+
 
 Al de rest ook eh ;)
