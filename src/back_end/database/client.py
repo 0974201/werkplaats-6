@@ -3,12 +3,13 @@ from datetime import datetime
 import ast
 import pytz
 from dotenv import load_dotenv
+from time import time as epoch_time
 import os
 
 
 class Client:
-    def __init__(self, session_ID) -> None:
-        self.session_ID = session_ID
+    def __init__(self) -> None:
+        self.session_ID = int(epoch_time())
         load_dotenv()
         self.uri = os.getenv("DB_URI")
         self.certificate = os.path.join(os.path.dirname(__file__), "certificate/admin.pem")

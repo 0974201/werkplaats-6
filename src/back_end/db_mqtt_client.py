@@ -7,8 +7,7 @@ class DbMqttClient:
     def __init__(self, frequency: float, active=True):
         self.frequency = frequency
         self.active = active
-        self.session_ID = int(time.time())
-        self.client_database = database.client.Client(self.session_ID)
+        self.client_database = database.client.Client()
         self.client_broker = broker.client.Client(
             "db_mqtt_client",
             [("crane/state", 1), ("meta/errors", 2)]
