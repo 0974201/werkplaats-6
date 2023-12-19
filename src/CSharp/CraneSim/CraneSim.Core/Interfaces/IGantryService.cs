@@ -12,10 +12,10 @@ namespace CraneSim.Core.Interfaces
     {
         /* calculate pos */
 
-        float CalculatePositiveMovement(Gantry entity);
-        float CalculateNegativeMovement(Gantry entity);
-        float CalculateCurrentSpeed(Gantry entity);
-        float CalculateAcceleration(Gantry entity);
+        float CalculatePositiveMovement();
+        float CalculateNegativeMovement();
+        float CalculateCurrentSpeed();
+        float CalculateAcceleration();
         void ResetStopWatch();
         void StartStopwatch();
         void StopStopwatch();
@@ -24,12 +24,10 @@ namespace CraneSim.Core.Interfaces
         /* mqtt cnx */
         
         Task EstablishBrokerConnection();
-        Task SendMessage();
+        Task SendMessageAsync();
         Task DisconnectBrokerConnection();
 
-        void Client_BeforeConnect(object sender, BeforeConnectEventArgs e);
-        void Client_AfterConnect(object sender, AfterConnectEventArgs e);
         void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e);
-        void Client_OnDisconnectRecieved(object sender, OnDisconnectReceivedEventArgs e);
+        
     }
 }
