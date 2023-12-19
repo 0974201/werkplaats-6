@@ -16,7 +16,5 @@ namespace CraneSim.Core.Dtos.Gantry
         [JsonPropertyName("msg")]
         public GantryResponseMsgDto Msg { get; set; }
 
-        [JsonPropertyName("absolutePosition")]
-        public GantryResponseAbsolPosDto AbsolutePosition { get; set; }
     }
 }
