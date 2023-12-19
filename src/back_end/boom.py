@@ -36,7 +36,7 @@ class Boom:
                     print("rotationZ =", self.rotationZ)
                     # Call boomData
                     self.boomData()
-                    time.sleep(0.01)
+                    time.sleep(1)
             elif keys == 1:
                 while self.rotationZ < self.angle:
                     # Call boomData
@@ -45,9 +45,10 @@ class Boom:
                     self.rotationZ += self.speed
                     # Print the current rotationZ
                     print("rotationZ =", self.rotationZ)
-                    time.sleep(0.01)
+                    time.sleep(1)
             else:
                 print("No key Pressed")
+                time.sleep(1)
             # self.client.disconnect()
                     
         
