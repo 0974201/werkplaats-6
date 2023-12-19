@@ -5,21 +5,25 @@ import json
 # define class boom 
 class Boom:
   # constructor method for the class
-  def __init__(self, isActive, mqtt_broker, rotationZ):
+  def __init__(self, isActive, mqtt_broker, rotationZ, speed, angle):
     # assign the parameters to the instance attributes
     self.isActive = isActive 
     self.rotationZ = rotationZ # rotation angle of the boom Z axis
+    self.speed = speed
+    self.angle = angle
     
-  # mqtt connection
+    # mqtt connection
     self.client = mqtt.Client()
     self.client.connect(mqtt_broker)
     self.client.loop_start()
 
   # update the rotation of the boom
-  def update_rotation(self, deltaZ):
-    self.rotationZ += deltaZ # update the rotation angle with deltaZ
-    self.rotationZ %= 360  # Normalize angle to 0-360
-    self.publish_status() # publish new status
+  def update_rotation(self, rotationZ, speed, angle):
+    while rotationZ < angle:
+      # Update rotationZ by adding the speed
+      rotationZ += speed
+      # Print the current rotationZ
+      print("rotationZ =", rotationZ)
 
   # publish the current status of the boom to an mqtt topic
   def publish_status(self):
@@ -47,3 +51,5 @@ class Boom:
 #     return self.rotationZ
 
 
+# boom = Boom(True, "", 0, 5, 90)
+# boom.update_rotation(0, 5, 90)
