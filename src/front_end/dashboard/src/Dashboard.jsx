@@ -22,7 +22,7 @@ export default function Dashboard() {
             {
                 "component": "hoist",
                 "isActive": true,
-                "isConnected": false,
+                "isConnected": true,
                 "absolutePosition": {
                     "x": 1,
                     "y": 1,
@@ -79,7 +79,7 @@ export default function Dashboard() {
                     },
                     "speed": {
                         "X": 1,
-                        "y": 1
+                        "y": 0
                     }
                 }
             },
@@ -99,7 +99,7 @@ export default function Dashboard() {
                         "z": 1
                     },
                     "speed": {
-                        "z": 1
+                        "z": 2
                     }
                 }
             }

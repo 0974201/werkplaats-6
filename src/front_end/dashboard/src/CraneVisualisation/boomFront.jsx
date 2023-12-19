@@ -8,7 +8,7 @@ export default function BoomFront(props) {
 
     useFrame((state, delta) => {
         groupRef.current.position.z += (props.MovementZ / 60)
-        // groupRef.current.rotation.z += (1/60)
+        groupRef.current.rotation.z += (props.boomRotation/60)
     })
     const armLength = 2
     const endLength = 10.8

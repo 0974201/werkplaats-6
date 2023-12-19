@@ -40,10 +40,10 @@ export default function CraneVisualisation(props) {
 
 
     useEffect(() => {
-        setMovementX(props.speed)
-        setMovementY(props.speed)
-        setMovementZ(props.speed)
-    }, [props.speed, props.craneInfo])
+        setMovementX(props.craneInfo.components[1].speed.speed.x)
+        setMovementY(props.craneInfo.components[0].speed.speed.y)
+        setMovementZ(props.craneInfo.components[3].speed.speed.z)
+    }, [props.craneInfo])
 
     return (
         <div id={"container3d"}>
@@ -65,7 +65,7 @@ export default function CraneVisualisation(props) {
                     <BoomFront
                         position={posBoomFront}
                         dimensions={boomSizeFront}
-                        boomRotarion={0}
+                        boomRotation={rotationBoom}
                         MovementZ={movementZ}
                     />
                     <BoomBack
@@ -99,7 +99,7 @@ export default function CraneVisualisation(props) {
                         MovementZ={movementZ}
                         MovementX={movementX}
                         MovementY={movementY}
-                        isConnected={props.craneInfo.components[0]}
+                        isConnected={props.craneInfo.components[0].isConnected}
                     />
                 </group>
                 <Box args={[200, 1, 400]} position={[0, -(76.1/2), 0]} material-color={"gray"} />
