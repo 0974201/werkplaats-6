@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Text.Json;
-using System.Threading.Tasks;
 using CraneSim.Core.Dtos.Gantry;
-using CraneSim.Core.Dtos.Trolley;
 using CraneSim.Core.Entities;
 using CraneSim.Core.Interfaces;
 using CraneSim.Dtos.Gantry;
@@ -20,7 +14,7 @@ namespace CraneSim.Core.Services
     {
         public readonly Stopwatch _gantryMoveStopwatch;
 
-        HiveMQClient _client;
+        HiveMQClient _gantryClient;
         HiveMQClientOptions _options;
         public readonly Gantry _activeGantry;
 
@@ -37,75 +31,75 @@ namespace CraneSim.Core.Services
             _options.UserName = "gantrymqtt"; //ik heb dit liever in een .env staan ;-;
             _options.Password = "xC7gqKU6F!GZ#qM";
 
-            _client = new HiveMQClient(_options);
+            _gantryClient = new HiveMQClient(_options);
 
             _activeGantry = activeGantry;
         }
 
         /* gantry pos calc */
 
-        public float CalculateAcceleration(Gantry entity)
+        public float CalculateAcceleration()
         {
-            var accelTime = entity.AccelAndDecelTime;
-            var currentSpeed = entity.Speed;
-            var topSpeed = entity.MaximumSpeedValue;
+            var accelTime = _activeGantry.AccelAndDecelTime;
+            var currentSpeed = _activeGantry.Speed;
+            var topSpeed = _activeGantry.MaximumSpeedValue;
 
             float result = (topSpeed - currentSpeed) / accelTime;
 
-            entity.Acceleration = result;
+            _activeGantry.Acceleration = result;
             return result;
         }
 
-        public float CalculateCurrentSpeed(Gantry entity)
+        public float CalculateCurrentSpeed()
         {
             var timePassed = (float)ReturnStopwatchvalue();
 
-            if (timePassed < entity.AccelAndDecelTime)
+            if (timePassed < _activeGantry.AccelAndDecelTime)
             {
-                entity.Speed = entity.Acceleration * timePassed;
+                _activeGantry.Speed = _activeGantry.Acceleration * timePassed;
             }
             else
             {
-                entity.Speed = entity.MaximumSpeedValue;
+                _activeGantry.Speed = _activeGantry.MaximumSpeedValue;
             }
 
-            entity.Speed = Math.Min(entity.MaximumSpeedValue, entity.Speed);
+            _activeGantry.Speed = Math.Min(_activeGantry.MaximumSpeedValue, _activeGantry.Speed);
 
-            return entity.Speed;
+            return _activeGantry.Speed;
         }
 
-        public float CalculateNegativeMovement(Gantry entity)
+        public float CalculateNegativeMovement()
         {
             var timePassed = (float)ReturnStopwatchvalue();
-            var currentSpeed = entity.Speed;
+            var currentSpeed = _activeGantry.Speed;
             var travelledDist = currentSpeed * timePassed;
 
-            float newPosZ = entity.PositionZ - travelledDist;
+            float newPosZ = _activeGantry.PositionZ - travelledDist;
 
-            if (newPosZ < entity.MinPosZ)
+            if (newPosZ < _activeGantry.MinPosZ)
             {
                 newPosZ = 0.0F;
             }
 
-            entity.PositionZ = newPosZ;
+            _activeGantry.PositionZ = newPosZ;
 
             return newPosZ;
         }
 
-        public float CalculatePositiveMovement(Gantry entity)
+        public float CalculatePositiveMovement()
         {
             var timePassed = (float)ReturnStopwatchvalue();
-            var currentSpeed = entity.Speed;
+            var currentSpeed = _activeGantry.Speed;
             var travelledDist = currentSpeed * timePassed;
 
-            float newPosZ = entity.PositionZ + travelledDist;
+            float newPosZ = _activeGantry.PositionZ + travelledDist;
 
-            if (newPosZ > entity.MaxPosZ)
+            if (newPosZ > _activeGantry.MaxPosZ)
             {
                 newPosZ = 1000.0F;
             }
 
-            entity.PositionZ = newPosZ;
+            _activeGantry.PositionZ = newPosZ;
 
             return newPosZ;
         }
@@ -134,67 +128,45 @@ namespace CraneSim.Core.Services
         
         public async Task EstablishBrokerConnection()
         {
-            var connectResult = await _client.ConnectAsync().ConfigureAwait(false);
+            var connectResult = await _gantryClient.ConnectAsync().ConfigureAwait(false);
 
-            await _client.SubscribeAsync("gantry/state.command").ConfigureAwait(false);
+            await _gantryClient.SubscribeAsync("crane/components/gantry/command").ConfigureAwait(false);
 
-            _client.OnMessageReceived += Client_OnMessageReceived;
+            _gantryClient.OnMessageReceived += Client_OnMessageReceived;
         }
 
         public async Task DisconnectBrokerConnection()
         {
-            bool disconnectResult = await _client.DisconnectAsync().ConfigureAwait(false);
+            bool disconnectResult = await _gantryClient.DisconnectAsync().ConfigureAwait(false);
         }
 
-        public async Task SendMessage()
+        public async Task SendMessageAsync()
         {
             GantryResponseDto gantryResponse = new GantryResponseDto
             {
                 Meta = new GantryResponseMetaDto
                 {
-                    Name = "gantry",
+                    Component = "gantry",
                     IsActive = _activeGantry.IsActive,
-                    Topic = "gantry/state"
+                    Topic = "crane/components/gantry/state"
                 },
                 Msg = new GantryResponseMsgDto
                 {
                     PositionZ = _activeGantry.PositionZ,
                     Speed = new GantryResponseSpeedDto
                     {
+                        ActiveAcceleration = _activeGantry.IsActive,
                         Acceleration = _activeGantry.Acceleration,
                         Speed = _activeGantry.Speed
                     }
                 }
             };
 
-            string GantryData = JsonSerializer.Serialize(gantryResponse);
+            string gantryData = JsonSerializer.Serialize(gantryResponse);
 
-            await _client.PublishAsync("gantry/state", GantryData).ConfigureAwait(false);
+            await _gantryClient.PublishAsync("crane/components/gantry/state", gantryData).ConfigureAwait(false);
         }
         
-        public void Client_AfterConnect(object sender, AfterConnectEventArgs e)
-        {
-            _client.AfterConnect += Client_AfterConnect;
-            void Client_AfterConnect(object sender, AfterConnectEventArgs e)
-            {
-                //if you have recieved a message you can find it here, and do stuff when OnMessageRecieved.
-            }
-        }
-
-        public void Client_BeforeConnect(object sender, BeforeConnectEventArgs e)
-        {
-            _client.BeforeConnect += Client_BeforeConnect;
-            void Client_BeforeConnect(object sender, BeforeConnectEventArgs e)
-            {
-                //do stuff when OnMessageRecieved.
-            }
-        }
-
-        public void Client_OnDisconnectRecieved(object sender, OnDisconnectReceivedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         public async void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e)
         {
             var payload = e.PublishMessage.PayloadAsString;
@@ -209,7 +181,7 @@ namespace CraneSim.Core.Services
                 _activeGantry.Speed = 0.0F;
                 _activeGantry.IsActive = false;
 
-                await SendMessage();
+                await SendMessageAsync();
             }
 
             if (gantryRequestDto.Msg.Command == "1")
@@ -220,23 +192,23 @@ namespace CraneSim.Core.Services
                     StartStopwatch();
                     _activeGantry.IsActive = true;
 
-                    _ = CalculateAcceleration;
-                    _ = CalculateCurrentSpeed;
-                    _ = CalculatePositiveMovement;
-                    _ = ReturnStopwatchvalue();
+                    var acceleration = CalculateAcceleration();
+                    var speed = CalculateCurrentSpeed();
+                    var positiveMovement = CalculatePositiveMovement();
+                    var stopwatch = ReturnStopwatchvalue();
 
-                    await SendMessage();
+                    await SendMessageAsync();
                 }
                 else
                 {
                     _activeGantry.IsActive = true;
 
-                    _ = CalculateAcceleration;
-                    _ = CalculateCurrentSpeed;
-                    _ = CalculatePositiveMovement;
+                    _ = CalculateAcceleration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculatePositiveMovement();
                     _ = ReturnStopwatchvalue();
 
-                    await SendMessage();
+                    await SendMessageAsync();
                 }
 
             }
@@ -249,23 +221,23 @@ namespace CraneSim.Core.Services
                     StartStopwatch();
                     _activeGantry.IsActive = true;
 
-                    _ =CalculateAcceleration;
-                    _ = CalculateCurrentSpeed;
-                    _ = CalculateNegativeMovement;
-                    _ = ReturnStopwatchvalue();
+                    var acceleration = CalculateAcceleration();
+                    var speed = CalculateCurrentSpeed();
+                    var negativeMovement = CalculateNegativeMovement();
+                    var stopwatch = ReturnStopwatchvalue();
 
-                    await SendMessage();
+                    await SendMessageAsync();
                 }
                 else
                 {
                     _activeGantry.IsActive = true;
 
-                    _ = CalculateAcceleration;
-                    _ = CalculateCurrentSpeed;
-                    _ = CalculateNegativeMovement;
+                    _ = CalculateAcceleration();
+                    _ = CalculateCurrentSpeed();
+                    _ = CalculateNegativeMovement();
                     _ = ReturnStopwatchvalue();
 
-                    await SendMessage();
+                    await SendMessageAsync();
                 }
             }
         }
