@@ -16,28 +16,7 @@ import CameraRig2 from "./camera2.jsx";
 
 export default function CraneVisualisation(props) {
 
-    const testData =  {
-        "component": "gantry",
-        "isActive": "bool",
-        "absolutePosition": {
-            "x": "float",
-            "y": "float",
-            "z": "float"
-        },
-        "speed": {
-            "activeAcceleration": {
-                "z": "bool"
-            },
-            "acceleration": {
-                "z": "float"
-            },
-            "speed": {
-                "z": "float"
-            }
-        }
-    }
-
-    console.log(testData)
+    console.log(props.craneInfo.components[0].speed.speed.y)
 
     const [railsSize, setRailsSize] = useState([31, 1, 1000])
     const [gantrySize, setGantrySize] = useState([30.5, 76.1, 20.2])
@@ -51,7 +30,7 @@ export default function CraneVisualisation(props) {
     const [posGantry, setPosGantry] = useState([-(gantrySize[0]/2), 0, -(railsSize[2]/2)+gantrySize[2]/2])
     const [posBoomFront, setPosBoomFront] = useState([(boomSizeFront[0]/2), 0, posGantry[2]])
     const [posBoomBack, setPosBoomBack] = useState([-boomSizeBack[0]/2, 0, posGantry[2]])
-    const [posTrolley, setPosTrolley] = useState([-47.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), posGantry[2]])
+    const [posTrolley, setPosTrolley] = useState([47.5, posBoomFront[1]-(boomSizeFront[1]/2)-(trolleySize[1]/2), posGantry[2]])
     const [posHoist, setPosHoist] = useState([posTrolley[0], -10, posGantry[2]])
     const [posShipContainer, setPosShipContainer] = useState([63, -((gantrySize[1]/2)-(shipContainerSize[1])/2), posGantry[2]])
 

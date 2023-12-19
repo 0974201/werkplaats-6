@@ -1,3 +1,7 @@
+#inputContainer {
+    display: flex;
+}
+
 .inputLetter {
     display: flex;
     width: 100%;
@@ -13,36 +17,36 @@
 #joystick {
     display: flex;
     position: relative;
-    height: 200px;
-    width: 200px;
-    margin: 10px;
+    height: 100px;
+    width: 100px;
+    margin: 5px;
     background-color: firebrick;
-    border-radius: 20px;
+    border-radius: 10px;
     align-items: center;
     justify-content: flex-start;
 }
 
 #shadow {
     position: absolute;
-    top: 30px;
-    left: 30px;
-    height: 140px;
-    width: 140px;
+    top: 15px;
+    left: 15px;
+    height: 70px;
+    width: 70px;
     border-radius: 50%;
     background-color: darkgoldenrod;
 }
 
 #stick {
     display: flex;
-    height: 140px;
-    width: 140px;
+    height: 70px;
+    width: 70px;
     background-color: #f3d032;
     border-radius: 50%;
     z-index: 2;
 }
 
 #joystick span {
-    font-size: 120px;
+    font-size: 60px;
 }
 
 #keyboardInput {
@@ -59,7 +63,7 @@
 .inputLetter {
     display: flex;
     width: 100%;
-    font-size: 80px;
+    font-size: 40px;
     justify-content: center;
     text-align: center;
 }
@@ -82,5 +86,40 @@
     width: fit-content;
     background-color: #f3d032;
     border-radius: 20px;
+}
+
+#emergencyButton > img {
+    height: 100px;
+}
+
+#ABXYContainer {
+    display: flex;
+}
+
+#ABXYRowSide {
+    display: flex;
+    align-items: center;
+}
+
+#ABXYRowMiddle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+#ABXYContainer #inputButton {
+    height: calc(100px/3);
+    width: calc(100px/3);
+    margin: 3px;
+    border-radius: 5px;
+}
+
+#ABXYContainer .inputLetter {
+    display: flex;
+    width: 100%;
+    font-size: 30px;
+    justify-content: center;
+    text-align: center;
 }
 

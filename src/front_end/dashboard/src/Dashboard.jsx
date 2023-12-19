@@ -8,7 +8,125 @@ import InputVisualisation from "./InputVisualisation/InputVisualisation.jsx";
 import {useEffect, useState} from "react";
 
 export default function Dashboard() {
-    const [craneInfo, setCraneInfo] = useState(null)
+    const [craneInfo, setCraneInfo] = useState({
+        "meta": {
+            "topic":"crane/state",
+            "isActive":"bool"
+        },
+        "absolutePosition": {
+            "x": "float",
+            "y": "float",
+            "z": "float"
+        },
+        "components": [
+            {
+                "component": "hoist",
+                "isActive": "bool",
+                "isConnected": "bool",
+                "absolutePosition": {
+                    "x": "float",
+                    "y": "float",
+                    "z": "float"
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "y": "bool"
+                    },
+                    "acceleration": {
+                        "y": "float"
+                    },
+                    "speed": {
+                        "y": "float"
+                    }
+                }
+            },
+            {
+                "component": "trolley",
+                "isActive": "bool",
+                "absolutePosition": {
+                    "x": "float",
+                    "y": "float",
+                    "z": "float"
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "x": "bool"
+                    },
+                    "acceleration": {
+                        "x": "float"
+                    },
+                    "speed": {
+                        "x": "float"
+                    }
+                }
+            },
+            {
+                "component": "boom",
+                "isActive": "bool",
+                "absolutePosition": {
+                    "x": "float",
+                    "y": "float",
+                    "z": "float"
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "x": "bool",
+                        "y": "bool"
+                    },
+                    "acceleration": {
+                        "x": "float",
+                        "y": "float"
+                    },
+                    "speed": {
+                        "X": "float",
+                        "y": "float"
+                    }
+                }
+            },
+            {
+                "component": "gantry",
+                "isActive": "bool",
+                "absolutePosition": {
+                    "x": "float",
+                    "y": "float",
+                    "z": "float"
+                },
+                "speed": {
+                    "activeAcceleration": {
+                        "z": "bool"
+                    },
+                    "acceleration": {
+                        "z": "float"
+                    },
+                    "speed": {
+                        "z": "float"
+                    }
+                }
+            }
+        ],
+        "container": {
+            "id":"int",
+            "isConnected":"bool",
+            "absolutePosition":{
+                "x":"float",
+                "y":"float",
+                "z":"float"
+            },
+            "speed":{
+                "speed":{
+                    "x":"float",
+                    "y":"float",
+                    "z":"float"
+                }
+            }
+        },
+        "commands": [
+            {
+                "target": "str",
+                "command": "int"
+            }
+        ]
+    })
     const [speed, setSpeed] = useState(0)
     const [pressed, setPressed] = useState(true)
 

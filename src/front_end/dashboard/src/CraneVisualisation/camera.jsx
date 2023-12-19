@@ -5,9 +5,7 @@ import {CameraControls} from "@react-three/drei";
 
 
 export default function CameraRig(props) {
-    console.log(props.posGantry)
     const cameraControlsRef = useRef()
-    console.log(cameraControlsRef)
     // cameraControlsRef.current?.truck(0, 10, true)
     useEffect(() => {
         // cameraControlsRef.current?.truck(0, 0, false)

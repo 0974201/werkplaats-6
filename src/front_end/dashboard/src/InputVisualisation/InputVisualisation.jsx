@@ -72,6 +72,8 @@ export default function InputVisualisation(props) {
         <div id={"controllerInput"}>
             <Joystick letter={"L"} Y={'top'} X={'left'} />
             <Joystick letter={"R"} Y={'center'} X={'right'} />
+            <ABXYButtons />
+            <Button letter={"RB"} active={false} />
         </div>
     )
 
@@ -82,6 +84,7 @@ export default function InputVisualisation(props) {
                     <Button letter={"Q"} active={props.pressed} />
                     <Button letter={"W"} active={false} />
                     <Button letter={"E"} active={false} />
+                    <Button letter={"R"} active={false} />
                 </div>
                 <div>
                     <Button letter={"A"} active={false} />
@@ -106,6 +109,21 @@ export default function InputVisualisation(props) {
             {props.pressed ?
                 <img src={"/public/icons8-emergency-stop-button-96_STOP.png"} alt={"STOP"}/> :
                 <img src={"/public/icons8-emergency-stop-button-96_START.png"} alt={"START"}/>}
+        </div>
+    )
+
+    const ABXYButtons = ()=> (
+        <div id={"ABXYContainer"}>
+            <div id={"ABXYRowSide"}>
+                <Button letter={"X"} active={false} />
+            </div>
+            <div id={"ABXYRowMiddle"}>
+                <Button letter={"Y"} active={false} />
+                <Button letter={"A"} active={false} />
+            </div>
+            <div id={"ABXYRowSide"}>
+                <Button letter={"B"} active={false} />
+            </div>
         </div>
     )
 
