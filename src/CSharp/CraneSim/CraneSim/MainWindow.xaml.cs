@@ -115,7 +115,7 @@ namespace CraneSim
         private async Task TestGantryService()
         {
             TestGantryServiceTimer();
-            _gantryService.CalculateAcceleration(_gantry);
+            _gantryService.CalculateAcceleration();
             TestGantrySpeed();
             TestGantryPosMovement();
             await Task.Delay(500);
@@ -136,7 +136,7 @@ namespace CraneSim
         private void TestGantrySpeed()
         {
             var speedBefore = _gantry.Speed;
-            _gantryService.CalculateCurrentSpeed(_gantry);
+            _gantryService.CalculateCurrentSpeed();
             var speedAfter = _gantry.Speed;
 
             MessageBox.Show($"startspeed: {speedBefore}, currentspeed{speedAfter}");
@@ -145,7 +145,7 @@ namespace CraneSim
         private void TestGantryPosMovement()
         {
             var oldPos = _gantry.PositionZ;
-            _gantryService.CalculatePositiveMovement(_gantry);
+            _gantryService.CalculatePositiveMovement();
             var newPos = _gantry.PositionZ;
 
             MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
@@ -154,7 +154,7 @@ namespace CraneSim
         private void TestGantryNegMovement()
         {
             var oldPos = _gantry.PositionZ;
-            _gantryService.CalculateNegativeMovement(_gantry);
+            _gantryService.CalculateNegativeMovement();
             var newPos = _gantry.PositionZ;
 
             MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
