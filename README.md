@@ -79,7 +79,9 @@ MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het op
     │   │   ├── mqtt_messages.md      
     │   │   └── ...                  
     │   │
-    │   ├── microservices/              
+    │   ├── microservices/  
+    │   │   └── components/
+    │         ├── trolley.md
     │   │   ├── broker.md            
     │   │   ├── controller.md
     │   │   ├── dashboard.md
@@ -93,21 +95,21 @@ MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het op
     │
     ├── src/                     
     │   ├── CSharp/  
-    │   │   ├── Controller.wpf          
-    │   │   ├── ControllerXBOX          
-    │   │   ├── CraneSim.Core         
-    │   │   ├── CraneSim.Infrastructure         
-    │   │   ├── CraneSim       
-    │   │   ├── MQTTTemplate         
-    │   │   ├── CraneSim.sln          
+    │   │   └── Controller.wpf/
+    │         ├── AssemblyInfo.cs        
     │   │   └── ...                   
     │   ├── Python/  
     │   │   ├── README.md         
     │   │   ├── boom.py         
     │   │   ├── emergencyButton.py   
     │   │   └── ...  
-    │   ├── back_end/  
-    │   │   ├──          
+    │   ├── back_end/    
+    │   │   └── broker/
+    │         ├── __init__.py
+    │         ├── client.py
+    │   │   └── database/
+    │         ├── __init__.py
+    │         ├── client.py
     │   │   ├── container.py        
     │   │   ├── db_mqtt_client.py 
     │   │   ├── hoist.py
@@ -115,8 +117,13 @@ MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het op
     │   │   ├── setup.py 
     │   │   ├── spreader.py 
     │   │   └── ...
-    │   ├── front_end/  
-    │   │   ├──          
+    │   ├── public/  
+    │   │   └── public/
+    │         ├── trolley.md
+    │   │   └── src/
+    │         ├── dashboard.css    
+    │         ├── dashboard.jsx  
+    │         ├── main.jsx
     │   │   └── ...   
     │
     ├── .gitignore  
