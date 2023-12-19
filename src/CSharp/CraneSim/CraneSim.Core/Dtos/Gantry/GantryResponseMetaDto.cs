@@ -10,13 +10,11 @@ namespace CraneSim.Core.Dtos.Gantry
     public class GantryResponseMetaDto
     {
         [JsonPropertyName("topic")]
-        public string Topic { get; set; } = "gantry/state";
-
+        public string Topic { get; set; } = "crane/components/gantry/state";
         [JsonPropertyName("active")]
         public bool IsActive { get; set; } = false;
-
         [JsonPropertyName("component")]
-        public string Name { get; set; } = "gantry";
+        public string Component { get; set; } = "gantry";
 
     }
 }
