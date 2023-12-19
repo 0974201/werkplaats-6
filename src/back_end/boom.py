@@ -40,7 +40,7 @@ class Boom:
             },
         }
     }
-    self.client.publish("crane/components/hoist/state", data)
+    self.client.publish("crane/components/boom/state", data)
     self.client.disconnect()
 
 # Boom()
