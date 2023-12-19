@@ -20,11 +20,10 @@ namespace CraneSim
 
         IShipContainerService _shipContainerService;
 
-
         public MainWindow()
         {
             InitializeComponent();
-            CreateComopnents();
+            CreateComponents();
             CreateServices();
         }
 
@@ -34,26 +33,34 @@ namespace CraneSim
             _gantry.IsActive = true;
             //TestTrolleyService();
             //TestGantryService(); < om test te runnen
-            
             _trolleyService.EstablishBrokerConnection();
+            _gantryService.EstablishBrokerConnection();
             _shipContainerService.EstablishBrokerConnection();
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _trolleyService.DisconnectBrokerConnection();
+            _gantryService.DisconnectBrokerConnection();
             _shipContainerService.DisconnectBrokerConnection();
         }
 
-        private void CreateComopnents()
+        private void CreateComponents()
         {
-            _trolley = new Trolley() 
-            { 
+            _trolley = new Trolley()
+            {
                 Id = 1,
                 Name = "Trolley",
             };
-            
+
             _gantry = new Gantry()
+            {
+                Id = 1,
+                Name = "Gantry",
+            };
+
+
+            _shipcontainer = new Shipcontainer()
             {
                 Id = 1,
                 Name = "Gantry",
@@ -68,8 +75,8 @@ namespace CraneSim
 
         private void CreateServices()
         {
-            _gantryService = new GantryService();
             _trolleyService = new TrolleyService(_trolley);
+            _gantryService = new GantryService(_gantry);
             _shipContainerService = new ShipContainerServices(_shipcontainer);
         }
 
@@ -125,7 +132,7 @@ namespace CraneSim
         private async Task TestGantryService()
         {
             TestGantryServiceTimer();
-            _gantryService.CalculateAcceleration(_gantry);
+            _gantryService.CalculateAcceleration();
             TestGantrySpeed();
             TestGantryPosMovement();
             await Task.Delay(500);
@@ -146,7 +153,7 @@ namespace CraneSim
         private void TestGantrySpeed()
         {
             var speedBefore = _gantry.Speed;
-            _gantryService.CalculateCurrentSpeed(_gantry);
+            _gantryService.CalculateCurrentSpeed();
             var speedAfter = _gantry.Speed;
 
             MessageBox.Show($"startspeed: {speedBefore}, currentspeed{speedAfter}");
@@ -155,7 +162,7 @@ namespace CraneSim
         private void TestGantryPosMovement()
         {
             var oldPos = _gantry.PositionZ;
-            _gantryService.CalculatePositiveMovement(_gantry);
+            _gantryService.CalculatePositiveMovement();
             var newPos = _gantry.PositionZ;
 
             MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
@@ -164,14 +171,12 @@ namespace CraneSim
         private void TestGantryNegMovement()
         {
             var oldPos = _gantry.PositionZ;
-            _gantryService.CalculateNegativeMovement(_gantry);
+            _gantryService.CalculateNegativeMovement();
             var newPos = _gantry.PositionZ;
 
             MessageBox.Show($"startposition: {oldPos}, currentPosition{newPos}");
         }
 
         #endregion
-
-        
     }
 }

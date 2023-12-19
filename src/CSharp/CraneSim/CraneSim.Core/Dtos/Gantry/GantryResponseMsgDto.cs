@@ -5,15 +5,14 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace CraneSim.Core.Dtos.Trolley
+namespace CraneSim.Core.Dtos.Gantry
 {
-    public class TrolleyResponseMsgDto
+    public class GantryResponseMsgDto
     {
-        
         [JsonPropertyName("relativePosition")]
-        public float RelativePosition { get; set; }
+        public float PositionZ { get; set; } = 0.0F;
 
         [JsonPropertyName("speed")]
-        public TrolleyResponseSpeedDto Speed { get; set; }
+        public GantryResponseSpeedDto Speed { get; set; }
     }
 }
