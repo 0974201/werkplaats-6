@@ -2,6 +2,7 @@ import broker.client
 import random
 import time
 import json
+import math
 
 class Hoist:
     def __init__(self):
@@ -20,8 +21,14 @@ class Hoist:
 
         isConnected = data_dict.get('msg', {}).get('isConnected')
         self.is_active = data_dict.get('meta', {}).get('isActive')
-        keys = data_dict.get('msg', {}).get('key')        
+        keys = data_dict.get('msg', {}).get('key') 
+        containerX = data_dict.get('msg', {}).get('containerX') 
+        containerY = data_dict.get('msg', {}).get('containerY') 
+        containerZ = data_dict.get('msg', {}).get('containerZ')
+        hoistX = data_dict.get('msg', {}).get('TrollyX')
+        hoistZ = data_dict.get('msg', {}).get('Gantryz')
 
+        self.container_connect(isConnected, containerX, containerY, containerZ, hoistX, hoistZ)
     broker.client.Client.on_message = on_message
 
     def positive_movement(self):
@@ -73,23 +80,26 @@ class Hoist:
         self.Hoist_data(speed, pos)
         # print(pos)
 
-    def container_connect(self):
-        is_connected = False
-        can_connect = False
-    
-    def Hoist_data(self, speed, pos):  
+    def container_connect(self, isConnected, containerX,containerY,containerZ ,hoist_y, hoistX, hoistZ):
+            Math.sqrt
+        
+        
+            isConnected = True
+            self.Hoist_data(isConnected)
 
+    
+    def Hoist_data(self, speed, pos, isConnected):  
         data = {
             "meta":
                 {
                     "topic": "crane/components/hoist/state",
-                    "isActive": True,
+                    "isActive": self.is_active,
                     "component": "hoist"
                 },
             "msg": {
-                "isConnected": False,
+                "isConnected": isConnected,
                 "relativePosition": {
-                    "y": pos
+                    "HoistY": pos
                 },
                 "speed": {
                     "activeAcceleration": {
