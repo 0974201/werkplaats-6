@@ -6,10 +6,10 @@ import json
 
 # class for the emergency button
 class EmergencyButton:
-    def __init__(self, isPressed):
+    def __init__(self):
         self.client = broker.client.Client("emergencyButton", [("meta/emergency_button")], 0)
         self.client.serve()
-        self.isPressed = isPressed
+        self.isPressed = False
         self.topic = "meta/emergency_button" # topic of emergency message
         self.sender = "controller" # sender of emergency message
         self.loop = True
@@ -25,6 +25,7 @@ class EmergencyButton:
     def stop_system(self, keys = None):
         while self.loop:
             if keys == 1:
+                self.Pressed = True
                 if self.isPressed:
                     print("Emergency button already pressed!")
                 else:
@@ -55,5 +56,5 @@ class EmergencyButton:
         self.client.publish("meta/emergency_button", data)
         self.client.disconnect()
 
-emergency = EmergencyButton(True)
+emergency = EmergencyButton()
 emergency.stop_system()
