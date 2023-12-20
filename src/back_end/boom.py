@@ -28,7 +28,7 @@ class Boom:
     # update the rotation of the boom
     def update_rotation(self, keys=None):
         while self.loop:
-            if keys == 2:
+            if keys == -1:
                 while self.rotationZ > 0:
                     # Update rotationZ by subtracting the speed
                     self.rotationZ -= self.speed
