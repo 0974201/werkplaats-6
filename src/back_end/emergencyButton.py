@@ -24,14 +24,14 @@ class EmergencyButton:
     # method to stop the system when the emergency button is pressed
     def stop_system(self, keys = None):
         while self.loop:
-            if keys == 2:
+            if keys == 1:
                 if self.isPressed:
                     print("Emergency button already pressed!")
                 else:
                     # print message
                     print(f"Emergency button pressed! Stopping the system for topic '{self.topic}' by sender '{self.sender}'.")
                     self.emergencyData()
-            elif keys == 1:
+            elif keys == -1:
                 if self.isPressed:
                     self.Pressed = False
                     print("Emergency button resetted.")
