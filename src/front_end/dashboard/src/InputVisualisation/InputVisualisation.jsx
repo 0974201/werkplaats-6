@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './InputVisualisation.css'
 
 export default function InputVisualisation(props) {
-    const [controllerConnected, setControllerConnected] = useState(false)
+    const [controllerConnected, setControllerConnected] = useState(true)
 
 
     function Button(props) {

@@ -1,4 +1,5 @@
 ﻿using CraneSim.Core.Dtos.Crane;
+using CraneSim.Core.Dtos.Gantry;
 using CraneSim.Core.Dtos.Hoist;
 using CraneSim.Core.Dtos.Main;
 using CraneSim.Core.Dtos.ShipContainer;
@@ -68,7 +69,7 @@ namespace CraneSim.Core.Services
                 TrolleyResponseDto trolleyRequestDto = JsonSerializer.Deserialize<TrolleyResponseDto>(payload);
                 if (_activeShipContainer.IsConnectedToHoist)
                 {
-                    _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition.X;
+                    _activeShipContainer.PositionX = trolleyRequestDto.Msg.RelativePosition;
                     await SendMessageAsync();
                 }
             }
@@ -94,7 +95,7 @@ namespace CraneSim.Core.Services
                 GantryResponseDto gantryRequestDto = JsonSerializer.Deserialize<GantryResponseDto>(payload);
                 if (_activeShipContainer.IsConnectedToHoist)
                 {
-                    _activeShipContainer.PositionZ = gantryRequestDto.AbsolutePosition.PositionZ;
+                    _activeShipContainer.PositionZ = gantryRequestDto.Msg.PositionZ;
                     await SendMessageAsync();
                 }
                 
