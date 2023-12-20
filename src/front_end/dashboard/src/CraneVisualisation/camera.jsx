@@ -13,8 +13,8 @@ export default function CameraRig(props) {
 
     useFrame((state, delta) => {
 
-        cameraControlsRef.current?.truck(-props.MovementZ/80, 0, true)
-        cameraControlsRef.current?.dolly(-props.MovementZ/95, true)
+        cameraControlsRef.current?.truck(-parseInt(props.MovementZ)*(3/80), 0, true)
+        cameraControlsRef.current?.dolly(-parseInt(props.MovementZ)*(3/95), true)
     })
     return (
         <CameraControls

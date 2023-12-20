@@ -33,17 +33,27 @@ export default function CraneVisualisation(props) {
 
     const [wireLength, setWireLength] = useState(posTrolley[1]-posHoist[1])
 
-    const [movementX, setMovementX] = useState(props.craneInfo.components[1].speed.speed.x)
-    const [movementY, setMovementY] = useState(props.craneInfo.components[0].speed.speed.y)
-    const [movementZ, setMovementZ] = useState(props.craneInfo.components[3].speed.speed.z)
-    const [rotationBoom, setRotationBoom] = useState(props.craneInfo.components[2].speed.speed.y)
+    const [trolleyCommand, setTrolleyCommand] = useState(props.trolleyCommand)
+    const [gantryCommand, setGantryCommand] = useState(props.gantryCommand)
+    const [hoistCommand, setHoistCommand] = useState(props.hoistCommand)
+    const [boomCommand, setBoomCommand] = useState(props.boomCommand)
+    const [spreaderCommand, setSpreaderCommand] = useState(props.spreaderCommand)
 
+    console.log(props.spreaderCommand)
 
     useEffect(() => {
-        setMovementX(props.craneInfo.components[1].speed.speed.x)
-        setMovementY(props.craneInfo.components[0].speed.speed.y)
-        setMovementZ(props.craneInfo.components[3].speed.speed.z)
-    }, [props.craneInfo])
+        setTrolleyCommand(props.trolleyCommand)
+        setGantryCommand(props.gantryCommand)
+        setHoistCommand(props.hoistCommand)
+        setBoomCommand(props.boomCommand)
+        setSpreaderCommand(props.spreaderCommand)
+    }, [
+        props.trolleyCommand,
+        props.gantryCommand,
+        props.hoistCommand,
+        props.boomCommand,
+        props.spreaderCommand
+    ])
 
     return (
         <div id={"container3d"}>
@@ -51,7 +61,7 @@ export default function CraneVisualisation(props) {
                 <ambientLight />
                 <pointLight position={[100, 100, 100]} intensity={100000} />
                 <pointLight position={[-100, 100, -100]} intensity={50000} />
-                <CameraRig MovementZ={movementZ} posGantry={posGantry} />
+                <CameraRig MovementZ={gantryCommand} posGantry={posGantry} />
                 <group>
                     <Rails
                         position={posRails}
@@ -60,46 +70,46 @@ export default function CraneVisualisation(props) {
                     <Gantry
                         position={posGantry}
                         dimensions={gantrySize}
-                        MovementZ={movementZ}
+                        MovementZ={gantryCommand}
                     />
                     <BoomFront
                         position={posBoomFront}
                         dimensions={boomSizeFront}
-                        boomRotation={rotationBoom}
-                        MovementZ={movementZ}
+                        boomRotation={boomCommand}
+                        MovementZ={gantryCommand}
                     />
                     <BoomBack
                         position={posBoomBack}
                         dimensions={boomSizeBack}
-                        MovementZ={movementZ}
+                        MovementZ={gantryCommand}
                     />
                     <Trolley
                         position={posTrolley}
                         dimensions={trolleySize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
                     />
                     <Wire
                         position={[posTrolley[0],posTrolley[1]-(wireLength/2), posTrolley[2]]}
                         wireLength={wireLength}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
                     />
                     <Hoist
                         position={posHoist}
                         dimension={hoistSize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
                     />
                     <ShipContainer
                         position={posShipContainer}
                         dimensions={shipContainerSize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
-                        isConnected={props.craneInfo.components[0].isConnected}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
+                        isConnected={spreaderCommand}
                     />
                 </group>
                 <Box args={[200, 1, 400]} position={[0, -(76.1/2), 0]} material-color={"gray"} />

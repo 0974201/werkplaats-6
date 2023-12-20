@@ -128,14 +128,12 @@ export default function Dashboard() {
         ]
     })
 
-    const [speed, setSpeed] = useState(0)
-
     const [trolleyCommand, setTrolleyCommand] = useState(0)
     const [gantryCommand, setGantryCommand] = useState(0)
     const [hoistCommand, setHoistCommand] = useState(0)
     const [boomCommand, setBoomCommand] = useState(0)
     const [emergencyCommand, setEmergencyCommand] = useState(false)
-    const [spreaderCommand, setSpreaderCommand] = useState(false)
+    const [spreaderCommand, setSpreaderCommand] = useState("false")
 
     // gebruikte bron: https://stackoverflow.com/questions/75312551/how-to-connect-hivemqtt-to-react-app-using-mqtt-package
     useEffect(() => {
@@ -187,14 +185,20 @@ export default function Dashboard() {
         client.subscribe('crane/components/boom/command');
         client.subscribe('meta/emergency_button');
         client.subscribe('crane/connectrequest');
-        client.subscribe('crane/state');
     }, []);
 
     return (
         <div id={"container"}>
             <div id={"visualisation"}>
                 <div id={"threeD"}>
-                    <CraneVisualisation speed={speed} craneInfo={craneInfo} />
+                    <CraneVisualisation
+                        trolleyCommand={trolleyCommand}
+                        gantryCommand={gantryCommand}
+                        hoistCommand={hoistCommand}
+                        boomCommand={boomCommand}
+                        spreaderCommand={spreaderCommand}
+                        craneInfo={craneInfo}
+                    />
                 </div>
                 <div id={"input"}>
                     <InputVisualisation
