@@ -1,11 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './InputVisualisation.css'
 
 export default function InputVisualisation(props) {
     const [controllerConnected, setControllerConnected] = useState(true)
+    const [commands, setCommands] = useState(props)
 
+    useEffect(() => {
+        setCommands(props)
+    }, [props])
+
+    console.log(commands)
 
     function Button(props) {
+        if (props.active) {
+            console.log(props.active)
+        }
+
         return (
             <div id={"inputButton"} style={{backgroundColor: props.active ? "green" : "red"}}>
                 <span className={"inputLetter"}>{props.letter}</span>
@@ -16,15 +26,15 @@ export default function InputVisualisation(props) {
     function Joystick(props) {
         const posY = () => {
             switch (props.Y) {
-                case 'top':
+                case "1":
                     return {
                         alignItems: 'flex-start'
                     }
-                case 'center':
+                case "0":
                     return {
                         alignItems: 'center'
                     }
-                case 'bottom':
+                case "-1":
                     return {
                         alignItems: 'flex-end'
                     }
@@ -34,18 +44,17 @@ export default function InputVisualisation(props) {
                     }
             }
         }
-
         const posX = () => {
             switch (props.X) {
-                case 'left':
+                case "1":
                     return {
                         justifyContent: 'flex-start'
                     }
-                case 'center':
+                case "0":
                     return {
                         justifyContent: 'center'
                     }
-                case 'right':
+                case "-1":
                     return {
                         justifyContent: 'flex-end'
                     }
@@ -55,9 +64,6 @@ export default function InputVisualisation(props) {
                     }
             }
         }
-
-
-
         return (
             <div id={"joystick"} style={{...posY(), ...posX()} }>
                 <div id={'shadow'}></div>
@@ -68,44 +74,59 @@ export default function InputVisualisation(props) {
         )
     }
 
-    const Controller = () => (
-        <div id={"controllerInput"}>
-            <Joystick letter={"L"} Y={'top'} X={'left'} />
-            <Joystick letter={"R"} Y={'center'} X={'right'} />
+    const EmergencyButton = (props) => (
+        <div id={"emergencyButton"}>
+            {/*Emergency Stop Button icon by Icons8*/}
+            {props.pressed ?
+                <img src={"/icons8-emergency-stop-button-96_START.png"} alt={"START"}/> :
+                <img src={"/icons8-emergency-stop-button-96_STOP.png"} alt={"STOP"}/>
+            }
         </div>
     )
+
+    const SpreaderButton = (props) => (
+        <div id={"spreaderButton"} style={{backgroundColor: props.active ? "green" : "red"}}>
+            <span>Connected</span>
+        </div>
+    )
+
+    const Controller = () => (
+        <div id={"controllerInput"}>
+            <div>
+                <Joystick letter={"L"} Y={commands.trolleyCommand} X={0} />
+                <div className={"verticalHalfButtons"}>
+                    <Button letter={"<"} active={commands.gantryCommand === "-1"} />
+                    <Button letter={">"} active={commands.gantryCommand === "1"} />
+                </div>
+            </div>
+            <div>
+                <div className={"horizontalHalfButtons"}>
+                    <Button letter={String.fromCharCode(8593)} active={commands.boomCommand === "1"} />
+                    <Button letter={String.fromCharCode(8595)} active={commands.boomCommand === "-1"} />
+                </div>
+                <Joystick letter={"R"} Y={commands.hoistCommand} X={0} />
+            </div>
+        </div>
+    )
+
+
 
     const Keyboard = () => (
         <div id={"keyboardInput"}>
             <div id={"letterCluster"}>
                 <div>
-                    <Button letter={"Q"} active={props.pressed} />
-                    <Button letter={"W"} active={false} />
-                    <Button letter={"E"} active={false} />
+                    <Button letter={"Q"} active={commands.boomCommand === "1"} />
+                    <Button letter={"W"} active={commands.trolleyCommand === "1"} />
+                    <Button letter={"E"} active={commands.boomCommand === "-1"} />
+                    <Button letter={String.fromCharCode(8593)} active={commands.hoistCommand === "1"} />
                 </div>
                 <div>
-                    <Button letter={"A"} active={false} />
-                    <Button letter={"S"} active={false} />
-                    <Button letter={"D"} active={false} />
+                    <Button letter={"A"} active={commands.gantryCommand === "-1"} />
+                    <Button letter={"S"} active={commands.trolleyCommand === "-1"} />
+                    <Button letter={"D"} active={commands.gantryCommand === "1"} />
+                    <Button letter={String.fromCharCode(8595)} active={commands.hoistCommand === "-1"} />
                 </div>
             </div>
-            <div id={"opCluster"}>
-                <Button letter={"O"} active={false} />
-                <Button letter={"P"} active={false} />
-            </div>
-            <div id={"arrowCluster"}>
-                <Button letter={String.fromCharCode(8593)} active={false} />
-                <Button letter={String.fromCharCode(8595)} active={false} />
-            </div>
-        </div>
-    )
-
-    const EmergencyButton = () => (
-        <div id={"emergencyButton"}>
-            {/*Emergency Stop Button icon by Icons8*/}
-            {props.pressed ?
-                <img src={"/public/icons8-emergency-stop-button-96_STOP.png"} alt={"STOP"}/> :
-                <img src={"/public/icons8-emergency-stop-button-96_START.png"} alt={"START"}/>}
         </div>
     )
 
@@ -117,7 +138,12 @@ export default function InputVisualisation(props) {
             :
                 <Keyboard />
             }
-            <EmergencyButton />
+            <div id={"onOffButton"}>
+                <EmergencyButton pressed={commands.emergencyCommand === "true"} />
+                <SpreaderButton active={commands.spreaderCommand === "true"} />
+                <button onClick={() => setControllerConnected(!controllerConnected)}>Switch Mode</button>
+            </div>
+
         </div>
     )
 }
