@@ -4,14 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CraneSim.Core.Entities;
+using HiveMQtt.Client.Events;
 
 namespace CraneSim.Core.Interfaces
 {
-    internal interface IGantryService
+    public interface IGantryService
     {
-        float CalculatePositiveMovement(Gantry entity);
-        float CalculateNegativeMovement(Gantry entity);
-        float CalculateCurrentSpeed(Gantry entity);
-        float CalculateAccelaration(Gantry entity);
+        /* calculate pos */
+
+        float CalculatePositiveMovement();
+        float CalculateNegativeMovement();
+        float CalculateCurrentSpeed();
+        float CalculateAcceleration();
+        void ResetStopWatch();
+        void StartStopwatch();
+        void StopStopwatch();
+        double ReturnStopwatchvalue();
+        
+        /* mqtt cnx */
+        
+        Task EstablishBrokerConnection();
+        Task SendMessageAsync();
+        Task DisconnectBrokerConnection();
+
+        void Client_OnMessageReceived(object sender, OnMessageReceivedEventArgs e);
+        
     }
 }
