@@ -5,23 +5,16 @@ import {CameraControls} from "@react-three/drei";
 
 
 export default function CameraRig(props) {
-    console.log(props.posGantry)
     const cameraControlsRef = useRef()
-    console.log(cameraControlsRef)
-    // cameraControlsRef.current?.truck(0, 10, true)
     useEffect(() => {
-        // cameraControlsRef.current?.truck(0, 0, false)
-        // cameraControlsRef.current?.dolly(600, true)
-        cameraControlsRef.current?.setPosition(80, 0, -400, false)
+        cameraControlsRef.current?.setPosition(100, 0, -100, false)
         cameraControlsRef.current?.setTarget(props.posGantry[0], props.posGantry[1], props.posGantry[2], false)
     }, [])
 
     useFrame((state, delta) => {
 
-        cameraControlsRef.current?.truck(-props.MovementZ/85, 0, true)
-        cameraControlsRef.current?.dolly(-props.MovementZ/90, true)
-        // cameraControlsRef.current?.setPosition(80, 30, -400, true)
-        // cameraControlsRef.current.position.z += props.MovementZ
+        cameraControlsRef.current?.truck(-parseInt(props.MovementZ)*(3/80), 0, true)
+        cameraControlsRef.current?.dolly(-parseInt(props.MovementZ)*(3/95), true)
     })
     return (
         <CameraControls

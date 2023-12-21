@@ -7,7 +7,7 @@ export default function BoomBack(props) {
     const groupRef = useRef()
 
     useFrame((state, delta) => {
-        groupRef.current.position.z += (props.MovementZ / 60)
+        groupRef.current.position.z += (parseInt(props.MovementZ)*(3/60))
     })
     const armLength = 2
     const endLength = 12.1
