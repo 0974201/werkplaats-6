@@ -5,9 +5,11 @@ import { useFrame } from '@react-three/fiber'
 export default function Hoist(props) {
     const meshRef = useRef()
 
-    useFrame((state, delta) => (meshRef.current.position.z += (props.MovementZ/60)))
-    useFrame((state, delta) => (meshRef.current.position.x += (props.MovementX/60)))
-    useFrame((state, delta) => (meshRef.current.position.y -= (props.MovementY/60)))
+    useFrame((state, delta) => {
+        meshRef.current.position.z += (parseInt(props.MovementZ)*(3/60))
+        meshRef.current.position.x += (parseInt(props.MovementX)*(3/60))
+        meshRef.current.position.y -= (parseInt(props.MovementY)*(3/60))
+    })
 
     return (
         <mesh
@@ -15,7 +17,7 @@ export default function Hoist(props) {
             ref={meshRef}
             scale={1}
         >
-            <boxGeometry args={[1, 1, 1]} />
+            <boxGeometry args={props.dimension} />
             <meshStandardMaterial color={'blue'} />
         </mesh>
     )

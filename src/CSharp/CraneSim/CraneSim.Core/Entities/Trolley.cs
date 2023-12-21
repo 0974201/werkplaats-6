@@ -20,10 +20,10 @@ namespace CraneSim.Core.Entities
         public float Deceleration { get; set; } = 0.0F;
         public float TraveledDistance { get; set; } = 0.0F;
 
-        public float AccelAndDecelarationTime { get; set; } = 2F;
+        public float AccelAndDecelarationTime { get; set; } = 2.0F;
 
         //in m/sec
-        public float MinimumSpeedValue { get; set; } = 2.5F;
+        public float MinimumSpeedValue { get; set; } = 0.1F;
         //in m/sec
         public float MaximumSpeedValue { get; set; } = 3.0F;
         //in m/sec
