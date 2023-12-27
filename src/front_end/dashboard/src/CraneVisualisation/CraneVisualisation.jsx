@@ -12,34 +12,10 @@ import Rails from "./rails.jsx";
 import BoomFront from "./boomFront.jsx";
 import BoomBack from "./boomBack.jsx";
 import CameraRig from "./camera.jsx";
-import CameraRig2 from "./camera2.jsx";
 
 export default function CraneVisualisation(props) {
 
-    const testData =  {
-        "component": "gantry",
-        "isActive": "bool",
-        "absolutePosition": {
-            "x": "float",
-            "y": "float",
-            "z": "float"
-        },
-        "speed": {
-            "activeAcceleration": {
-                "z": "bool"
-            },
-            "acceleration": {
-                "z": "float"
-            },
-            "speed": {
-                "z": "float"
-            }
-        }
-    }
-
-    console.log(testData)
-
-    const [railsSize, setRailsSize] = useState([31, 1, 1000])
+    const [railsSize, setRailsSize] = useState([31, 1, 400])
     const [gantrySize, setGantrySize] = useState([30.5, 76.1, 20.2])
     const [shipContainerSize, setShipContainerSize] = useState([2.44, 2.59, 13.71])
     const [boomSizeFront, setBoomSizeFront] = useState([76.8, 2, 8])
@@ -57,81 +33,35 @@ export default function CraneVisualisation(props) {
 
     const [wireLength, setWireLength] = useState(posTrolley[1]-posHoist[1])
 
-    const [movementX, setMovementX] = useState(props.speed)
-    const [movementY, setMovementY] = useState(props.speed)
-    const [movementZ, setMovementZ] = useState(props.speed)
-    const [rotationBoom, setRotationBoom] = useState()
+    const [trolleyCommand, setTrolleyCommand] = useState(props.trolleyCommand)
+    const [gantryCommand, setGantryCommand] = useState(props.gantryCommand)
+    const [hoistCommand, setHoistCommand] = useState(props.hoistCommand)
+    const [boomCommand, setBoomCommand] = useState(props.boomCommand)
+    const [spreaderCommand, setSpreaderCommand] = useState(props.spreaderCommand)
 
-    const [freeCamera, setFreeCamera] = useState(true)
-    const [cameraPosition, setCameraPosition] = useState([80, 30, 80])
-    const [cameraLookAt, setCameraLookAt] = useState([20, 0, 0])
-
-    useEffect(() => {
-        setMovementX(props.speed)
-        setMovementY(props.speed)
-        setMovementZ(props.speed)
-    }, [props.speed, props.craneInfo])
+    console.log(props.spreaderCommand)
 
     useEffect(() => {
-        setWireLength(posTrolley[1]-posHoist[1])
-    }, [posHoist])
-
-    useEffect(() => {
-        setCameraPosition(cameraPosition)
-    }, [cameraPosition])
-
-    const fov = 60;
-    const aspect = 1920 / 1080;
-    const near = 1.0;
-    const far = 1000.0;
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(70, 20, -400);
-    camera.rotation.set(
-        THREE.MathUtils.degToRad(-20),
-        THREE.MathUtils.degToRad(30),
-        THREE.MathUtils.degToRad(10))
+        setTrolleyCommand(props.trolleyCommand)
+        setGantryCommand(props.gantryCommand)
+        setHoistCommand(props.hoistCommand)
+        setBoomCommand(props.boomCommand)
+        setSpreaderCommand(props.spreaderCommand)
+    }, [
+        props.trolleyCommand,
+        props.gantryCommand,
+        props.hoistCommand,
+        props.boomCommand,
+        props.spreaderCommand
+    ])
 
     return (
         <div id={"container3d"}>
-
-            {/*<div id={"cameraButtons"}>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setFreeCamera(true)*/}
-            {/*    }}>Free</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([70, 30, 80])*/}
-            {/*        setCameraLookAt([20, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Standard</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([20, 100, 0])*/}
-            {/*        setCameraLookAt([20, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Top</button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        setCameraPosition([0, 0, 100])*/}
-            {/*        setCameraLookAt([0, 0, 0])*/}
-            {/*        setFreeCamera(false)*/}
-            {/*    }}>Side</button>*/}
-
-            {/*</div>*/}
-
-
-
             <Canvas>
-                {/*{freeCamera ?*/}
-                {/*    <CameraControls /> :*/}
-                {/*    <CameraRig lookAt={cameraLookAt} position={cameraPosition} />*/}
-                {/*}*/}
                 <ambientLight />
                 <pointLight position={[100, 100, 100]} intensity={100000} />
                 <pointLight position={[-100, 100, -100]} intensity={50000} />
-                {/*<PerspectiveCamera {...camera} />*/}
-                {/*<CameraRig2*/}
-                {/*    camera={camera}*/}
-                {/*    MovementZ={movementZ}*/}
-                {/*/>*/}
-                <CameraRig MovementZ={movementZ} posGantry={posGantry} />
+                <CameraRig MovementZ={gantryCommand} posGantry={posGantry} />
                 <group>
                     <Rails
                         position={posRails}
@@ -140,49 +70,49 @@ export default function CraneVisualisation(props) {
                     <Gantry
                         position={posGantry}
                         dimensions={gantrySize}
-                        MovementZ={movementZ}
+                        MovementZ={gantryCommand}
                     />
                     <BoomFront
                         position={posBoomFront}
                         dimensions={boomSizeFront}
-                        boomRotarion={0}
-                        MovementZ={movementZ}
+                        boomRotation={boomCommand}
+                        MovementZ={gantryCommand}
                     />
                     <BoomBack
                         position={posBoomBack}
                         dimensions={boomSizeBack}
-                        MovementZ={movementZ}
+                        MovementZ={gantryCommand}
                     />
                     <Trolley
                         position={posTrolley}
                         dimensions={trolleySize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
                     />
                     <Wire
                         position={[posTrolley[0],posTrolley[1]-(wireLength/2), posTrolley[2]]}
                         wireLength={wireLength}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
                     />
                     <Hoist
                         position={posHoist}
                         dimension={hoistSize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
                     />
                     <ShipContainer
                         position={posShipContainer}
                         dimensions={shipContainerSize}
-                        MovementZ={movementZ}
-                        MovementX={movementX}
-                        MovementY={movementY}
-                        isConnected={props.isConnected}
+                        MovementZ={gantryCommand}
+                        MovementX={trolleyCommand}
+                        MovementY={hoistCommand}
+                        isConnected={spreaderCommand}
                     />
                 </group>
-                <Box args={[200, 1, 1000]} position={[0, -(76.1/2), 0]} material-color={"gray"} />
+                <Box args={[200, 1, 400]} position={[0, -(76.1/2), 0]} material-color={"gray"} />
             </Canvas>
         </div>
     )

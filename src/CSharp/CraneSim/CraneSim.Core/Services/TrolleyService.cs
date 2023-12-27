@@ -149,11 +149,8 @@ namespace CraneSim.Core.Services
                 },
                 Msg = new TrolleyResponseMsgDto
                 {
-                    //RelativePosition = _activeTrolley.PositionX,
-                    RelativePosition = new TrolleyResponseRelPosDto
-                    {
-                        X = _activeTrolley.PositionX
-                    },
+                    RelativePosition = _activeTrolley.PositionX,
+
                     Speed = new TrolleyResponseSpeedDto
                     {
                         Acceleration = _activeTrolley.Acceleration,
@@ -181,6 +178,7 @@ namespace CraneSim.Core.Services
                 StopStopwatch();
                 ResetStopWatch();
                 _activeTrolley.Speed = 0.0F;
+                _activeTrolley.Acceleration = 0.0F;
                 _activeTrolley.IsActive = false;
 
                 await SendMessageAsync();

@@ -4,14 +4,16 @@ import { useFrame } from '@react-three/fiber'
 
 export default function ShipContainer(props) {
     const meshRef = useRef()
+    console.log(props.isConnected)
 
-    if (props.isConnected === true) {
         useFrame((state, delta) => {
-            meshRef.current.position.z += (props.MovementZ / 60)
-            meshRef.current.position.x += (props.MovementX/60)
-            meshRef.current.position.y -= (props.MovementY/60)
+            if (props.isConnected === "true") {
+            meshRef.current.position.z += (parseInt(props.MovementZ)*(3/60))
+            meshRef.current.position.x += (parseInt(props.MovementX)*(3/60))
+            meshRef.current.position.y -= (parseInt(props.MovementY)*(3/60))
+            }
         })
-    }
+
 
 
     return (

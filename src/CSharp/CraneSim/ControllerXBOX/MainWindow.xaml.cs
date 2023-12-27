@@ -25,12 +25,16 @@ namespace ControllerXBOX
         private bool _aDown = false;
         private bool _isInStop = false;
 
+        private bool _pickUp = false;
+
         private bool _arrowPadReleased = true;
         private bool _letterButtonsReleased = true;
 
         private DateTime _lastTrolleyMessage = DateTime.MinValue;
         private DateTime _lastGantryMessage = DateTime.MinValue;
-        int counter = 0;
+        private DateTime _lastHoistMessage = DateTime.MinValue;
+        private DateTime _lastBoomMessage = DateTime.MinValue;
+        private DateTime _lastPickupMessage = DateTime.MinValue;
 
         private HiveMQClient _client;
 
@@ -172,6 +176,11 @@ namespace ControllerXBOX
                     }
                 }
 
+                if (arrowPadState.HasFlag(GamepadButtonFlags.RightShoulder))
+                {
+                    _pickUp = !_pickUp;
+                    SendPickup();
+                }
 
                 if (_leftJoystickUp)
                 {
@@ -277,22 +286,22 @@ namespace ControllerXBOX
 
         private async void HoistUp()
         {
-            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            if ((DateTime.Now - _lastHoistMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastGantryMessage = DateTime.Now;
+            _lastHoistMessage = DateTime.Now;
             output.Content = "Hoist is moved up!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/command\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
         }
         private async void HoistDown()
         {
-            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            if ((DateTime.Now - _lastHoistMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastGantryMessage = DateTime.Now;
+            _lastHoistMessage = DateTime.Now;
             output.Content = "Hoist is moved Down!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/hoist/2\"},\"msg\":{\"target\":\"Hoist\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/hoist/command", jsonString).ConfigureAwait(false);
@@ -306,22 +315,22 @@ namespace ControllerXBOX
 
         private async void BoomUp()
         {
-            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            if ((DateTime.Now - _lastBoomMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastGantryMessage = DateTime.Now;
+            _lastBoomMessage = DateTime.Now;
             output.Content = "Boom is moved up!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/1\"},\"msg\":{\"target\":\"Boom\",\"command\":\"1\"}}";
             await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
         }
         private async void BoomDown()
         {
-            if ((DateTime.Now - _lastGantryMessage).TotalSeconds < 1)
+            if ((DateTime.Now - _lastBoomMessage).TotalSeconds < 1)
             {
                 return;
             }
-            _lastGantryMessage = DateTime.Now;
+            _lastBoomMessage = DateTime.Now;
             output.Content = "Boom is moved Down!";
             var jsonString = "{\"meta\":{\"topic\":\"crane/components/boom/2\"},\"msg\":{\"target\":\"Boom\",\"command\":\"-1\"}}";
             await _client.PublishAsync("crane/components/boom/command", jsonString).ConfigureAwait(false);
@@ -344,6 +353,26 @@ namespace ControllerXBOX
             output.Content = "Undid the Noodstop!";
             var jsonString = "{\"meta\":{\"topic\":\"meta/emergency_button\"},\"msg\":{\"isPressed\":\"false\"}}";
             await _client.PublishAsync("meta/emergency_button", jsonString).ConfigureAwait(false);
+        }
+
+        private async void SendPickup()
+        {
+            if ((DateTime.Now - _lastPickupMessage).TotalSeconds < 1)
+            {
+                return;
+            }
+            _lastPickupMessage = DateTime.Now;
+            output.Content = "Grabbing or releasing container";
+            if (_pickUp)
+            {
+                var jsonString = "{\"meta\":{\"topic\":\"crane/connectrequest\"},\"msg\":{\"isconnecting\":\"true\"}}";
+                await _client.PublishAsync("crane/connectrequest", jsonString).ConfigureAwait(false);
+            }
+            else
+            {
+                var jsonString = "{\"meta\":{\"topic\":\"crane/connectrequest\"},\"msg\":{\"isconnecting\":\"false\"}}";
+                await _client.PublishAsync("crane/connectrequest", jsonString).ConfigureAwait(false);
+            }
         }
     }
 }
