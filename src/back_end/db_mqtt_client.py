@@ -1,5 +1,5 @@
-import database.client
-import broker.client
+from .database import client as db_client
+from .broker import client as b_client
 import time
 import json
 
@@ -9,8 +9,8 @@ class DbMqttClient:
         self.frequency = frequency
         self.active = active
         self.topics = [("crane/state", 1), ("meta/errors", 2)]
-        self.client_database = database.client.Client()
-        self.client_broker = broker.client.Client(
+        self.client_database = db_client.Client()
+        self.client_broker = b_client.Client(
             "db_mqtt_client",
             self.topics
         )
