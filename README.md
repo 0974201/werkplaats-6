@@ -1,106 +1,149 @@
 # Kraansimulatie Project
 
-Het doel van dit project is om een interactieve kraansimulatie te creëren. Het zal MQTT gebruiken voor real-time communicatie, 
-React.js gebruiken voor de frontend, Python gebruiken voor de backend en MongoDB gebruiken voor het opslaan van data. 
+Het doel van dit project is om een interactieve kraansimulatie te creëren. Het zal MQTT gebruiken voor real-time communicatie,
+React.js gebruiken voor de frontend, Python gebruiken voor de backend en MongoDB gebruiken voor het opslaan van data.
+
 ## Kenmerken
 
-* Realistische 3D-simulatie van een kraan.
-* Bediening van de kraan via een dashboard (webinterface).
-* Real-time statusupdates van de kraan met behulp van MQTT.
-* Simulatie van kraan bewegingen en berekeningen maken in Python.
+- Realistische 3D-simulatie van een kraan.
+- Bediening van de kraan via een dashboard (webinterface).
+- Real-time statusupdates van de kraan met behulp van MQTT.
+- Simulatie van kraan bewegingen en berekeningen maken in Python.
 
 ## Vereisten (DoD)
 
-- [ ] Implementatie van de kraan in de backend.
+- [x] Basisopzet van de kraansimulatie.
+- [x] Implementatie van MQTT voor real-time communicatie.
+- [x] functionaliteit van de boomcomponent (boom.py).
+- [x] Opzet van de backend in Python.
+- [x] Basis frontend ontwikkeling met React.js.
+- [x] Realistische 3D-simulatie van een kraan.
+- [x] Bediening van de kraan via een dashboard (webinterface).
+- [x] Real-time statusupdates van de kraan met behulp van MQTT.
+- [x] Simulatie van kraanbewegingen en berekeningen in Python.
+
+- [ ] Volledige integratie van de kraancomponenten (hoist, trolley, gantry) in de backend.
+- [ ] Implementatie van de volledige kraanfunctionaliteit in de backend.
+- [ ] Uitbreiden van de MQTT-communicatie voor alle kraancomponenten.
+
 - [ ] (voeg andere vereisten toe die je hebt voltooid of van plan bent om te voltooien)
 
 ## Installatie en setup
 
 ### Benodigdheden
 
-* Node.js en npm
-* Python 3.x
-* C Sharp
-* HiveMQ MQTT Broker
-* MongoDB
+- Node.js
+- React.js
+- Vite.js
+- Python 3.x
+- C Sharp
+- HiveMQ (Mqtt broker)
+- MongoDB
 
-## Backend 
+## Backend
 
-1. Open een Terminal 
+1. Open een Terminal
 2. Navigeer naar de Backend Map:
-    *  Gebruik het commando ```cd pad/naar/jouw/project/backend``` om naar de backend map te gaan.
+   - Gebruik het commando `cd pad/naar/jouw/project/backend` om naar de backend map te gaan.
 3. Installeer Python Afhankelijkheden:
-    *   Zorg ervoor dat Python geïnstalleerd is op je systeem. Je kunt de installatie verifiëren met ```python --version```.
-    *   Installeer de vereiste pakketten met ```pip install -r requirements.txt```. Dit commando leest de requirements.txt file en installeert alle benodigde Python-pakketten.
+   - Zorg ervoor dat Python geïnstalleerd is op je systeem. Je kunt de installatie verifiëren met `python --version`.
+   - Installeer de vereiste pakketten met `pip install -r requirements.txt`. Dit commando leest de requirements.txt file en installeert alle benodigde Python-pakketten.
 4. Start de Backend Server:
-    *   Start de server met ```python main.py```. Dit zal de backend applicatie draaien die nodig is voor de kraansimulatie.
+   - Start de server met `python main.py`. Dit zal de backend applicatie draaien die nodig is voor de kraansimulatie.
 
-## Frontend 
+## Frontend
+
 1. Open een Terminal
 2. Navigeer naar de Frontend Map:
-   *  Gebruik het commando ```cd pad/naar/jouw/project/frontend``` om naar de frontend map te gaan.
+   - Gebruik het commando `cd pad/naar/jouw/project/frontend` om naar de frontend map te gaan.
 3. Installeer Node.js Afhankelijkheden:
-   *  Zorg ervoor dat Node.js en npm geïnstalleerd zijn op je systeem. Je kunt de installatie verifiëren met ```node --version``` en ```npm --version```.
-   *  Installeer de benodigde Node-modules met het commando ```npm install```. Dit zal alle afhankelijkheden installeren die gedefinieerd zijn in je package.json bestand.
+   - Zorg ervoor dat Node.js en npm geïnstalleerd zijn op je systeem. Je kunt de installatie verifiëren met `node --version` en `npm --version`.
+   - Installeer de benodigde Node-modules met het commando `npm install`. Dit zal alle afhankelijkheden installeren die gedefinieerd zijn in je package.json bestand.
 4. Start de React-applicatie:
-   *  Start de React-frontend met npm start. Dit zal de ontwikkelserver opstarten en de applicatie beschikbaar maken in je webbrowser.
+   - Start de React-frontend met npm start. Dit zal de ontwikkelserver opstarten en de applicatie beschikbaar maken in je webbrowser.
 
-## HiveMQ MQTT Broker 
+## HiveMQ MQTT Broker
 
 HiveMQ biedt een eenvoudige en krachtige MQTT Broker die ideaal is voor IoT-toepassingen
 
 1. Ga naar de [HiveMQ](https://www.hivemq.com) en download de nieuwste versie.
 2. Pak het gedownloade bestand uit naar een directory naar keuze.
 3. Open de terminal, navigeer naar de uitgepakte directory en start de broker met:
-```./bin/run.sh```
+   `./bin/run.sh`
 4. Open een webbrowser en ga naar http://localhost:8080. Je zou de HiveMQ control panel moeten zien.
 
-## MongoDB 
+## MongoDB
 
-MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het opslaan van projectgerelateerde data. 
+MongoDB is een document-gebaseerde NoSQL-database die gebruikt wordt voor het opslaan van projectgerelateerde data.
 
 1. Ga naar de [MongoDB](https://www.mongodb.com) en kies de versie die past bij jouw besturingssysteem.
 2. Volg de installatie-instructies op de MongoDB website.
 3. Afhankelijk van je systeem, start MongoDB met een commando zoals:
-```mongod```
-4. Maak een verbinding met de standaard MongoDB-poort ```27017``` om te controleren of de database draait.
+   `mongod`
+4. Maak een verbinding met de standaard MongoDB-poort `27017` om te controleren of de database draait.
 
 ## Projectstructuur
 
-    kraan-simulatie/
+    st-2324-1-d-wx1-t2-2324-wx1-bear/
     │
-    ├── backend/                     # 
-    │   ├── mqtt/                    # 
-    │   │   ├── mqtt_client.py       # 
-    │   │   └── ...                  # 
-    │   │
-    │   ├── simulation/              #
-    │   │   ├── engine.py            # 
-    │   │   └── ...                  # 
-    │   │
-    │   ├── main.py                  # 
-    │   ├── requirements.txt         #
-    │   └── ...
-    │
-    ├── frontend/                    # 
-    │   ├── public/                  # 
-    │   │   ├── index.html           #
-    │   │   └── ...                  # 
-    │   │
-    │   ├── src/                     # 
-    │   │   ├── components/          # 
-    │   │   │   ├── CraneModel.js    #  
-    │   │   │   └── ...              # 
-    │   │   │
-    │   │   ├── App.js               # 
-    │   │   ├── index.js             # 
+    ├── docs/
+    │   ├── conventions/
+    │   │   ├── base_positions.md
+    │   │   ├── components.md
+    │   │   ├── metrics.md
+    │   │   ├── mqtt_messages.md
     │   │   └── ...
     │   │
-    │   ├── package.json             # 
-    │   └── ...
+    │   ├── microservices/
+    │   │   └── components/
+    │         ├── trolley.md
+    │   │   ├── broker.md
+    │   │   ├── controller.md
+    │   │   ├── dashboard.md
+    │   │   ├── database.md
+    │   │   └── ...
     │
+    ├── run/
+    │   │   ├── linux_mac.sh
+    │   │   ├── windows.bat
+    │   │   └── ...
+    │
+    ├── src/
+    │   ├── CSharp/
+    │   │   └── Controller.wpf/
+    │         ├── AssemblyInfo.cs
+    │   │   └── ...
+    │   ├── Python/
+    │   │   ├── README.md
+    │   │   ├── boom.py
+    │   │   ├── emergencyButton.py
+    │   │   └── ...
+    │   ├── back_end/
+    │   │   └── broker/
+    │         ├── __init__.py
+    │         ├── client.py
+    │   │   └── database/
+    │         ├── __init__.py
+    │         ├── client.py
+    │   │   ├── container.py
+    │   │   ├── db_mqtt_client.py
+    │   │   ├── hoist.py
+    │   │   ├── main.py
+    │   │   ├── setup.py
+    │   │   ├── spreader.py
+    │   │   └── ...
+    │   ├── public/
+    │   │   └── public/
+    │         ├── trolley.md
+    │   │   └── src/
+    │         ├── dashboard.css
+    │         ├── dashboard.jsx
+    │         ├── main.jsx
+    │   │   └── ...
+    │
+    ├── .gitignore
     ├── README.md                    # Projectdocumentatie
-    └── ...
+    ├── Requirements.txt             # Packages
 
 ## Gebruik
 

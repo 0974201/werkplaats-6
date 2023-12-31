@@ -1,63 +1,74 @@
-import math
-import paho.mqtt.client as paho
-from paho import mqtt
+# imports
+import broker.client
+import time
 import json
 
-# define class boom 
+# define class boom
 class Boom:
-  # constructor method for the class
-  def __init__(self, isActive, mqtt_broker, positionX, positionY, rotationZ, speed):
-    # assign the parameters to the instance attributes
-    self.isActive = isActive 
-    self._speed = speed  
-    self.positionX = positionX 
-    self.positionY = positionY 
-    self.rotationZ = rotationZ # rotationangle of the boom Z axis
-    # self.angle = angle
-    
-  # mqtt connection
-    self.client = mqtt.Client()
-    self.client.connect(mqtt_broker)
-    self.client.loop_start()
+    # constructor method for the class
+    def __init__(self, isActive, rotationZ, speed, angle):
+        self.client = broker.client.Client("boom", [("crane/components/boom/state")], 0)
+        self.client.serve()
+        # assign the parameters to the instance attributes
+        self.isActive = isActive
+        self.rotationZ = rotationZ  # rotation angle of the boom Z axis
+        self.speed = speed
+        self.angle = angle
+        self.loop = True
 
-  # update the position of the boom x moves right and left position y moves up and down
-  def update_position(self, deltaX, deltaY):
-    self._positionX += deltaX
-    self._positionY += deltaY
-    self.publish_status()
+    def on_message(self, client, userdata, msg):
+        print("Message received: ", msg.payload)
+        data_dict = json.loads(msg.payload.decode('utf-8'))
+        self.is_active = data_dict.get('meta', {}).get('isActive')
+        keys = data_dict.get('msg', {}).get('key') 
+        # oldRotation = data_dict.get('msg', {}).get('rotationZ') 
 
-  # update the rotation of the boom
-  def update_rotation(self, deltaZ):
-        self._rotationZ += deltaZ # update the rotation angle with deltaZ
-        self._rotationZ %= 360  # Normalize angle to 0-360
-        self.publish_status() # publish new status
+        self.update_rotation(keys)
 
-  # publish the current status of the boom to an mqtt topic
-  def publish_status(self):
-    status = {
-        "isActive": self.isActive,
-        "position": {"x": self._positionX, "y": self._positionY},
-        "rotation": self._rotationZ,
-        "speed": self._speed
-    }
-    self.client.publish("boom/state", json.dumps(status))
+    # update the rotation of the boom
+    def update_rotation(self, keys=None):
+        while self.loop:
+            if keys == -1:
+                while self.rotationZ > 0:
+                    # Update rotationZ by subtracting the speed
+                    self.rotationZ -= self.speed
+                    # Print the current rotationZ
+                    print("rotationZ =", self.rotationZ)
+                    # Call boomData
+                    self.boomData()
+                    time.sleep(1)
+            elif keys == 1:
+                while self.rotationZ < self.angle:
+                    # Call boomData
+                    self.boomData()
+                    # Update rotationZ by adding the speed
+                    self.rotationZ += self.speed
+                    # Print the current rotationZ
+                    print("rotationZ =", self.rotationZ)
+                    time.sleep(1)
+            else:
+                print("No key Pressed")
+                time.sleep(1)
+            # self.client.disconnect()
+                    
+        
 
-  # stop the mqtt client
-  def stop_mqtt(self):
-      self.client.loop_stop()
-      self.client.disconnect
+    def boomData(self):
+        data = {
+            "meta": {
+                "topic": "crane/components/boom/state",
+                "isActive": True,
+                "component": "boom"
+            },
+            "msg": {
+                "Rotation": {
+                    "Z": self.rotationZ
+                },
+            }
+        }
+        self.client.publish("crane/components/boom/state", data)
 
-# template_mqtt
-# boom = Boom('mqtt_broker_address', True, 0, 0, 90, 5)
-# boom.update_position(10, 5)
-# boom.update_rotation(15)
-
-# method for getting the cordinates
-#   def get_coordinates(self):
-#     return (self.positionX, self.positionY)
-
-# # method for getting the rotation
-#   def get_rotation(self):
-#     return self.rotationZ
-
-
+# Create an instance of Boom
+boom = Boom(True, 0, 5, 75)
+# Call the update_rotation method
+boom.update_rotation()

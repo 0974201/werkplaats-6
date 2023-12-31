@@ -6,7 +6,7 @@ import Boom from "./boomFront.jsx";
 export default function Gantry(props) {
     const meshRef = useRef()
     const gantryRef = useRef()
-    useFrame((state, delta) => (gantryRef.current.position.z += (props.MovementZ/60)))
+    useFrame((state, delta) => (gantryRef.current.position.z += parseInt(props.MovementZ)*(3/60)))
 
     const legWidth = 2
 
