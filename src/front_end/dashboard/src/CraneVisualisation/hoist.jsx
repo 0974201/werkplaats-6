@@ -6,9 +6,9 @@ export default function Hoist(props) {
     const meshRef = useRef()
 
     useFrame((state, delta) => {
-        meshRef.current.position.z += (props.MovementZ / 60)
-        meshRef.current.position.x += (props.MovementX/60)
-        meshRef.current.position.y -= (props.MovementY/60)
+        meshRef.current.position.z += (parseInt(props.MovementZ)*(3/60))
+        meshRef.current.position.x += (parseInt(props.MovementX)*(3/60))
+        meshRef.current.position.y -= (parseInt(props.MovementY)*(3/60))
     })
 
     return (
