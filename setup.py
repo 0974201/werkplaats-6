@@ -14,7 +14,7 @@ setup(
     keywords = "STS-Crane Digital Twin",
     url = "https://github.com/howest-gp-wpl/st-2324-1-d-wx1-t2-2324-wx1-bear",
     packages=['src'],
-    long_description=get_readme('README'),
+    long_description=get_readme('README.md'),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
