@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import time
 import json
 import os
+import ast
 
 
 class Client:
@@ -12,7 +13,8 @@ class Client:
         self.subscribed = None
         self.microservice = microservice
         self.topics = topics
-        self.topics.append(("meta/emergency_button", 2))
+        if topics != [("meta/emergency_button", 2)]:
+            self.topics.append(("meta/emergency_button", 2))
         self.subscribe = subscribe
         load_dotenv()
         self.env = {
@@ -43,6 +45,10 @@ class Client:
             self.subscribed = True
 
         def on_message(client, userdata, msg):
+            msg_object = json.loads(msg.payload.decode("utf-8"))
+            if msg_object["meta"]["topic"] == "meta/emergency_button" and msg_object["msg"]["isPressed"]:
+                print(f"{self.microservice} acknowledged emergency button state True")
+                return {"EB_pressed": True}
             print(f"{self.microservice} received {msg.payload.decode('utf-8')} on {self.topics}")
             return msg
 
