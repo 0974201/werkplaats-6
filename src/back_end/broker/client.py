@@ -4,8 +4,12 @@ from dotenv import load_dotenv
 import time
 import json
 import os
-import ast
 
+"""
+This Module contains the MQTT Hive Broker client, it implements environement variables for authentication.
+It connects to the MQTT server and is able to subscribe/publish to multiple topics which can be specified in an instance.
+It logs all of it's processes.
+"""
 
 class Client:
     def __init__(self, microservice="", topics=[("#", 0)], subscribe=True):
@@ -13,9 +17,11 @@ class Client:
         self.subscribed = None
         self.microservice = microservice
         self.topics = topics
+        # checks if there already is a subscription on the emergency button topic
         if topics != [("meta/emergency_button", 2)]:
             self.topics.append(("meta/emergency_button", 2))
         self.subscribe = subscribe
+        # take credentials from .env script
         load_dotenv()
         self.env = {
             "username": os.getenv("BROKER_USERNAME"),
@@ -23,7 +29,9 @@ class Client:
             "url": os.getenv("BROKER_URL"),
             "port": int(os.getenv("BROKER_PORT"))
         }
+        # initialize and inherit functionality from from the paho client class
         self.client = paho.Client(client_id=microservice, userdata=None, protocol=paho.MQTTv5)
+        # set callbacks in the form of a method for readability
         self.set_callbacks()
 
     def disconnect(self):
@@ -64,6 +72,7 @@ class Client:
         self.client.publish(topic, json.dumps(msg), qos)
 
     def serve(self):
+        # this a method which envokes the connect method and manages the loop of the connection to keep it alive
         self.connect()
         if self.subscribe:
             self.subscribed = False
